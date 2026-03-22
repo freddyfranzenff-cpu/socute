@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Freddy & Sarah</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --bg:      #faf8f5;
+      --surface: #ffffff;
+      --text:    #2d2620;
+      --muted:   #9e9189;
+      --border:  #ede8e2;
+      --accent:  #c4856a;
+      --accent2: #8aabaa;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 3.5rem 1.5rem 5rem;
+    }
+
+    /* ── Login / locating ── */
+    #login-screen, #locating {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+      gap: 1.5rem;
+      animation: fadeUp .5s ease both;
+    }
+    #locating { display: none; }
+
+    .login-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem;
+      font-weight: 300;
+      color: var(--text);
+      text-align: center;
+    }
+    .login-title em { font-style: italic; color: var(--accent); }
+
+    .login-sub {
+      font-size: .75rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .login-btns { display: flex; gap: 1rem; }
+
+    .login-btn {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: 12px;
+      padding: .75rem 2.2rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 300;
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color .2s, transform .15s;
+    }
+    .login-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+    .locating-text {
+      font-size: .82rem;
+      color: var(--muted);
+      letter-spacing: .1em;
+    }
+
+    /* ── Demo banner ── */
+    #demo-banner {
+      background: #f0f7f6;
+      border: 1px solid #b8d8d6;
+      border-radius: 10px;
+      padding: .65rem 1.1rem;
+      font-size: .78rem;
+      color: #3a6e6b;
+      margin-bottom: 1.75rem;
+      text-align: center;
+      display: none;
+    }
+
+    /* ── Firebase banner ── */
+    #config-banner {
+      background: #fef9ec;
+      border: 1px solid #f0d070;
+      border-radius: 10px;
+      padding: .7rem 1.1rem;
+      font-size: .8rem;
+      color: #7a6020;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    #config-banner a { color: #8a6010; }
+
+    /* ── Main ── */
+    #main { display: none; animation: fadeUp .5s ease both; }
+
+    header { margin-bottom: 3rem; }
+
+    .eyebrow {
+      font-size: .72rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: .6rem;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(2.4rem, 6vw, 3.6rem);
+      color: var(--text);
+      line-height: 1;
+    }
+    h1 em { font-style: italic; color: var(--accent); }
+
+    .divider { height: 1px; background: var(--border); margin: 2.5rem 0; }
+
+    .section-label {
+      font-size: .7rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+
+    /* ── Clocks ── */
+    .clocks { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .clock-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem 1.25rem;
+    }
+    .clock-card.mine { border-color: #d8ccc6; }
+
+    .clock-city {
+      font-size: .7rem;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: .35rem;
+    }
+
+    .clock-time {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .clock-date { font-size: .78rem; color: var(--muted); margin-top: .3rem; }
+
+    /* ── Stats ── */
+    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem 1.25rem;
+    }
+
+    .stat-label {
+      font-size: .7rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: .5rem;
+    }
+
+    .stat-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem;
+      font-weight: 300;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .stat-unit { font-size: .78rem; color: var(--muted); margin-top: .25rem; }
+
+    .cd-row { display: flex; gap: 1.2rem; align-items: baseline; }
+    .cd-cell { text-align: left; }
+    .cd-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem;
+      font-weight: 300;
+      color: var(--accent2);
+      display: block;
+      line-height: 1;
+    }
+    .cd-lbl { font-size: .65rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+    .cd-caption { font-size: .78rem; color: var(--muted); margin-top: .4rem; }
+
+    /* ── Notes ── */
+    .notes-compose {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .notes-compose textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: .75rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .9rem;
+      color: var(--text);
+      background: var(--bg);
+      resize: none;
+      outline: none;
+      transition: border-color .2s;
+      line-height: 1.5;
+    }
+    .notes-compose textarea:focus { border-color: var(--accent); }
+
+    .compose-footer { display: flex; align-items: center; gap: .75rem; margin-top: .75rem; }
+
+    .author-tag { font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+
+    .send-btn {
+      margin-left: auto;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: .48rem 1.2rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .85rem;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+    .send-btn:hover { opacity: .82; }
+
+    #notes-wall { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: .85rem; }
+
+    .note-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.1rem 1rem;
+      animation: fadeUp .3s ease both;
+    }
+
+    .note-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .note-author { display: block; margin-top: .5rem; font-size: .7rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); }
+
+    .empty { color: var(--muted); font-size: .9rem; padding: 1rem 0; font-style: italic; }
+
+    footer { margin-top: 4rem; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--border); text-align: center; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      .clocks, .stats { grid-template-columns: 1fr; }
+      .login-btns { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div id="config-banner">
+    ⚙️ Replace the Firebase config in the script to enable live sync.
+    <a href="https://console.firebase.google.com/" target="_blank">Firebase Console →</a>
+  </div>
+
+  <div id="demo-banner">
+    Running in demo mode — notes are local to this session only.
+  </div>
+
+  <!-- Login -->
+  <div id="login-screen">
+    <p class="login-sub">Welcome to</p>
+    <h2 class="login-title">Freddy <em>&</em> Sarah</h2>
+    <p class="login-sub">Who are you?</p>
+    <div class="login-btns">
+      <button class="login-btn" onclick="chooseUser('Freddy')">Freddy</button>
+      <button class="login-btn" onclick="chooseUser('Sarah')">Sarah</button>
+    </div>
+  </div>
+
+  <!-- Locating -->
+  <div id="locating">
+    <h2 class="login-title">Freddy <em>&</em> Sarah</h2>
+    <p class="locating-text">Detecting your location…</p>
+  </div>
+
+  <!-- Main -->
+  <div id="main">
+    <header>
+      <p class="eyebrow">a little corner for</p>
+      <h1>Freddy <em>&</em> Sarah</h1>
+    </header>
+
+    <p class="section-label">Right now</p>
+    <div class="clocks">
+      <div class="clock-card mine">
+        <p class="clock-city" id="my-city">You</p>
+        <p class="clock-time" id="my-time">--:--:--</p>
+        <p class="clock-date" id="my-date">--</p>
+      </div>
+      <div class="clock-card">
+        <p class="clock-city" id="other-city">Them</p>
+        <p class="clock-time" id="other-time">--:--:--</p>
+        <p class="clock-date" id="other-date">--</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <p class="section-label">Us</p>
+    <div class="stats">
+      <div class="stat-card">
+        <p class="stat-label">Together since</p>
+        <p class="stat-value" id="days-together">—</p>
+        <p class="stat-unit">days</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Next meetup</p>
+        <div class="cd-row">
+          <div class="cd-cell"><span class="cd-num" id="cd-d">--</span><span class="cd-lbl">d</span></div>
+          <div class="cd-cell"><span class="cd-num" id="cd-h">--</span><span class="cd-lbl">h</span></div>
+          <div class="cd-cell"><span class="cd-num" id="cd-m">--</span><span class="cd-lbl">m</span></div>
+          <div class="cd-cell"><span class="cd-num" id="cd-s">--</span><span class="cd-lbl">s</span></div>
+        </div>
+        <p class="cd-caption">4 July 2026</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <p class="section-label">Notes to each other</p>
+    <div class="notes-compose">
+      <textarea id="note-input" rows="3" placeholder="Write something…"></textarea>
+      <div class="compose-footer">
+        <span class="author-tag" id="note-author-name">—</span>
+        <button class="send-btn" onclick="submitNote()">Send</button>
+      </div>
+    </div>
+    <div id="notes-wall"><p class="empty">No notes yet.</p></div>
+
+    <footer>Freddy & Sarah</footer>
+  </div>
+
+</div>
+
+<script type="module">
+  // ── Firebase config — replace to enable live sync ──────────────────────────
+  const FIREBASE_CONFIG = {
+    apiKey:            "AIzaSyAz5CvOXduYUAh2_Zk2L-8PUEy4KfQjeCo",
+    authDomain:        "ldrcounter.firebaseapp.com",
+    databaseURL:       "https://ldrcounter-default-rtdb.europe-west1.firebaseio.com",
+    projectId:         "ldrcounter",
+    storageBucket:     "ldrcounter.firebasestorage.app",
+    messagingSenderId: "856435037901",
+    appId:             "1:856435037901:web:db66ccb1ddcc0278d9fb84",
+    measurementId:     "G-XC5ZCNCXLG"
+  };
+
+  const DEFAULTS  = { Freddy: "Europe/Berlin", Sarah: "Asia/Taipei" };
+  const IS_CONFIGURED = !FIREBASE_CONFIG.apiKey.startsWith("YOUR");
+
+  let ME = null, OTHER = null;
+  let myTz = null, otherTz = null;
+  let db = null, dbPush = null, dbSet = null, dbRef = null;
+
+  // ── Demo-mode note store ───────────────────────────────────────────────────
+  let localNotes = [];
+
+  // ── Try to init Firebase ───────────────────────────────────────────────────
+  async function tryInitFirebase() {
+    if (!IS_CONFIGURED) return false;
+    try {
+      const { initializeApp }                      = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+      const { getDatabase, ref, set, push, onValue, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+      const app = initializeApp(FIREBASE_CONFIG);
+      db      = getDatabase(app);
+      dbRef   = ref;
+      dbSet   = set;
+      dbPush  = push;
+      // Wire up live notes
+      onValue(ref(db, "notes"), (snap) => {
+        const data = snap.val();
+        renderNotes(data ? Object.values(data).reverse() : []);
+      });
+      // Wire up other presence
+      function watchOther() {
+        onValue(ref(db, `presence/${OTHER}`), (snap) => {
+          const data = snap.val();
+          otherTz = (data && data.timezone) ? data.timezone : DEFAULTS[OTHER];
+          document.getElementById("other-city").textContent = cityLabel(OTHER, otherTz);
+        });
+      }
+      window._watchOther = watchOther;
+      // Push my presence
+      window._pushPresence = (tz) => {
+        set(ref(db, `presence/${ME}`), { timezone: tz, updatedAt: serverTimestamp() });
+      };
+      return true;
+    } catch (e) {
+      console.warn("Firebase init failed, using demo mode:", e);
+      return false;
+    }
+  }
+
+  // ── Timezone from coords ───────────────────────────────────────────────────
+  async function tzFromCoords(lat, lng) {
+    try {
+      const r = await fetch(`https://timeapi.io/api/timezone/coordinate?latitude=${lat}&longitude=${lng}`);
+      const j = await r.json();
+      return j.timeZone || null;
+    } catch { return null; }
+  }
+
+  async function detectMyLocation() {
+    return new Promise((resolve) => {
+      if (!navigator.geolocation) { resolve(null); return; }
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          const tz = await tzFromCoords(pos.coords.latitude, pos.coords.longitude);
+          resolve(tz);
+        },
+        () => resolve(null),
+        { timeout: 8000 }
+      );
+    });
+  }
+
+  // ── Notes rendering ────────────────────────────────────────────────────────
+  function renderNotes(notes) {
+    const wall = document.getElementById("notes-wall");
+    if (!notes.length) {
+      wall.innerHTML = `<p class="empty">No notes yet.</p>`;
+      return;
+    }
+    wall.innerHTML = "";
+    notes.forEach(note => {
+      const card = document.createElement("div");
+      card.className = "note-card";
+      card.innerHTML = `<p class="note-text">${note.text}</p><span class="note-author">${note.author}</span>`;
+      wall.appendChild(card);
+    });
+  }
+
+  window.submitNote = function() {
+    const text = document.getElementById("note-input").value.trim();
+    if (!text || !ME) return;
+    const note = { text, author: ME, time: Date.now() };
+    if (db && dbPush) {
+      dbPush(dbRef(db, "notes"), note);
+    } else {
+      // Demo mode — local only
+      localNotes.unshift(note);
+      renderNotes(localNotes);
+    }
+    document.getElementById("note-input").value = "";
+  };
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+  function cityLabel(name, tz) {
+    if (!tz) return name;
+    const city = tz.split("/").pop().replace(/_/g, " ");
+    return `${name} · ${city}`;
+  }
+  function fmtTime(tz) {
+    return new Date().toLocaleTimeString("en-GB", { timeZone: tz, hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  }
+  function fmtDate(tz) {
+    return new Date().toLocaleDateString("en-GB", { timeZone: tz, weekday: "long", day: "numeric", month: "long" });
+  }
+
+  // ── Start UI ───────────────────────────────────────────────────────────────
+  function startUI(isDemo) {
+    document.getElementById("login-screen").style.display = "none";
+    document.getElementById("locating").style.display     = "none";
+    document.getElementById("config-banner").style.display = isDemo ? "none" : "block";
+    document.getElementById("demo-banner").style.display   = isDemo ? "block" : "none";
+    document.getElementById("main").style.display          = "block";
+
+    document.getElementById("my-city").textContent    = cityLabel(ME, myTz);
+    document.getElementById("other-city").textContent = cityLabel(OTHER, otherTz || DEFAULTS[OTHER]);
+    document.getElementById("note-author-name").textContent = ME;
+
+    if (window._watchOther) window._watchOther();
+
+    // Clocks
+    function tickClocks() {
+      const effOther = otherTz || DEFAULTS[OTHER];
+      document.getElementById("my-time").textContent    = fmtTime(myTz);
+      document.getElementById("my-date").textContent    = fmtDate(myTz);
+      document.getElementById("other-time").textContent = fmtTime(effOther);
+      document.getElementById("other-date").textContent = fmtDate(effOther);
+    }
+    tickClocks();
+    setInterval(tickClocks, 1000);
+
+    // Days together
+    const start = new Date("2026-01-01");
+    document.getElementById("days-together").textContent = Math.floor((Date.now() - start) / 86400000);
+
+    // Countdown
+    const meetup = new Date("2026-07-04T00:00:00+02:00");
+    function tickCountdown() {
+      const diff = meetup - Date.now();
+      if (diff <= 0) {
+        ["cd-d","cd-h","cd-m","cd-s"].forEach(id => document.getElementById(id).textContent = "0");
+        return;
+      }
+      document.getElementById("cd-d").textContent = Math.floor(diff / 86400000);
+      document.getElementById("cd-h").textContent = Math.floor((diff % 86400000) / 3600000);
+      document.getElementById("cd-m").textContent = Math.floor((diff % 3600000) / 60000);
+      document.getElementById("cd-s").textContent = Math.floor((diff % 60000) / 1000);
+    }
+    tickCountdown();
+    setInterval(tickCountdown, 1000);
+  }
+
+  // ── Login ──────────────────────────────────────────────────────────────────
+  window.chooseUser = async function(name) {
+    ME    = name;
+    OTHER = name === "Freddy" ? "Sarah" : "Freddy";
+
+    document.getElementById("login-screen").style.display = "none";
+    document.getElementById("locating").style.display     = "flex";
+
+    // Try Firebase first
+    const firebaseOk = await tryInitFirebase();
+
+    // Detect location
+    const detectedTz = await detectMyLocation();
+    myTz    = detectedTz || Intl.DateTimeFormat().resolvedOptions().timeZone || DEFAULTS[ME];
+    otherTz = DEFAULTS[OTHER];
+
+    // Push presence if Firebase is live
+    if (firebaseOk && window._pushPresence) window._pushPresence(myTz);
+
+    startUI(!firebaseOk);
+  };
+</script>
+
+</body>
+</html>
