@@ -718,8 +718,8 @@
   // Map
   function initMap(myCo,oCo,myL,oL){
     if(mapInstance){mapInstance.remove();mapInstance=null;}
-    mapInstance=L.map("map",{zoomControl:false,attributionControl:true}).setView([(myCo[0]+oCo[0])/2,(myCo[1]+oCo[1])/2],2);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"© OpenStreetMap",maxZoom:18}).addTo(mapInstance);
+    mapInstance=L.map("map",{zoomControl:false,attributionControl:true,minZoom:2,maxBounds:[[-90,-180],[90,180]],maxBoundsViscosity:1.0}).setView([(myCo[0]+oCo[0])/2,(myCo[1]+oCo[1])/2],2);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"© OpenStreetMap",maxZoom:18,noWrap:true}).addTo(mapInstance);
     const mkI=color=>L.divIcon({className:"",html:`<div style="background:${color};width:12px;height:12px;border-radius:50%;border:2.5px solid white;box-shadow:0 1px 4px rgba(0,0,0,.3)"></div>`,iconSize:[12,12],iconAnchor:[6,6]});
     myMarker=L.marker(myCo,{icon:mkI("#c4856a")}).addTo(mapInstance).bindTooltip(myL,{permanent:true,direction:"top",offset:[0,-10],className:"map-tooltip"});
     otherMarker=L.marker(oCo,{icon:mkI("#8aabaa")}).addTo(mapInstance).bindTooltip(oL,{permanent:true,direction:"top",offset:[0,-10],className:"map-tooltip"});
@@ -1123,31 +1123,36 @@
     const centerLat = (Math.min(...lats)+Math.max(...lats))/2;
     const centerLng = (Math.min(...lngs)+Math.max(...lngs))/2;
 
-    placesMapInstance = L.map("places-map", {zoomControl:true, attributionControl:true})
+    placesMapInstance = L.map("places-map", {zoomControl:true, attributionControl:true, minZoom:2, maxBounds:[[-90,-180],[90,180]], maxBoundsViscosity:1.0})
       .setView([centerLat, centerLng], 2);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution:"© OpenStreetMap", maxZoom:18
+      attribution:"© OpenStreetMap", maxZoom:18, noWrap:true
     }).addTo(placesMapInstance);
 
     // Draw pins
     groups.forEach(g => {
       const isMulti = g.items.length > 1;
-      const color = isMulti ? "#c4856a" : "#c4856a";
-      const size = isMulti ? 16 : 12;
+      const color = "#8aabaa";
+      const size = isMulti ? 34 : 28;
 
       const badgeHTML = isMulti
-        ? `<div style="position:absolute;top:-6px;right:-6px;background:white;border:1.5px solid ${color};border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:bold;color:${color};font-family:Jost,sans-serif;">${g.items.length}</div>`
+        ? `<div style="position:absolute;top:-5px;right:-5px;background:white;border:1.5px solid ${color};border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:bold;color:${color};font-family:Jost,sans-serif;">${g.items.length}</div>`
         : "";
+
+      // Heart SVG path scaled to size
+      const heartPath = `M${size/2} ${size*0.88} S${size*0.07} ${size*0.58} ${size*0.07} ${size*0.33} a${size*0.22} ${size*0.22} 0 0 1 ${size*0.43} ${size*0.12} a${size*0.22} ${size*0.22} 0 0 1 ${size*0.43} -${size*0.12} c0 ${size*0.25} -${size*0.43} ${size*0.55} -${size*0.43} ${size*0.55}z`;
 
       const icon = L.divIcon({
         className: "",
         html: `<div style="position:relative;width:${size}px;height:${size}px;">
-          <div style="background:${color};width:${size}px;height:${size}px;border-radius:50%;border:2.5px solid white;box-shadow:0 1px 4px rgba(0,0,0,.25);"></div>
+          <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M${size/2} ${size*0.9} C${size/2} ${size*0.9} ${size*0.06} ${size*0.58} ${size*0.06} ${size*0.33} a${size*0.22} ${size*0.22} 0 0 1 ${size*0.44} -${size*0.05} a${size*0.22} ${size*0.22} 0 0 1 ${size*0.44} ${size*0.05} C${size*0.94} ${size*0.58} ${size/2} ${size*0.9} ${size/2} ${size*0.9}z" fill="${color}"/>
+          </svg>
           ${badgeHTML}
         </div>`,
         iconSize: [size+10, size+10],
-        iconAnchor: [size/2+5, size/2+5]
+        iconAnchor: [size/2+5, size*0.9+5]
       });
 
       const marker = L.marker([g.lat, g.lng], {icon})
