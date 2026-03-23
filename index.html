@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Freddy & Sarah</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <style>
     :root {
@@ -76,13 +78,8 @@
     }
     .login-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
 
-    .locating-text {
-      font-size: .82rem;
-      color: var(--muted);
-      letter-spacing: .1em;
-    }
+    .locating-text { font-size: .82rem; color: var(--muted); letter-spacing: .1em; }
 
-    /* ── Demo banner ── */
     #demo-banner {
       background: #f0f7f6;
       border: 1px solid #b8d8d6;
@@ -93,21 +90,7 @@
       margin-bottom: 1.75rem;
       text-align: center;
       display: none;
-    visibility: hidden;
     }
-
-    /* ── Firebase banner ── */
-    #config-banner {
-      background: #fef9ec;
-      border: 1px solid #f0d070;
-      border-radius: 10px;
-      padding: .7rem 1.1rem;
-      font-size: .8rem;
-      color: #7a6020;
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-    #config-banner a { color: #8a6010; }
 
     /* ── Main ── */
     #main { display: none; animation: fadeUp .5s ease both; }
@@ -141,6 +124,75 @@
       margin-bottom: 1.25rem;
     }
 
+    /* ── Map ── */
+    .map-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    #map {
+      height: 220px;
+      width: 100%;
+      z-index: 1;
+    }
+
+    /* Leaflet tooltip styling */
+    .map-tooltip {
+      background: white !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 6px !important;
+      padding: 3px 8px !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 11px !important;
+      color: #2d2620 !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08) !important;
+      white-space: nowrap;
+    }
+    .map-tooltip::before { display: none !important; }
+
+    .leaflet-control-attribution {
+      font-size: 9px !important;
+      background: rgba(255,255,255,0.6) !important;
+    }
+
+    /* ── Weather ── */
+    .weather-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--border);
+    }
+
+    .weather-cell { padding: 1.1rem 1.25rem; }
+    .weather-cell:first-child { border-right: 1px solid var(--border); }
+
+    .weather-city {
+      font-size: .68rem;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: .5rem;
+    }
+
+    .weather-main {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: .3rem;
+    }
+
+    .weather-temp {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .weather-desc { font-size: .78rem; color: var(--muted); }
+    .weather-details { font-size: .72rem; color: var(--muted); margin-top: .2rem; }
+
     /* ── Clocks ── */
     .clocks { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
@@ -152,22 +204,8 @@
     }
     .clock-card.mine { border-color: #d8ccc6; }
 
-    .clock-city {
-      font-size: .7rem;
-      letter-spacing: .13em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: .35rem;
-    }
-
-    .clock-time {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.4rem;
-      font-weight: 300;
-      color: var(--text);
-      line-height: 1;
-    }
-
+    .clock-city { font-size: .7rem; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); margin-bottom: .35rem; }
+    .clock-time { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 300; color: var(--text); line-height: 1; }
     .clock-date { font-size: .78rem; color: var(--muted); margin-top: .3rem; }
 
     /* ── Stats ── */
@@ -180,34 +218,33 @@
       padding: 1.5rem 1.25rem;
     }
 
-    .stat-label {
-      font-size: .7rem;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: var(--muted);
+    .stat-label { font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; }
+    .stat-value { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; font-weight: 300; color: var(--accent); line-height: 1; }
+    .stat-unit { font-size: .78rem; color: var(--muted); margin-top: .25rem; }
+
+    .stat-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       margin-bottom: .5rem;
     }
 
-    .stat-value {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.8rem;
-      font-weight: 300;
-      color: var(--accent);
-      line-height: 1;
+    .meetup-date-input {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .25rem .5rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .7rem;
+      color: var(--muted);
+      background: var(--bg);
+      outline: none;
+      cursor: pointer;
     }
-
-    .stat-unit { font-size: .78rem; color: var(--muted); margin-top: .25rem; }
+    .meetup-date-input:focus { border-color: var(--accent2); }
 
     .cd-row { display: flex; gap: 1.2rem; align-items: baseline; }
     .cd-cell { text-align: left; }
-    .cd-num {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.2rem;
-      font-weight: 300;
-      color: var(--accent2);
-      display: block;
-      line-height: 1;
-    }
+    .cd-num { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 300; color: var(--accent2); display: block; line-height: 1; }
     .cd-lbl { font-size: .65rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
     .cd-caption { font-size: .78rem; color: var(--muted); margin-top: .4rem; }
 
@@ -237,7 +274,6 @@
     .notes-compose textarea:focus { border-color: var(--accent); }
 
     .compose-footer { display: flex; align-items: center; gap: .75rem; margin-top: .75rem; }
-
     .author-tag { font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 
     .send-btn {
@@ -270,9 +306,12 @@
       font-size: 1rem;
       color: var(--text);
       line-height: 1.55;
+      margin-bottom: .6rem;
     }
 
-    .note-author { display: block; margin-top: .5rem; font-size: .7rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); }
+    .note-footer { display: flex; justify-content: space-between; align-items: center; }
+    .note-author { font-size: .7rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); }
+    .note-time { font-size: .7rem; color: var(--muted); }
 
     .empty { color: var(--muted); font-size: .9rem; padding: 1rem 0; font-style: italic; }
 
@@ -284,22 +323,17 @@
     }
 
     @media (max-width: 480px) {
-      .clocks, .stats { grid-template-columns: 1fr; }
+      .clocks, .stats, .weather-row { grid-template-columns: 1fr; }
+      .weather-cell:first-child { border-right: none; border-bottom: 1px solid var(--border); }
       .login-btns { flex-direction: column; }
+      .stat-card-header { flex-direction: column; align-items: flex-start; gap: .4rem; }
     }
   </style>
 </head>
 <body>
 <div class="page">
 
-  <div id="config-banner" style="display:none">
-    ⚙️ Replace the Firebase config in the script to enable live sync.
-    <a href="https://console.firebase.google.com/" target="_blank">Firebase Console →</a>
-  </div>
-
-  <div id="demo-banner">
-    Running in demo mode — notes are local to this session only.
-  </div>
+  <div id="demo-banner">Running in demo mode — notes are local to this session only.</div>
 
   <!-- Login -->
   <div id="login-screen">
@@ -320,11 +354,41 @@
 
   <!-- Main -->
   <div id="main">
+
     <header>
       <p class="eyebrow">a little corner for</p>
       <h1>Freddy <em>&</em> Sarah</h1>
     </header>
 
+    <!-- Where we are -->
+    <p class="section-label">Where we are</p>
+    <div class="map-card">
+      <div id="map"></div>
+      <div class="weather-row">
+        <div class="weather-cell">
+          <p class="weather-city" id="my-weather-city">—</p>
+          <div class="weather-main">
+            <span id="my-weather-icon" style="font-size:1.4rem;line-height:1;">—</span>
+            <span class="weather-temp" id="my-weather-temp">—</span>
+            <span class="weather-desc" id="my-weather-desc"></span>
+          </div>
+          <p class="weather-details" id="my-weather-details"></p>
+        </div>
+        <div class="weather-cell">
+          <p class="weather-city" id="other-weather-city">—</p>
+          <div class="weather-main">
+            <span id="other-weather-icon" style="font-size:1.4rem;line-height:1;">—</span>
+            <span class="weather-temp" id="other-weather-temp">—</span>
+            <span class="weather-desc" id="other-weather-desc"></span>
+          </div>
+          <p class="weather-details" id="other-weather-details"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Right now -->
     <p class="section-label">Right now</p>
     <div class="clocks">
       <div class="clock-card mine">
@@ -341,6 +405,7 @@
 
     <div class="divider"></div>
 
+    <!-- Us -->
     <p class="section-label">Us</p>
     <div class="stats">
       <div class="stat-card">
@@ -349,19 +414,23 @@
         <p class="stat-unit">days</p>
       </div>
       <div class="stat-card">
-        <p class="stat-label">Next meetup</p>
+        <div class="stat-card-header">
+          <p class="stat-label" style="margin-bottom:0;">Next meetup</p>
+          <input type="date" id="meetup-date-input" class="meetup-date-input" value="2026-07-04" onchange="updateMeetupDate(this.value)"/>
+        </div>
         <div class="cd-row">
           <div class="cd-cell"><span class="cd-num" id="cd-d">--</span><span class="cd-lbl">d</span></div>
           <div class="cd-cell"><span class="cd-num" id="cd-h">--</span><span class="cd-lbl">h</span></div>
           <div class="cd-cell"><span class="cd-num" id="cd-m">--</span><span class="cd-lbl">m</span></div>
           <div class="cd-cell"><span class="cd-num" id="cd-s">--</span><span class="cd-lbl">s</span></div>
         </div>
-        <p class="cd-caption">4 July 2026</p>
+        <p class="cd-caption" id="cd-caption">4 July 2026</p>
       </div>
     </div>
 
     <div class="divider"></div>
 
+    <!-- Notes -->
     <p class="section-label">Notes to each other</p>
     <div class="notes-compose">
       <textarea id="note-input" rows="3" placeholder="Write something…"></textarea>
@@ -378,7 +447,7 @@
 </div>
 
 <script type="module">
-  // ── Firebase config — replace to enable live sync ──────────────────────────
+  // ── Firebase config ────────────────────────────────────────────────────────
   const FIREBASE_CONFIG = {
     apiKey:            "AIzaSyAz5CvOXduYUAh2_Zk2L-8PUEy4KfQjeCo",
     authDomain:        "ldrcounter.firebaseapp.com",
@@ -390,48 +459,172 @@
     measurementId:     "G-XC5ZCNCXLG"
   };
 
-  const DEFAULTS  = { Freddy: "Europe/Berlin", Sarah: "Asia/Taipei" };
-  const IS_CONFIGURED = !FIREBASE_CONFIG.apiKey.startsWith("YOUR");
+  // ── Defaults ───────────────────────────────────────────────────────────────
+  const DEFAULTS       = { Freddy: "Europe/Berlin",  Sarah: "Asia/Taipei" };
+  const DEFAULT_CITIES = { Freddy: "Bonn",           Sarah: "Kaohsiung" };
+  const DEFAULT_COORDS = { Freddy: [50.7374, 7.0982], Sarah: [22.6273, 120.3014] };
 
+  // ── State ──────────────────────────────────────────────────────────────────
   let ME = null, OTHER = null;
-  let myTz = null, otherTz = null;
-  let myCity = null, otherCity = null;
-  const DEFAULT_CITIES = { Freddy: "Bonn", Sarah: "Kaohsiung" };
+  let myTz = null,    otherTz = null;
+  let myCity = null,  otherCity = null;
+  let myCoords = null, otherCoords = null;
   let db = null, dbPush = null, dbSet = null, dbRef = null;
-
-  // ── Demo-mode note store ───────────────────────────────────────────────────
   let localNotes = [];
+  let meetupDate = new Date("2026-07-04T00:00:00+02:00");
+  let countdownInterval = null;
+  let mapInstance = null, myMarker = null, otherMarker = null, connectLine = null;
+  let otherWeatherFetched = false;
 
-  // ── Try to init Firebase ───────────────────────────────────────────────────
-  async function tryInitFirebase() {
-    if (!IS_CONFIGURED) return false;
+  // ── Weather helpers ────────────────────────────────────────────────────────
+  function weatherIcon(code) {
+    if (code === 0)  return "☀️";
+    if (code <= 2)   return "⛅";
+    if (code <= 3)   return "☁️";
+    if (code <= 48)  return "🌫️";
+    if (code <= 57)  return "🌦️";
+    if (code <= 67)  return "🌧️";
+    if (code <= 77)  return "❄️";
+    if (code <= 82)  return "🌧️";
+    if (code <= 86)  return "🌨️";
+    if (code <= 99)  return "⛈️";
+    return "🌡️";
+  }
+
+  function weatherDesc(code) {
+    if (code === 0)  return "Clear sky";
+    if (code === 1)  return "Mainly clear";
+    if (code === 2)  return "Partly cloudy";
+    if (code === 3)  return "Overcast";
+    if (code <= 48)  return "Foggy";
+    if (code <= 57)  return "Drizzle";
+    if (code <= 67)  return "Rain";
+    if (code <= 77)  return "Snow";
+    if (code <= 82)  return "Rain showers";
+    if (code <= 86)  return "Snow showers";
+    if (code <= 99)  return "Thunderstorm";
+    return "Unknown";
+  }
+
+  async function fetchWeather(lat, lng, prefix) {
     try {
-      const { initializeApp }                      = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
-      const { getDatabase, ref, set, push, onValue, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,weathercode,windspeed_10m&daily=temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=1`;
+      const r = await fetch(url);
+      const j = await r.json();
+      const temp = Math.round(j.current.temperature_2m);
+      const code = j.current.weathercode;
+      const wind = Math.round(j.current.windspeed_10m);
+      const high = Math.round(j.daily.temperature_2m_max[0]);
+      const low  = Math.round(j.daily.temperature_2m_min[0]);
+      document.getElementById(`${prefix}-weather-icon`).textContent    = weatherIcon(code);
+      document.getElementById(`${prefix}-weather-temp`).textContent    = `${temp}°`;
+      document.getElementById(`${prefix}-weather-desc`).textContent    = weatherDesc(code);
+      document.getElementById(`${prefix}-weather-details`).textContent = `H ${high}°  L ${low}°  Wind ${wind} km/h`;
+    } catch {
+      document.getElementById(`${prefix}-weather-temp`).textContent = "—";
+    }
+  }
+
+  // ── Map ────────────────────────────────────────────────────────────────────
+  function initMap(myCo, otherCo, myLabel, otherLabel) {
+    if (mapInstance) { mapInstance.remove(); mapInstance = null; }
+
+    mapInstance = L.map("map", { zoomControl: false, attributionControl: true })
+      .setView([(myCo[0]+otherCo[0])/2, (myCo[1]+otherCo[1])/2], 2);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap", maxZoom: 18
+    }).addTo(mapInstance);
+
+    const makeIcon = (color) => L.divIcon({
+      className: "",
+      html: `<div style="background:${color};width:12px;height:12px;border-radius:50%;border:2.5px solid white;box-shadow:0 1px 4px rgba(0,0,0,.3)"></div>`,
+      iconSize: [12,12], iconAnchor: [6,6]
+    });
+
+    myMarker = L.marker(myCo, { icon: makeIcon("#c4856a") })
+      .addTo(mapInstance)
+      .bindTooltip(myLabel, { permanent: true, direction: "top", offset: [0,-10], className: "map-tooltip" });
+
+    otherMarker = L.marker(otherCo, { icon: makeIcon("#8aabaa") })
+      .addTo(mapInstance)
+      .bindTooltip(otherLabel, { permanent: true, direction: "top", offset: [0,-10], className: "map-tooltip" });
+
+    connectLine = L.polyline([myCo, otherCo], {
+      color: "#c4856a", weight: 1.5, dashArray: "6,5", opacity: 0.65
+    }).addTo(mapInstance);
+
+    mapInstance.fitBounds(L.latLngBounds([myCo, otherCo]).pad(0.3));
+  }
+
+  function updateOtherMapMarker(coords, label) {
+    if (!mapInstance) return;
+    otherMarker.setLatLng(coords);
+    otherMarker.setTooltipContent(label);
+    connectLine.setLatLngs([myCoords, coords]);
+    mapInstance.fitBounds(L.latLngBounds([myCoords, coords]).pad(0.3));
+  }
+
+  // ── Firebase ───────────────────────────────────────────────────────────────
+  async function tryInitFirebase() {
+    try {
+      const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+      const { getDatabase, ref, set, push, onValue, serverTimestamp } =
+        await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+
       const app = initializeApp(FIREBASE_CONFIG);
-      db      = getDatabase(app);
-      dbRef   = ref;
-      dbSet   = set;
-      dbPush  = push;
-      // Wire up live notes
+      db = getDatabase(app);
+      dbRef = ref; dbSet = set; dbPush = push;
+
+      // Live notes
       onValue(ref(db, "notes"), (snap) => {
         const data = snap.val();
         renderNotes(data ? Object.values(data).reverse() : []);
       });
-      // Wire up other presence
-      function watchOther() {
+
+      // Meetup date sync
+      onValue(ref(db, "meetupDate"), (snap) => {
+        const val = snap.val();
+        if (val) {
+          meetupDate = new Date(val);
+          const inputVal = val.substring(0, 10);
+          document.getElementById("meetup-date-input").value = inputVal;
+          updateCdCaption(meetupDate);
+          startCountdown();
+        }
+      });
+
+      // Other person's presence
+      window._watchOther = () => {
         onValue(ref(db, `presence/${OTHER}`), (snap) => {
           const data = snap.val();
-          otherTz = (data && data.timezone) ? data.timezone : DEFAULTS[OTHER];
-          otherCity = (data && data.city) ? data.city : DEFAULT_CITIES[OTHER];
-          document.getElementById("other-city").textContent = `${OTHER} · ${otherCity}`;
+          otherTz     = data?.timezone || DEFAULTS[OTHER];
+          otherCity   = data?.city     || DEFAULT_CITIES[OTHER];
+          const newCoords = (data?.lat && data?.lng) ? [data.lat, data.lng] : DEFAULT_COORDS[OTHER];
+          const coordsChanged = !otherCoords ||
+            Math.abs(newCoords[0] - otherCoords[0]) > 0.01 ||
+            Math.abs(newCoords[1] - otherCoords[1]) > 0.01;
+
+          otherCoords = newCoords;
+
+          // Update labels
+          const label = `${OTHER} · ${otherCity}`;
+          document.getElementById("other-city").textContent         = label;
+          document.getElementById("other-weather-city").textContent = label;
+
+          // Update map marker
+          if (mapInstance) updateOtherMapMarker(otherCoords, label);
+
+          // Re-fetch weather only if location changed
+          if (coordsChanged) fetchWeather(otherCoords[0], otherCoords[1], "other");
         });
-      }
-      window._watchOther = watchOther;
-      // Push my presence
-      window._pushPresence = (tz, city) => {
-        set(ref(db, `presence/${ME}`), { timezone: tz, city: city, updatedAt: serverTimestamp() });
       };
+
+      // Push my presence
+      window._pushPresence = (tz, city, lat, lng) => {
+        set(ref(db, `presence/${ME}`), { timezone: tz, city, lat, lng, updatedAt: serverTimestamp() });
+      };
+
       return true;
     } catch (e) {
       console.warn("Firebase init failed, using demo mode:", e);
@@ -439,7 +632,7 @@
     }
   }
 
-  // ── Timezone from coords ───────────────────────────────────────────────────
+  // ── Location detection ─────────────────────────────────────────────────────
   async function tzFromCoords(lat, lng) {
     try {
       const r = await fetch(`https://timeapi.io/api/timezone/coordinate?latitude=${lat}&longitude=${lng}`);
@@ -458,31 +651,40 @@
 
   async function detectMyLocation() {
     return new Promise((resolve) => {
-      if (!navigator.geolocation) { resolve({ tz: null, city: null }); return; }
+      if (!navigator.geolocation) { resolve({ tz: null, city: null, lat: null, lng: null }); return; }
       navigator.geolocation.getCurrentPosition(
-        async (pos) => {
-          const { latitude: lat, longitude: lng } = pos.coords;
+        async ({ coords: { latitude: lat, longitude: lng } }) => {
           const [tz, city] = await Promise.all([tzFromCoords(lat, lng), cityFromCoords(lat, lng)]);
-          resolve({ tz, city });
+          resolve({ tz, city, lat, lng });
         },
-        () => resolve({ tz: null, city: null }),
+        () => resolve({ tz: null, city: null, lat: null, lng: null }),
         { timeout: 8000 }
       );
     });
   }
 
-  // ── Notes rendering ────────────────────────────────────────────────────────
+  // ── Notes ──────────────────────────────────────────────────────────────────
+  function fmtTimestamp(ts) {
+    if (!ts) return "";
+    const d   = new Date(ts);
+    const pad = (n) => String(n).padStart(2, "0");
+    return `${pad(d.getDate())}.${pad(d.getMonth()+1)}.${String(d.getFullYear()).slice(2)} · ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
   function renderNotes(notes) {
     const wall = document.getElementById("notes-wall");
-    if (!notes.length) {
-      wall.innerHTML = `<p class="empty">No notes yet.</p>`;
-      return;
-    }
+    if (!notes.length) { wall.innerHTML = `<p class="empty">No notes yet.</p>`; return; }
     wall.innerHTML = "";
     notes.forEach(note => {
       const card = document.createElement("div");
       card.className = "note-card";
-      card.innerHTML = `<p class="note-text">${note.text}</p><span class="note-author">${note.author}</span>`;
+      const ts = note.time ? `<span class="note-time">${fmtTimestamp(note.time)}</span>` : "";
+      card.innerHTML = `
+        <p class="note-text">${note.text}</p>
+        <div class="note-footer">
+          <span class="note-author">${note.author}</span>
+          ${ts}
+        </div>`;
       wall.appendChild(card);
     });
   }
@@ -494,18 +696,44 @@
     if (db && dbPush) {
       dbPush(dbRef(db, "notes"), note);
     } else {
-      // Demo mode — local only
       localNotes.unshift(note);
       renderNotes(localNotes);
     }
     document.getElementById("note-input").value = "";
   };
 
-  // ── Helpers ────────────────────────────────────────────────────────────────
-  function cityLabel(name, city, tz) {
-    const label = city || (tz ? tz.split("/").pop().replace(/_/g, " ") : null);
-    return label ? `${name} · ${label}` : name;
+  // ── Meetup date ────────────────────────────────────────────────────────────
+  function updateCdCaption(date) {
+    document.getElementById("cd-caption").textContent =
+      date.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
   }
+
+  window.updateMeetupDate = function(val) {
+    meetupDate = new Date(val + "T00:00:00");
+    updateCdCaption(meetupDate);
+    startCountdown();
+    if (db && dbSet) dbSet(dbRef(db, "meetupDate"), val + "T00:00:00");
+  };
+
+  // ── Countdown ─────────────────────────────────────────────────────────────
+  function startCountdown() {
+    if (countdownInterval) clearInterval(countdownInterval);
+    function tick() {
+      const diff = meetupDate - Date.now();
+      if (diff <= 0) {
+        ["cd-d","cd-h","cd-m","cd-s"].forEach(id => document.getElementById(id).textContent = "0");
+        return;
+      }
+      document.getElementById("cd-d").textContent = Math.floor(diff / 86400000);
+      document.getElementById("cd-h").textContent = Math.floor((diff % 86400000) / 3600000);
+      document.getElementById("cd-m").textContent = Math.floor((diff % 3600000) / 60000);
+      document.getElementById("cd-s").textContent = Math.floor((diff % 60000) / 1000);
+    }
+    tick();
+    countdownInterval = setInterval(tick, 1000);
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
   function fmtTime(tz) {
     return new Date().toLocaleTimeString("en-GB", { timeZone: tz, hour: "2-digit", minute: "2-digit", second: "2-digit" });
   }
@@ -517,14 +745,26 @@
   function startUI(isDemo) {
     document.getElementById("login-screen").style.display = "none";
     document.getElementById("locating").style.display     = "none";
-    document.getElementById("config-banner").style.display = "none";
-    document.getElementById("demo-banner").style.display   = isDemo ? "block" : "none";
-    document.getElementById("main").style.display          = "block";
+    document.getElementById("demo-banner").style.display  = isDemo ? "block" : "none";
+    document.getElementById("main").style.display         = "block";
 
-    document.getElementById("my-city").textContent    = cityLabel(ME, myCity, myTz);
-    document.getElementById("other-city").textContent = cityLabel(OTHER, otherCity || DEFAULT_CITIES[OTHER], otherTz || DEFAULTS[OTHER]);
-    document.getElementById("note-author-name").textContent = ME;
+    const myLabel    = `${ME} · ${myCity}`;
+    const otherLabel = `${OTHER} · ${otherCity}`;
 
+    document.getElementById("my-city").textContent            = myLabel;
+    document.getElementById("other-city").textContent         = otherLabel;
+    document.getElementById("my-weather-city").textContent    = myLabel;
+    document.getElementById("other-weather-city").textContent = otherLabel;
+    document.getElementById("note-author-name").textContent   = ME;
+
+    // Map (init after main is visible so dimensions are correct)
+    setTimeout(() => initMap(myCoords, otherCoords, myLabel, otherLabel), 50);
+
+    // Weather
+    fetchWeather(myCoords[0], myCoords[1], "my");
+    fetchWeather(otherCoords[0], otherCoords[1], "other");
+
+    // Watch other person's live presence
     if (window._watchOther) window._watchOther();
 
     // Clocks
@@ -543,20 +783,8 @@
     document.getElementById("days-together").textContent = Math.floor((Date.now() - start) / 86400000) + 1;
 
     // Countdown
-    const meetup = new Date("2026-07-04T00:00:00+02:00");
-    function tickCountdown() {
-      const diff = meetup - Date.now();
-      if (diff <= 0) {
-        ["cd-d","cd-h","cd-m","cd-s"].forEach(id => document.getElementById(id).textContent = "0");
-        return;
-      }
-      document.getElementById("cd-d").textContent = Math.floor(diff / 86400000);
-      document.getElementById("cd-h").textContent = Math.floor((diff % 86400000) / 3600000);
-      document.getElementById("cd-m").textContent = Math.floor((diff % 3600000) / 60000);
-      document.getElementById("cd-s").textContent = Math.floor((diff % 60000) / 1000);
-    }
-    tickCountdown();
-    setInterval(tickCountdown, 1000);
+    updateCdCaption(meetupDate);
+    startCountdown();
   }
 
   // ── Login ──────────────────────────────────────────────────────────────────
@@ -567,18 +795,20 @@
     document.getElementById("login-screen").style.display = "none";
     document.getElementById("locating").style.display     = "flex";
 
-    // Try Firebase first
     const firebaseOk = await tryInitFirebase();
+    const { tz, city, lat, lng } = await detectMyLocation();
 
-    // Detect location
-    const { tz: detectedTz, city: detectedCity } = await detectMyLocation();
-    myTz    = detectedTz || Intl.DateTimeFormat().resolvedOptions().timeZone || DEFAULTS[ME];
-    myCity  = detectedCity || DEFAULT_CITIES[ME];
-    otherTz = DEFAULTS[OTHER];
-    otherCity = DEFAULT_CITIES[OTHER];
+    myTz     = tz   || Intl.DateTimeFormat().resolvedOptions().timeZone || DEFAULTS[ME];
+    myCity   = city || DEFAULT_CITIES[ME];
+    myCoords = (lat && lng) ? [lat, lng] : DEFAULT_COORDS[ME];
 
-    // Push presence if Firebase is live
-    if (firebaseOk && window._pushPresence) window._pushPresence(myTz, myCity);
+    otherTz     = DEFAULTS[OTHER];
+    otherCity   = DEFAULT_CITIES[OTHER];
+    otherCoords = DEFAULT_COORDS[OTHER];
+
+    if (firebaseOk && window._pushPresence) {
+      window._pushPresence(myTz, myCity, myCoords[0], myCoords[1]);
+    }
 
     startUI(!firebaseOk);
   };
