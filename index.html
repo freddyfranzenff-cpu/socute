@@ -154,6 +154,8 @@
     .m-note{font-size:.78rem;color:var(--muted);line-height:1.4}
     .m-footer{display:flex;align-items:center;justify-content:space-between;margin-top:.5rem}
     .m-author{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+    .m-location{font-size:.68rem;color:var(--muted);display:flex;align-items:center;gap:.25rem;margin-top:.25rem}
+    .m-location svg{flex-shrink:0;opacity:.5}
     .m-tag{display:inline-block;font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(196,133,106,.25);border-radius:20px;padding:.15rem .55rem}
     .m-tag.b{color:var(--accent2);border-color:rgba(138,171,170,.25)}
     .m-tag.gold{color:var(--gold);border-color:rgba(201,169,110,.25)}
@@ -417,6 +419,7 @@
     <div class="add-form" id="add-milestone-form">
       <input type="text" id="m-title-input" placeholder="What happened?"/>
       <input type="text" id="m-note-input" placeholder="A little note… (optional)"/>
+      <input type="text" id="m-location-input" placeholder="📍 Location (optional, e.g. Bonn, Germany)"/>
       <div class="add-form-row">
         <input type="date" id="m-date-input"/>
         <span style="font-size:.68rem;color:var(--muted);">→</span>
@@ -681,7 +684,8 @@
       const tc=TAG_CLS[item.tag]||"";
       const icon=TAG_ICONS[item.tag]||"";
       const dateStr=fmtMDateRange(item.date,item.endDate);
-      return`<div class="milestone"><div class="m-dot ${dc}"></div><div class="m-card${isFuture?" future-card":""}"><div class="m-top"><p class="m-title"><span class="m-icon">${icon}</span>${item.title}</p><span class="m-date-range">${dateStr}</span></div>${item.note?`<p class="m-note">${item.note}</p>`:""}<div class="m-footer">${item.tag?`<span class="m-tag ${tc}">${item.tag}</span>`:"<span></span>"}<div style="display:flex;align-items:center;gap:.4rem;"><span class="m-author">${item.addedBy||""}</span>${item._key?`<button class="m-edit" onclick="editMilestone('${item._key}')" title="Edit">✎</button><button class="m-delete" onclick="deleteMilestone('${item._key}')" title="Delete">✕</button>`:""}</div></div></div></div>`;
+      const locationHTML=item.location?`<p class="m-location"><svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 1a5 5 0 015 5c0 3.5-5 9-5 9S3 9.5 3 6a5 5 0 015-5z"/><circle cx="8" cy="6" r="1.8"/></svg>${item.locationDisplay||item.location}</p>`:"";
+      return`<div class="milestone"><div class="m-dot ${dc}"></div><div class="m-card${isFuture?" future-card":""}"><div class="m-top"><p class="m-title"><span class="m-icon">${icon}</span>${item.title}</p><span class="m-date-range">${dateStr}</span></div>${item.note?`<p class="m-note">${item.note}</p>`:""}${locationHTML}<div class="m-footer">${item.tag?`<span class="m-tag ${tc}">${item.tag}</span>`:"<span></span>"}<div style="display:flex;align-items:center;gap:.4rem;"><span class="m-author">${item.addedBy||""}</span>${item._key?`<button class="m-edit" onclick="editMilestone('${item._key}')" title="Edit">✎</button><button class="m-delete" onclick="deleteMilestone('${item._key}')" title="Delete">✕</button>`:""}</div></div></div></div>`;
     }).join("");
   }
   window.toggleAddForm=function(){
@@ -694,6 +698,7 @@
       document.getElementById("m-date-input").value=new Date().toISOString().split("T")[0];
       document.getElementById("m-enddate-input").value="";
       document.getElementById("m-tag-input").value="moment";
+      document.getElementById("m-location-input").value="";
       document.getElementById("m-save-btn").textContent="Save";
       document.getElementById("m-title-input").focus();
     }
@@ -708,6 +713,7 @@
       document.getElementById("m-date-input").value=item.date||"";
       document.getElementById("m-enddate-input").value=item.endDate||"";
       document.getElementById("m-tag-input").value=item.tag||"moment";
+      document.getElementById("m-location-input").value=item.location||"";
       document.getElementById("m-save-btn").textContent="Update";
       document.getElementById("m-title-input").focus();
       f.scrollIntoView({behavior:"smooth",block:"nearest"});
@@ -722,15 +728,35 @@
       if(item)loadIntoForm(item);
     }
   };
-  window.saveMilestone=function(){
+  async function geocodeLocation(locationStr){
+    if(!locationStr)return{lat:null,lng:null};
+    try{
+      const r=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(locationStr)}&format=json&limit=1`);
+      const j=await r.json();
+      if(j&&j.length>0)return{lat:parseFloat(j[0].lat),lng:parseFloat(j[0].lon),displayName:j[0].display_name.split(",").slice(0,2).join(",").trim()};
+    }catch(e){console.warn("Geocode failed",e);}
+    return{lat:null,lng:null,displayName:locationStr};
+  }
+
+  window.saveMilestone=async function(){
     const title=document.getElementById("m-title-input").value.trim();
     const note=document.getElementById("m-note-input").value.trim();
     const date=document.getElementById("m-date-input").value;
     const endDate=document.getElementById("m-enddate-input").value;
     const tag=document.getElementById("m-tag-input").value;
+    const locationStr=document.getElementById("m-location-input").value.trim();
     if(!title||!date)return;
+    const btn=document.getElementById("m-save-btn");
+    btn.textContent="Saving…";
     const m={title,note,date,tag,addedBy:ME,time:Date.now()};
     if(endDate&&endDate!==date)m.endDate=endDate;
+    if(locationStr){
+      const geo=await geocodeLocation(locationStr);
+      m.location=locationStr;
+      if(geo.lat)m.lat=geo.lat;
+      if(geo.lng)m.lng=geo.lng;
+      if(geo.displayName)m.locationDisplay=geo.displayName;
+    }
     if(editingKey){
       if(db&&dbSet)dbSet(dbRef(db,`milestones/${editingKey}`),m);
       else{const idx=localMilestones.findIndex(x=>x._key===editingKey);if(idx>-1)localMilestones[idx]={...m,_key:editingKey};renderMilestones([...localMilestones]);}
@@ -742,8 +768,9 @@
     document.getElementById("m-title-input").value="";
     document.getElementById("m-note-input").value="";
     document.getElementById("m-enddate-input").value="";
+    document.getElementById("m-location-input").value="";
     document.getElementById("add-milestone-form").classList.remove("open");
-    document.getElementById("m-save-btn").textContent="Save";
+    btn.textContent="Save";
   };
   window.deleteMilestone=function(key){
     if(db&&dbRemove)dbRemove(dbRef(db,`milestones/${key}`));
