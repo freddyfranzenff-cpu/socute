@@ -158,6 +158,17 @@
     .m-tag.b{color:var(--accent2);border-color:rgba(138,171,170,.25)}
     .m-tag.gold{color:var(--gold);border-color:rgba(201,169,110,.25)}
     .m-delete{background:none;border:none;cursor:pointer;color:var(--muted);opacity:0;transition:opacity .2s;padding:2px;font-size:.75rem}
+    .m-edit{background:none;border:none;cursor:pointer;color:var(--muted);opacity:0;transition:opacity .2s;padding:2px;font-size:.75rem}
+    .m-card:hover .m-edit{opacity:.5}
+    .m-edit:hover{opacity:1!important;color:var(--accent2)}
+    .m-date-range{font-size:.65rem;color:var(--muted);white-space:nowrap;padding-top:3px}
+    .m-icon{font-size:.95rem;margin-right:.35rem;line-height:1}
+    .stat-card-small{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:1rem 1.4rem;position:relative;overflow:hidden}
+    .stat-card-small::before{content:'';position:absolute;top:0;left:1.4rem;right:1.4rem;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.3}
+    .home-stats-row{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
+    .sleep-indicator{display:inline-flex;align-items:center;gap:.3rem;font-size:.65rem;color:var(--muted);margin-top:.25rem}
+    .milestone-counter{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:1.25rem}
+    .milestone-counter span{color:var(--accent);font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:300}
     .m-card:hover .m-delete{opacity:.5}
     .m-delete:hover{opacity:1!important;color:#b04040}
     .year-marker{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);opacity:.7;margin-bottom:.75rem}
@@ -342,6 +353,18 @@
         <p class="cd-caption" id="cd-caption">4 July 2026</p>
       </div>
     </div>
+    <div class="home-stats-row" style="margin-top:1.25rem;">
+      <div class="stat-card-small">
+        <p class="card-label"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 8h12M8 2l6 6-6 6"/></svg>Distance apart</p>
+        <p class="stat-value" id="distance-apart" style="font-size:2rem;">—</p>
+        <p class="stat-unit">km</p>
+      </div>
+      <div class="stat-card-small">
+        <p class="card-label"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 2a6 6 0 100 12A6 6 0 008 2z"/><path d="M8 5v3l2 1.5"/></svg>Right now</p>
+        <p id="sleep-my" class="sleep-indicator">—</p>
+        <p id="sleep-other" class="sleep-indicator">—</p>
+      </div>
+    </div>
     <div class="orn-divider"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 2h10v9H3zM6 11l2 3 2-3" stroke="#c9a96e" stroke-width=".8"/></svg></div>
     <p class="section-heading">Recent notes</p>
     <div class="grid-2" id="home-notes-preview"><p class="empty">No notes yet.</p></div>
@@ -354,14 +377,17 @@
       <button class="milestone-add-btn" onclick="toggleAddForm()"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>Add milestone</button>
       <svg class="page-corner-orn" width="70" height="44" viewBox="0 0 70 44"><path d="M70 44 Q48 22 24 34 Q12 40 0 44" stroke="#c9a96e" stroke-width=".8" fill="none"/><circle cx="24" cy="34" r="3" fill="none" stroke="#c9a96e" stroke-width=".6"/><circle cx="48" cy="24" r="2" fill="none" stroke="#c9a96e" stroke-width=".6"/></svg>
     </div>
+    <p class="milestone-counter" id="milestone-counter">You have <span>0</span> milestones together</p>
     <div class="timeline" id="milestone-timeline"><p class="empty">No milestones yet. Add your first one!</p></div>
     <div class="add-form" id="add-milestone-form">
       <input type="text" id="m-title-input" placeholder="What happened?"/>
       <input type="text" id="m-note-input" placeholder="A little note… (optional)"/>
       <div class="add-form-row">
         <input type="date" id="m-date-input"/>
+        <span style="font-size:.68rem;color:var(--muted);">→</span>
+        <input type="date" id="m-enddate-input" title="End date (optional)"/>
         <select class="form-tag-select" id="m-tag-input"><option value="moment">Moment</option><option value="memory">Memory</option><option value="first">First</option><option value="milestone">Milestone</option><option value="future">Future ✈️</option></select>
-        <button class="form-save-btn" onclick="saveMilestone()">Save</button>
+        <button class="form-save-btn" id="m-save-btn" onclick="saveMilestone()">Save</button>
       </div>
     </div>
   </div>
@@ -535,22 +561,95 @@
   // Milestones
   const DOT_COLORS=["gold","b","a","b","a","gold"];
   const TAG_CLS={moment:"a",memory:"b",first:"gold",milestone:"b",future:""};
+  const TAG_ICONS={moment:"✨",memory:"📷",first:"🌱",milestone:"🏅",future:"✈️"};
+  let editingKey=null;
   function fmtMDate(s){if(!s)return"";const d=new Date(s+"T12:00:00"),p=n=>String(n).padStart(2,"0");return`${p(d.getDate())}.${p(d.getMonth()+1)}.${String(d.getFullYear()).slice(2)}`;}
+  function fmtMDateRange(s,e){if(!e||e===s)return fmtMDate(s);return`${fmtMDate(s)} – ${fmtMDate(e)}`;}
   function renderMilestones(items){
     const tl=document.getElementById("milestone-timeline");
-    if(!items.length){tl.innerHTML=`<p class="empty">No milestones yet. Add your first one!</p>`;return;}
+    const counter=document.getElementById("milestone-counter");
+    if(!items.length){tl.innerHTML=`<p class="empty">No milestones yet. Add your first one!</p>`;if(counter)counter.innerHTML=`You have <span>0</span> milestones together`;return;}
     items.sort((a,b)=>new Date(a.date)-new Date(b.date));
+    if(counter)counter.innerHTML=`You have <span>${items.length}</span> milestone${items.length!==1?"s":""} together`;
     let ci=0;
     tl.innerHTML=items.map(item=>{
       const isFuture=new Date(item.date)>new Date();
       const dc=isFuture?"future":DOT_COLORS[ci++%DOT_COLORS.length];
       const tc=TAG_CLS[item.tag]||"";
-      return`<div class="milestone"><div class="m-dot ${dc}"></div><div class="m-card${isFuture?" future-card":""}"><div class="m-top"><p class="m-title">${item.title}</p><span class="m-date">${fmtMDate(item.date)}</span></div>${item.note?`<p class="m-note">${item.note}</p>`:""}<div class="m-footer">${item.tag?`<span class="m-tag ${tc}">${item.tag}</span>`:"<span></span>"}<div style="display:flex;align-items:center;gap:.5rem;"><span class="m-author">${item.addedBy||""}</span>${item._key?`<button class="m-delete" onclick="deleteMilestone('${item._key}')">✕</button>`:""}</div></div></div></div>`;
+      const icon=TAG_ICONS[item.tag]||"";
+      const dateStr=fmtMDateRange(item.date,item.endDate);
+      return`<div class="milestone"><div class="m-dot ${dc}"></div><div class="m-card${isFuture?" future-card":""}"><div class="m-top"><p class="m-title"><span class="m-icon">${icon}</span>${item.title}</p><span class="m-date-range">${dateStr}</span></div>${item.note?`<p class="m-note">${item.note}</p>`:""}<div class="m-footer">${item.tag?`<span class="m-tag ${tc}">${item.tag}</span>`:"<span></span>"}<div style="display:flex;align-items:center;gap:.4rem;"><span class="m-author">${item.addedBy||""}</span>${item._key?`<button class="m-edit" onclick="editMilestone('${item._key}')" title="Edit">✎</button><button class="m-delete" onclick="deleteMilestone('${item._key}')" title="Delete">✕</button>`:""}</div></div></div></div>`;
     }).join("");
   }
-  window.toggleAddForm=function(){const f=document.getElementById("add-milestone-form");f.classList.toggle("open");if(f.classList.contains("open")){document.getElementById("m-date-input").value=new Date().toISOString().split("T")[0];document.getElementById("m-title-input").focus();}};
-  window.saveMilestone=function(){const title=document.getElementById("m-title-input").value.trim(),note=document.getElementById("m-note-input").value.trim(),date=document.getElementById("m-date-input").value,tag=document.getElementById("m-tag-input").value;if(!title||!date)return;const m={title,note,date,tag,addedBy:ME,time:Date.now()};if(db&&dbPush){dbPush(dbRef(db,"milestones"),m);}else{localMilestones.push({...m,_key:Date.now().toString()});renderMilestones([...localMilestones]);}document.getElementById("m-title-input").value="";document.getElementById("m-note-input").value="";document.getElementById("add-milestone-form").classList.remove("open");};
-  window.deleteMilestone=function(key){if(db&&dbRemove){dbRemove(dbRef(db,`milestones/${key}`));}else{localMilestones=localMilestones.filter(m=>m._key!==key);renderMilestones([...localMilestones]);}};
+  window.toggleAddForm=function(){
+    editingKey=null;
+    const f=document.getElementById("add-milestone-form");
+    f.classList.toggle("open");
+    if(f.classList.contains("open")){
+      document.getElementById("m-title-input").value="";
+      document.getElementById("m-note-input").value="";
+      document.getElementById("m-date-input").value=new Date().toISOString().split("T")[0];
+      document.getElementById("m-enddate-input").value="";
+      document.getElementById("m-tag-input").value="moment";
+      document.getElementById("m-save-btn").textContent="Save";
+      document.getElementById("m-title-input").focus();
+    }
+  };
+  window.editMilestone=function(key){
+    if(db&&window._fbOnValue){
+      window._fbOnValue(dbRef(db,`milestones/${key}`),snap=>{
+        const item=snap.val();if(!item)return;
+        editingKey=key;
+        const f=document.getElementById("add-milestone-form");
+        f.classList.add("open");
+        document.getElementById("m-title-input").value=item.title||"";
+        document.getElementById("m-note-input").value=item.note||"";
+        document.getElementById("m-date-input").value=item.date||"";
+        document.getElementById("m-enddate-input").value=item.endDate||"";
+        document.getElementById("m-tag-input").value=item.tag||"moment";
+        document.getElementById("m-save-btn").textContent="Update";
+        document.getElementById("m-title-input").focus();
+        f.scrollIntoView({behavior:"smooth",block:"nearest"});
+      },{onlyOnce:true});
+    } else {
+      const item=localMilestones.find(m=>m._key===key);if(!item)return;
+      editingKey=key;
+      const f=document.getElementById("add-milestone-form");f.classList.add("open");
+      document.getElementById("m-title-input").value=item.title||"";
+      document.getElementById("m-note-input").value=item.note||"";
+      document.getElementById("m-date-input").value=item.date||"";
+      document.getElementById("m-enddate-input").value=item.endDate||"";
+      document.getElementById("m-tag-input").value=item.tag||"moment";
+      document.getElementById("m-save-btn").textContent="Update";
+    }
+  };
+  window.saveMilestone=function(){
+    const title=document.getElementById("m-title-input").value.trim();
+    const note=document.getElementById("m-note-input").value.trim();
+    const date=document.getElementById("m-date-input").value;
+    const endDate=document.getElementById("m-enddate-input").value;
+    const tag=document.getElementById("m-tag-input").value;
+    if(!title||!date)return;
+    const m={title,note,date,tag,addedBy:ME,time:Date.now()};
+    if(endDate&&endDate!==date)m.endDate=endDate;
+    if(editingKey){
+      if(db&&dbSet)dbSet(dbRef(db,`milestones/${editingKey}`),m);
+      else{const idx=localMilestones.findIndex(x=>x._key===editingKey);if(idx>-1)localMilestones[idx]={...m,_key:editingKey};renderMilestones([...localMilestones]);}
+      editingKey=null;
+    } else {
+      if(db&&dbPush)dbPush(dbRef(db,"milestones"),m);
+      else{localMilestones.push({...m,_key:Date.now().toString()});renderMilestones([...localMilestones]);}
+    }
+    document.getElementById("m-title-input").value="";
+    document.getElementById("m-note-input").value="";
+    document.getElementById("m-enddate-input").value="";
+    document.getElementById("add-milestone-form").classList.remove("open");
+    document.getElementById("m-save-btn").textContent="Save";
+  };
+  window.deleteMilestone=function(key){
+    if(db&&dbRemove)dbRemove(dbRef(db,`milestones/${key}`));
+    else{localMilestones=localMilestones.filter(m=>m._key!==key);renderMilestones([...localMilestones]);}
+  };
 
   // Meetup
   function updateCdCaption(date){const s=date.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});document.getElementById("cd-caption").textContent=s;document.getElementById("scd-caption").textContent=s;}
@@ -563,6 +662,35 @@
   function greeting(name,tz){const h=parseInt(new Date().toLocaleTimeString("en-GB",{timeZone:tz,hour:"2-digit"}));const g=h<12?"Good morning":h<18?"Good afternoon":"Good evening";return`${g}, <em>${name}</em>`;}
   function fmtTime(tz){return new Date().toLocaleTimeString("en-GB",{timeZone:tz,hour:"2-digit",minute:"2-digit",second:"2-digit"});}
   function fmtDate(tz){return new Date().toLocaleDateString("en-GB",{timeZone:tz,weekday:"long",day:"numeric",month:"long"});}
+
+  // Distance between two coords (Haversine)
+  function calcDistance(lat1,lon1,lat2,lon2){
+    const R=6371,dLat=(lat2-lat1)*Math.PI/180,dLon=(lon2-lon1)*Math.PI/180;
+    const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+    return Math.round(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)));
+  }
+
+  function updateDistanceAndSleep(){
+    // Distance
+    if(myCoords&&otherCoords){
+      const km=calcDistance(myCoords[0],myCoords[1],otherCoords[0],otherCoords[1]);
+      const el=document.getElementById("distance-apart");
+      if(el)el.textContent=km.toLocaleString("en-GB");
+    }
+    // Sleep indicators
+    function sleepStatus(name,tz){
+      const h=parseInt(new Date().toLocaleTimeString("en-GB",{timeZone:tz,hour:"2-digit"}));
+      const isAsleep=h>=23||h<7;
+      const isMorning=h>=7&&h<9;
+      const icon=isAsleep?"🌙":isMorning?"🌅":"☀️";
+      const status=isAsleep?"probably asleep":isMorning?"just waking up":"awake";
+      return`${icon} ${name} is ${status}`;
+    }
+    const myEl=document.getElementById("sleep-my");
+    const otherEl=document.getElementById("sleep-other");
+    if(myEl)myEl.textContent=sleepStatus(ME,myTz);
+    if(otherEl)otherEl.textContent=sleepStatus(OTHER,otherTz||DEFAULTS[OTHER]);
+  }
 
   // Nav
   window.showPage=function(name){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));document.getElementById(`page-${name}`).classList.add("active");document.getElementById(`nav-${name}`).classList.add("active");closeSidebar();};
@@ -586,6 +714,8 @@
     fetchWeather(myCoords[0],myCoords[1],"my");
     fetchWeather(otherCoords[0],otherCoords[1],"other");
     if(window._watchOther)window._watchOther();
+    updateDistanceAndSleep();
+    setInterval(updateDistanceAndSleep, 60000);
     function tickClocks(){document.getElementById("my-time").textContent=fmtTime(myTz);document.getElementById("my-date").textContent=fmtDate(myTz);document.getElementById("other-time").textContent=fmtTime(otherTz||DEFAULTS[OTHER]);document.getElementById("other-date").textContent=fmtDate(otherTz||DEFAULTS[OTHER]);}
     tickClocks();setInterval(tickClocks,1000);
     const start=new Date("2026-01-01");document.getElementById("days-together").textContent=Math.floor((Date.now()-start)/86400000)+1;
