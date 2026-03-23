@@ -398,22 +398,11 @@
   function webAuthnSupported(){return!!(window.PublicKeyCredential&&navigator.credentials);}
 
   // Auth
-  window.startAuth=async function(name){
-    pendingUser=name;
-    document.getElementById("login-screen").style.display="none";
-    ["cb1","cb2","cb3","cb4"].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display="none";});
-    await tryInitFirebase();
-    const hasRecovery=await checkHasRecovery(name);
-    const hasCred=!!localStorage.getItem(`wc_${name}`);
-    document.getElementById("auth-screen").style.display="flex";
-    if(!hasRecovery){document.getElementById("auth-name-setup").textContent=name;showAuthStep("auth-setup");}
-    else if(hasCred&&webAuthnSupported()){document.getElementById("auth-name-bio").textContent=name;showAuthStep("auth-biometric");}
-    else{showAuthStep("auth-recovery");}
-  };
+  window.startAuth=async function(name){pendingUser=name;document.getElementById("login-screen").style.display="none";["cb1","cb2","cb3","cb4"].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display="none";});document.getElementById("locating").style.display="flex";await tryInitFirebase();const hasRecovery=await checkHasRecovery(name);const hasCred=!!localStorage.getItem(`wc_${name}`);document.getElementById("locating").style.display="none";document.getElementById("auth-screen").style.display="flex";if(!hasRecovery){document.getElementById("auth-name-setup").textContent=name;showAuthStep("auth-setup");}else if(hasCred&&webAuthnSupported()){document.getElementById("auth-name-bio").textContent=name;showAuthStep("auth-biometric");}else{showAuthStep("auth-recovery");}};
 
   async function checkHasRecovery(name){
     if(!db||!fbOnValue)return false;
-    return new Promise(r=>fbOnValue(dbRef(db,`auth/${name}/recoveryHash`),s=>{r(!!s.val());},{onlyOnce:true}));
+    return new Promise(r=>{const t=setTimeout(()=>r(false),5000);fbOnValue(dbRef(db,`auth/${name}/recoveryHash`),s=>{clearTimeout(t);r(!!s.val());},{onlyOnce:true});});
   }
 
   window.showAuthStep=function(id){
@@ -443,7 +432,7 @@
 
   async function getStoredHash(name){
     if(!db||!fbOnValue)return null;
-    return new Promise(r=>fbOnValue(dbRef(db,`auth/${name}/recoveryHash`),s=>{r(s.val());},{onlyOnce:true}));
+    return new Promise(r=>{const t=setTimeout(()=>r(null),5000);fbOnValue(dbRef(db,`auth/${name}/recoveryHash`),s=>{clearTimeout(t);r(s.val());},{onlyOnce:true});});
   }
 
   window.doSetup=async function(){
