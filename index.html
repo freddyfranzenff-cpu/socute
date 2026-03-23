@@ -596,31 +596,27 @@
     }
   };
   window.editMilestone=function(key){
-    if(db&&window._fbOnValue){
-      window._fbOnValue(dbRef(db,`milestones/${key}`),snap=>{
-        const item=snap.val();if(!item)return;
-        editingKey=key;
-        const f=document.getElementById("add-milestone-form");
-        f.classList.add("open");
-        document.getElementById("m-title-input").value=item.title||"";
-        document.getElementById("m-note-input").value=item.note||"";
-        document.getElementById("m-date-input").value=item.date||"";
-        document.getElementById("m-enddate-input").value=item.endDate||"";
-        document.getElementById("m-tag-input").value=item.tag||"moment";
-        document.getElementById("m-save-btn").textContent="Update";
-        document.getElementById("m-title-input").focus();
-        f.scrollIntoView({behavior:"smooth",block:"nearest"});
-      },{onlyOnce:true});
-    } else {
-      const item=localMilestones.find(m=>m._key===key);if(!item)return;
+    function loadIntoForm(item){
       editingKey=key;
-      const f=document.getElementById("add-milestone-form");f.classList.add("open");
+      const f=document.getElementById("add-milestone-form");
+      f.classList.add("open");
       document.getElementById("m-title-input").value=item.title||"";
       document.getElementById("m-note-input").value=item.note||"";
       document.getElementById("m-date-input").value=item.date||"";
       document.getElementById("m-enddate-input").value=item.endDate||"";
       document.getElementById("m-tag-input").value=item.tag||"moment";
       document.getElementById("m-save-btn").textContent="Update";
+      document.getElementById("m-title-input").focus();
+      f.scrollIntoView({behavior:"smooth",block:"nearest"});
+    }
+    if(db&&fbOnValue){
+      fbOnValue(dbRef(db,`milestones/${key}`),snap=>{
+        const item=snap.val();
+        if(item)loadIntoForm(item);
+      },{onlyOnce:true});
+    } else {
+      const item=localMilestones.find(m=>m._key===key);
+      if(item)loadIntoForm(item);
     }
   };
   window.saveMilestone=function(){
