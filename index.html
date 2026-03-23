@@ -168,6 +168,41 @@
     .home-stats-row{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
     .sleep-indicator{display:inline-flex;align-items:center;gap:.3rem;font-size:.65rem;color:var(--muted);margin-top:.25rem}
     .milestone-counter{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:1.25rem}
+    .bl-progress-bar-bg{height:4px;background:var(--border);border-radius:2px;overflow:hidden;flex:1}
+    .bl-progress-bar-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s}
+    .bl-cat-pill{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);border-radius:20px;padding:.2rem .65rem;cursor:pointer;background:var(--surface);transition:all .2s;font-family:'Jost',sans-serif}
+    .bl-cat-pill.active{color:var(--accent);border-color:rgba(196,133,106,.4);background:var(--surface)}
+    .bl-item{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1rem 1.25rem;display:flex;align-items:flex-start;gap:10px;position:relative;overflow:hidden;transition:border-color .2s}
+    .bl-item::before{content:'';position:absolute;top:0;left:1.25rem;right:1.25rem;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.2}
+    .bl-item:hover{border-color:#d8c8bc}
+    .bl-item.done{opacity:.55}
+    .bl-item.done .bl-item-title{text-decoration:line-through;text-decoration-color:var(--accent)}
+    .bl-check{width:18px;height:18px;border-radius:50%;border:1px solid var(--border);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+    .bl-check:hover{border-color:var(--accent)}
+    .bl-check.checked{background:var(--accent);border-color:var(--accent)}
+    .bl-check-mark{width:7px;height:4px;border-left:1.5px solid white;border-bottom:1.5px solid white;transform:rotate(-45deg) translateY(-1px)}
+    .bl-item-icon{font-size:1rem;flex-shrink:0;line-height:1.4}
+    .bl-item-body{flex:1;min-width:0}
+    .bl-item-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--text);line-height:1.35;margin-bottom:.2rem}
+    .bl-item-meta{display:flex;align-items:center;gap:.5rem}
+    .bl-item-cat{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+    .bl-item-who{font-size:.6rem;color:var(--muted);opacity:.6}
+    .bl-item-actions{display:flex;gap:4px;opacity:0;transition:opacity .2s;flex-shrink:0}
+    .bl-item:hover .bl-item-actions{opacity:1}
+    .bl-item-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:.72rem;padding:2px 4px;transition:color .2s}
+    .bl-item-btn:hover{color:var(--accent)}
+    .bl-add-form{background:var(--warm);border:1px dashed var(--border);border-radius:16px;padding:1rem 1.25rem;display:none;flex-direction:column;gap:.6rem;margin-top:.75rem}
+    .bl-add-form.open{display:flex}
+    .bl-add-input{border:none;background:transparent;outline:none;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--text);width:100%}
+    .bl-add-input::placeholder{color:var(--muted)}
+    .bl-add-row{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:.6rem}
+    .bl-cat-select{font-size:.68rem;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:.28rem .55rem;background:var(--surface);outline:none;font-family:'Jost',sans-serif;cursor:pointer}
+    .bl-save-btn{margin-left:auto;background:var(--accent);color:white;border:none;border-radius:9px;padding:.38rem 1.1rem;font-family:'Jost',sans-serif;font-size:.75rem;cursor:pointer;transition:opacity .2s}
+    .bl-save-btn:hover{opacity:.85}
+    .bl-section-sep{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:1.5rem 0 .75rem}
+    .bl-sep-line{display:flex;align-items:center;gap:.75rem;margin:1.5rem 0 .75rem}
+    .bl-sep-line::before,.bl-sep-line::after{content:'';flex:1;height:1px;background:var(--border)}
+    .bl-sep-text{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
     .milestone-counter span{color:var(--accent);font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:300}
     .m-card:hover .m-delete{opacity:.5}
     .m-delete:hover{opacity:1!important;color:#b04040}
@@ -292,9 +327,9 @@
     <button class="nav-item active" id="nav-home" onclick="showPage('home')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M2 6.5L8 2l6 4.5V14H2V6.5z"/></svg>Home</button>
     <button class="nav-item" id="nav-milestones" onclick="showPage('milestones')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="8" cy="8" r="2"/><path d="M8 1v3M8 12v3M1 8h3M12 8h3"/><path d="M3.5 3.5l2 2M10.5 10.5l2 2M3.5 12.5l2-2M10.5 5.5l2-2"/></svg>Milestones</button>
     <button class="nav-item" id="nav-notes" onclick="showPage('notes')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 2h10v9l-3 3H3V2z"/><path d="M10 11v3M10 11h3"/><line x1="5" y1="6" x2="11" y2="6"/><line x1="5" y1="9" x2="9" y2="9"/></svg>Notes</button>
+    <button class="nav-item" id="nav-bucket" onclick="showPage('bucket')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2.5 6h4z"/></svg>Bucket list</button>
     <div class="nav-spacer"></div>
     <p class="nav-section-label">Coming soon</p>
-    <button class="nav-item" style="opacity:.35;pointer-events:none;"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2.5 6h4z"/></svg>Bucket list</button>
     <button class="nav-item" style="opacity:.35;pointer-events:none;"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="1" width="10" height="14" rx="1"/><path d="M6 5h4M6 8h4M6 11h2"/></svg>Letter</button>
   </nav>
   <div class="sidebar-footer">
@@ -407,6 +442,73 @@
     <div id="notes-wall"><p class="empty">No notes yet.</p></div>
   </div>
 
+  <!-- BUCKET LIST -->
+  <div class="page" id="page-bucket">
+    <div class="page-header">
+      <div>
+        <p class="page-eyebrow">Dreams to share</p>
+        <h1 class="page-title">Bucket <em>list</em></h1>
+      </div>
+      <button class="milestone-add-btn" onclick="toggleBucketForm()">
+        <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+        Add dream
+      </button>
+      <svg class="page-corner-orn" width="70" height="44" viewBox="0 0 70 44"><path d="M70 44 Q48 22 24 34 Q12 40 0 44" stroke="#c9a96e" stroke-width=".8" fill="none"/><circle cx="24" cy="34" r="3" fill="none" stroke="#c9a96e" stroke-width=".6"/><circle cx="48" cy="24" r="2" fill="none" stroke="#c9a96e" stroke-width=".6"/></svg>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="card" style="margin-bottom:1.25rem;">
+      <div style="display:flex;align-items:center;gap:1.5rem;">
+        <div style="text-align:center;flex-shrink:0;">
+          <p class="stat-value" id="bl-done-count" style="font-size:2rem;">0</p>
+          <p class="stat-unit">done</p>
+        </div>
+        <div style="width:1px;height:36px;background:var(--border);flex-shrink:0;"></div>
+        <div style="text-align:center;flex-shrink:0;">
+          <p class="stat-value" id="bl-total-count" style="font-size:2rem;color:var(--muted);">0</p>
+          <p class="stat-unit">total</p>
+        </div>
+        <div style="flex:1;">
+          <div style="display:flex;justify-content:space-between;font-size:.65rem;color:var(--muted);margin-bottom:6px;">
+            <span>Progress</span><span id="bl-percent">0%</span>
+          </div>
+          <div class="bl-progress-bar-bg"><div class="bl-progress-bar-fill" id="bl-progress-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category filters -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem;">
+      <button class="bl-cat-pill active" id="bl-filter-all" onclick="filterBucket('all')">All</button>
+      <button class="bl-cat-pill" id="bl-filter-travel" onclick="filterBucket('travel')">Travel ✈️</button>
+      <button class="bl-cat-pill" id="bl-filter-food" onclick="filterBucket('food')">Food 🍜</button>
+      <button class="bl-cat-pill" id="bl-filter-adventure" onclick="filterBucket('adventure')">Adventure 🏔️</button>
+      <button class="bl-cat-pill" id="bl-filter-together" onclick="filterBucket('together')">Together 💕</button>
+    </div>
+
+    <!-- To do list -->
+    <p class="section-heading">To do</p>
+    <div id="bl-todo-list" style="display:flex;flex-direction:column;gap:.75rem;"><p class="empty">No dreams yet. Add your first one!</p></div>
+
+    <!-- Done list -->
+    <div class="bl-sep-line" id="bl-done-sep" style="display:none;"><span class="bl-sep-text">Completed</span></div>
+    <div id="bl-done-list" style="display:flex;flex-direction:column;gap:.75rem;"></div>
+
+    <!-- Add form -->
+    <div class="bl-add-form" id="bl-add-form">
+      <input type="text" class="bl-add-input" id="bl-title-input" placeholder="A dream to share…"/>
+      <div class="bl-add-row">
+        <select class="bl-cat-select" id="bl-cat-input">
+          <option value="travel">Travel ✈️</option>
+          <option value="food">Food 🍜</option>
+          <option value="adventure">Adventure 🏔️</option>
+          <option value="together">Together 💕</option>
+        </select>
+        <button class="bl-save-btn" id="bl-save-btn" onclick="saveBucketItem()">Add</button>
+      </div>
+    </div>
+  </div>
+
   <footer>Freddy & Sarah</footer>
 </main>
 
@@ -498,6 +600,7 @@
       const app=initializeApp(FIREBASE_CONFIG);
       db=getDatabase(app);dbRef=ref;dbSet=set;dbPush=push;dbRemove=remove;fbOnValue=onValue;
       onValue(ref(db,"notes"),snap=>{const d=snap.val();const n=d?Object.values(d).reverse():[];renderNotes(n);renderNotesPreview(n);});
+      onValue(ref(db,"bucket"),snap=>{const d=snap.val();renderBucket(d?Object.entries(d).map(([k,v])=>({...v,_key:k})):[]);});
       onValue(ref(db,"milestones"),snap=>{const d=snap.val();renderMilestones(d?Object.entries(d).map(([k,v])=>({...v,_key:k})):[]); });
       onValue(ref(db,"meetupDate"),snap=>{const v=snap.val();if(v){meetupDate=new Date(v);document.getElementById("meetup-date-input").value=v.substring(0,10);updateCdCaption(meetupDate);startCountdown();}});
       window._watchOther=()=>{
@@ -687,6 +790,143 @@
     if(myEl)myEl.textContent=sleepStatus(ME,myTz);
     if(otherEl)otherEl.textContent=sleepStatus(OTHER,otherTz||DEFAULTS[OTHER]);
   }
+
+  // Bucket list
+  const BL_ICONS={travel:"✈️",food:"🍜",adventure:"🏔️",together:"💕"};
+  let localBucket=[];
+  let blFilter="all";
+  let blEditKey=null;
+
+  function renderBucket(items){
+    const done=items.filter(i=>i.done);
+    const todo=items.filter(i=>!i.done);
+    const total=items.length;
+    const doneCount=done.length;
+    const pct=total?Math.round(doneCount/total*100):0;
+
+    document.getElementById("bl-done-count").textContent=doneCount;
+    document.getElementById("bl-total-count").textContent=total;
+    document.getElementById("bl-percent").textContent=pct+"%";
+    document.getElementById("bl-progress-fill").style.width=pct+"%";
+
+    const filtered=cat=>blFilter==="all"?cat:cat.filter(i=>i.category===blFilter);
+    const todoFiltered=filtered(todo);
+    const doneFiltered=filtered(done);
+
+    const todoEl=document.getElementById("bl-todo-list");
+    const doneEl=document.getElementById("bl-done-list");
+    const doneSep=document.getElementById("bl-done-sep");
+
+    todoEl.innerHTML=todoFiltered.length?todoFiltered.map(blItemHTML).join(""):`<p class="empty">No dreams here yet!</p>`;
+    doneEl.innerHTML=doneFiltered.map(blItemHTML).join("");
+    doneSep.style.display=doneFiltered.length?"flex":"none";
+  }
+
+  function blItemHTML(item){
+    const icon=BL_ICONS[item.category]||"💫";
+    return`<div class="bl-item${item.done?" done":""}" id="bli-${item._key}">
+      <div class="bl-check${item.done?" checked":""}" onclick="toggleBucketDone('${item._key}')">${item.done?'<div class="bl-check-mark"></div>':""}</div>
+      <div class="bl-item-icon">${icon}</div>
+      <div class="bl-item-body">
+        <p class="bl-item-title">${item.title}</p>
+        <div class="bl-item-meta">
+          <span class="bl-item-cat">${item.category||""}</span>
+          <span class="bl-item-who">Added by ${item.addedBy||""}</span>
+          ${item.done&&item.completedAt?`<span class="bl-item-who">· ${fmtTs(item.completedAt)}</span>`:""}
+        </div>
+      </div>
+      <div class="bl-item-actions">
+        ${!item.done?`<button class="bl-item-btn" onclick="editBucketItem('${item._key}')" title="Edit">✎</button>`:""}
+        <button class="bl-item-btn" onclick="deleteBucketItem('${item._key}')" title="Delete" style="color:var(--muted)">✕</button>
+      </div>
+    </div>`;
+  }
+
+  window.filterBucket=function(cat){
+    blFilter=cat;
+    document.querySelectorAll(".bl-cat-pill").forEach(p=>p.classList.remove("active"));
+    const el=document.getElementById(`bl-filter-${cat}`);
+    if(el)el.classList.add("active");
+    if(db&&fbOnValue){
+      fbOnValue(dbRef(db,"bucket"),snap=>{
+        const d=snap.val();
+        renderBucket(d?Object.entries(d).map(([k,v])=>({...v,_key:k})):[]);
+      },{onlyOnce:true});
+    } else renderBucket([...localBucket]);
+  };
+
+  window.toggleBucketForm=function(){
+    blEditKey=null;
+    const f=document.getElementById("bl-add-form");
+    f.classList.toggle("open");
+    if(f.classList.contains("open")){
+      document.getElementById("bl-title-input").value="";
+      document.getElementById("bl-cat-input").value="travel";
+      document.getElementById("bl-save-btn").textContent="Add";
+      document.getElementById("bl-title-input").focus();
+    }
+  };
+
+  window.saveBucketItem=function(){
+    const title=document.getElementById("bl-title-input").value.trim();
+    const category=document.getElementById("bl-cat-input").value;
+    if(!title)return;
+    if(blEditKey){
+      const update={title,category};
+      if(db&&dbSet)dbSet(dbRef(db,`bucket/${blEditKey}`),{title,category,addedBy:ME,done:false,time:Date.now()});
+      else{const idx=localBucket.findIndex(x=>x._key===blEditKey);if(idx>-1){localBucket[idx].title=title;localBucket[idx].category=category;}renderBucket([...localBucket]);}
+      blEditKey=null;
+    } else {
+      const item={title,category,addedBy:ME,done:false,time:Date.now()};
+      if(db&&dbPush)dbPush(dbRef(db,"bucket"),item);
+      else{localBucket.push({...item,_key:Date.now().toString()});renderBucket([...localBucket]);}
+    }
+    document.getElementById("bl-title-input").value="";
+    document.getElementById("bl-add-form").classList.remove("open");
+    document.getElementById("bl-save-btn").textContent="Add";
+  };
+
+  window.toggleBucketDone=function(key){
+    if(db&&fbOnValue){
+      fbOnValue(dbRef(db,`bucket/${key}`),snap=>{
+        const item=snap.val();if(!item)return;
+        const newDone=!item.done;
+        dbSet(dbRef(db,`bucket/${key}`),{...item,done:newDone,completedAt:newDone?Date.now():null});
+      },{onlyOnce:true});
+    } else {
+      const item=localBucket.find(x=>x._key===key);
+      if(item){item.done=!item.done;item.completedAt=item.done?Date.now():null;}
+      renderBucket([...localBucket]);
+    }
+  };
+
+  window.editBucketItem=function(key){
+    if(db&&fbOnValue){
+      fbOnValue(dbRef(db,`bucket/${key}`),snap=>{
+        const item=snap.val();if(!item)return;
+        blEditKey=key;
+        const f=document.getElementById("bl-add-form");
+        f.classList.add("open");
+        document.getElementById("bl-title-input").value=item.title||"";
+        document.getElementById("bl-cat-input").value=item.category||"travel";
+        document.getElementById("bl-save-btn").textContent="Update";
+        document.getElementById("bl-title-input").focus();
+        f.scrollIntoView({behavior:"smooth",block:"nearest"});
+      },{onlyOnce:true});
+    } else {
+      const item=localBucket.find(x=>x._key===key);if(!item)return;
+      blEditKey=key;
+      const f=document.getElementById("bl-add-form");f.classList.add("open");
+      document.getElementById("bl-title-input").value=item.title||"";
+      document.getElementById("bl-cat-input").value=item.category||"travel";
+      document.getElementById("bl-save-btn").textContent="Update";
+    }
+  };
+
+  window.deleteBucketItem=function(key){
+    if(db&&dbRemove)dbRemove(dbRef(db,`bucket/${key}`));
+    else{localBucket=localBucket.filter(x=>x._key!==key);renderBucket([...localBucket]);}
+  };
 
   // Nav
   window.showPage=function(name){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));document.getElementById(`page-${name}`).classList.add("active");document.getElementById(`nav-${name}`).classList.add("active");closeSidebar();};
