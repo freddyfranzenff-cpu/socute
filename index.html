@@ -256,6 +256,36 @@
       .login-btns{flex-direction:column;align-items:center}
       .login-btn{max-width:220px;width:100%}
     }
+    /* ── Pulse ── */
+    .pulse-banner{background:rgba(196,133,106,.07);border:1px solid rgba(196,133,106,.22);border-radius:14px;padding:.85rem 1.1rem;display:flex;align-items:center;gap:.85rem;margin-bottom:.6rem;animation:fadeUp .4s ease both}
+    .pulse-banner-icon{width:32px;height:32px;border-radius:50%;background:rgba(196,133,106,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;animation:hb 1.8s ease infinite}
+    @keyframes hb{0%,100%{transform:scale(1)}14%{transform:scale(1.18)}28%{transform:scale(1)}42%{transform:scale(1.1)}56%{transform:scale(1)}}
+    .pulse-banner-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;color:var(--text)}
+    .pulse-banner-time{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:.1rem}
+    .pulse-row{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.85rem 1.1rem;display:flex;align-items:center;gap:.85rem;position:relative;overflow:hidden;margin-bottom:.4rem}
+    .pulse-row::before{content:'';position:absolute;top:0;left:1.1rem;right:1.1rem;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.25}
+    .pulse-btn-sm{position:relative;width:32px;height:32px;flex-shrink:0;cursor:pointer}
+    .pulse-ring-sm{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(196,133,106,.3);animation:pulseRing 2.2s ease-out infinite}
+    .pulse-ring-sm.r2{animation-delay:.75s}
+    @keyframes pulseRing{0%{transform:scale(1);opacity:.6}100%{transform:scale(2.2);opacity:0}}
+    .pulse-heart-sm{position:absolute;inset:4px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s}
+    .pulse-heart-sm:hover{transform:scale(1.1)}
+    .pulse-heart-sm:active{transform:scale(.92)}
+    .pulse-heart-sm.sent{animation:heartPop .3s ease}
+    @keyframes heartPop{0%{transform:scale(1)}50%{transform:scale(1.35)}100%{transform:scale(1)}}
+    .pulse-row-title{font-size:.78rem;color:var(--text)}
+    .pulse-row-sub{font-size:.65rem;color:var(--muted);margin-top:.1rem}
+    .pulse-row-last{font-size:.6rem;color:var(--muted);white-space:nowrap;opacity:.65;margin-left:auto}
+    .pulse-history-toggle{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;font-family:'Jost',sans-serif;text-decoration:underline;text-underline-offset:3px;margin-bottom:.75rem;display:block;padding:0}
+    .pulse-history{background:var(--warm);border-radius:12px;padding:.4rem .9rem;margin-bottom:1.5rem;display:none}
+    .pulse-history.open{display:block}
+    .pulse-history-item{display:flex;align-items:center;gap:.65rem;padding:.45rem 0;border-bottom:1px solid var(--border)}
+    .pulse-history-item:last-child{border-bottom:none}
+    .pulse-history-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
+    .pulse-history-dot.other{background:var(--muted);opacity:.5}
+    .pulse-history-text{font-size:.72rem;color:var(--muted);flex:1}
+    .pulse-history-text strong{color:var(--text);font-weight:400}
+    .pulse-history-time{font-size:.62rem;color:var(--muted);opacity:.6;white-space:nowrap}
   </style>
 </head>
 <body>
@@ -379,6 +409,37 @@
       </div>
       <svg class="page-corner-orn" width="70" height="44" viewBox="0 0 70 44"><path d="M70 44 Q48 22 24 34 Q12 40 0 44" stroke="#c9a96e" stroke-width=".8" fill="none"/><circle cx="24" cy="34" r="3" fill="none" stroke="#c9a96e" stroke-width=".6"/><circle cx="48" cy="24" r="2" fill="none" stroke="#c9a96e" stroke-width=".6"/><path d="M24 34 Q20 24 26 18" stroke="#c9a96e" stroke-width=".6" fill="none"/><path d="M48 24 Q54 16 49 10" stroke="#c9a96e" stroke-width=".6" fill="none"/><circle cx="26" cy="18" r="1.2" fill="#c9a96e" opacity=".5"/><circle cx="49" cy="10" r="1" fill="#c9a96e" opacity=".4"/></svg>
     </div>
+    <!-- ── PULSE ── -->
+    <div id="pulse-received" style="display:none;">
+      <div class="pulse-banner">
+        <div class="pulse-banner-icon">
+          <svg width="14" height="13" viewBox="0 0 24 22" fill="#c4856a"><path d="M12 21C12 21 2 14 2 7a6 6 0 0112 0 6 6 0 0112 0c0 7-10 14-10 14z"/></svg>
+        </div>
+        <div>
+          <p class="pulse-banner-title" id="pulse-received-title">— was thinking of you</p>
+          <p class="pulse-banner-time" id="pulse-received-time">—</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pulse-row">
+      <div class="pulse-btn-sm" onclick="sendPulse()">
+        <div class="pulse-ring-sm"></div>
+        <div class="pulse-ring-sm r2"></div>
+        <div class="pulse-heart-sm" id="pulse-heart-btn">
+          <svg width="12" height="11" viewBox="0 0 24 22" fill="white"><path d="M12 21C12 21 2 14 2 7a6 6 0 0112 0 6 6 0 0112 0c0 7-10 14-10 14z"/></svg>
+        </div>
+      </div>
+      <div style="flex:1;">
+        <p class="pulse-row-title">Thinking of you</p>
+        <p class="pulse-row-sub" id="pulse-send-sub">Tap to send <span id="pulse-other-name">—</span> a pulse</p>
+      </div>
+      <span class="pulse-row-last" id="pulse-last-sent" style="display:none;"></span>
+    </div>
+
+    <button class="pulse-history-toggle" id="pulse-history-toggle" onclick="togglePulseHistory()" style="display:none;">Show recent pulses ↓</button>
+    <div class="pulse-history" id="pulse-history-list"></div>
+
     <p class="section-heading">Where we are</p>
     <div class="map-card">
       <div id="map"></div>
@@ -1235,6 +1296,131 @@
     buildPlaces(milestones);
   };
 
+  // Pulse
+  function fmtPulseTime(ts){
+    if(!ts)return"";
+    const diff=Date.now()-ts;
+    const mins=Math.floor(diff/60000);
+    const hrs=Math.floor(diff/3600000);
+    const days=Math.floor(diff/86400000);
+    if(mins<1)return"Just now";
+    if(mins<60)return`${mins} minute${mins!==1?"s":""} ago`;
+    if(hrs<24)return`${hrs} hour${hrs!==1?"s":""} ago`;
+    return`${days} day${days!==1?"s":""} ago`;
+  }
+
+  function fmtPulseTs(ts){
+    if(!ts)return"";
+    const d=new Date(ts);
+    const p=n=>String(n).padStart(2,"0");
+    const today=new Date();
+    const yesterday=new Date(today-86400000);
+    const isToday=d.toDateString()===today.toDateString();
+    const isYesterday=d.toDateString()===yesterday.toDateString();
+    const timeStr=`${p(d.getHours())}:${p(d.getMinutes())}`;
+    if(isToday)return`Today ${timeStr}`;
+    if(isYesterday)return`Yesterday ${timeStr}`;
+    return`${p(d.getDate())}.${p(d.getMonth()+1)} · ${timeStr}`;
+  }
+
+  function renderPulseHistory(pulses){
+    const list=document.getElementById("pulse-history-list");
+    const toggle=document.getElementById("pulse-history-toggle");
+    if(!pulses||!pulses.length){
+      if(toggle)toggle.style.display="none";
+      return;
+    }
+    if(toggle)toggle.style.display="block";
+    const recent=pulses.slice(0,6);
+    list.innerHTML=recent.map(p=>{
+      const isMe=p.from===ME;
+      const dotClass=isMe?"":"other";
+      const text=isMe
+        ?`You were thinking of <strong>${OTHER}</strong>`
+        :`<strong>${OTHER}</strong> was thinking of you`;
+      return`<div class="pulse-history-item">
+        <div class="pulse-history-dot ${dotClass}"></div>
+        <span class="pulse-history-text">${text}</span>
+        <span class="pulse-history-time">${fmtPulseTs(p.time)}</span>
+      </div>`;
+    }).join("");
+  }
+
+  function updateReceivedBanner(pulses){
+    if(!pulses||!pulses.length)return;
+    // Find latest pulse FROM the other person
+    const latest=pulses.find(p=>p.from===OTHER);
+    if(!latest)return;
+    const diff=Date.now()-latest.time;
+    // Only show if within last 24 hours
+    if(diff>86400000)return;
+    const banner=document.getElementById("pulse-received");
+    const title=document.getElementById("pulse-received-title");
+    const time=document.getElementById("pulse-received-time");
+    if(banner&&title&&time){
+      title.textContent=`${OTHER} was thinking of you`;
+      time.textContent=fmtPulseTime(latest.time);
+      banner.style.display="block";
+    }
+  }
+
+  function updateLastSent(pulses){
+    if(!pulses||!pulses.length)return;
+    const latest=pulses.find(p=>p.from===ME);
+    if(!latest)return;
+    const el=document.getElementById("pulse-last-sent");
+    if(el){
+      el.style.display="block";
+      el.textContent=`Last · ${fmtPulseTs(latest.time)}`;
+    }
+  }
+
+  window.sendPulse=async function(){
+    if(!ME)return;
+    const btn=document.getElementById("pulse-heart-btn");
+    if(btn){btn.classList.add("sent");setTimeout(()=>btn.classList.remove("sent"),300);}
+    const pulse={from:ME,to:OTHER,time:Date.now()};
+    if(db&&dbPush){
+      await dbPush(dbRef(db,"pulses"),pulse);
+    } else {
+      // local fallback
+      const el=document.getElementById("pulse-last-sent");
+      if(el){el.style.display="block";el.textContent="Last · Just now";}
+    }
+  };
+
+  window.togglePulseHistory=function(){
+    const list=document.getElementById("pulse-history-list");
+    const toggle=document.getElementById("pulse-history-toggle");
+    if(!list||!toggle)return;
+    list.classList.toggle("open");
+    toggle.textContent=list.classList.contains("open")?"Hide recent pulses ↑":"Show recent pulses ↓";
+  };
+
+  function initPulse(){
+    // Set other name in send sub
+    const sub=document.getElementById("pulse-other-name");
+    if(sub)sub.textContent=OTHER;
+
+    if(!db||!fbOnValue)return;
+    fbOnValue(dbRef(db,"pulses"),snap=>{
+      const data=snap.val();
+      if(!data)return;
+      const pulses=Object.values(data).sort((a,b)=>b.time-a.time);
+      updateReceivedBanner(pulses);
+      updateLastSent(pulses);
+      renderPulseHistory(pulses);
+      // Update received time every minute
+      setInterval(()=>{
+        const latest=pulses.find(p=>p.from===OTHER);
+        if(latest){
+          const time=document.getElementById("pulse-received-time");
+          if(time)time.textContent=fmtPulseTime(latest.time);
+        }
+      },60000);
+    });
+  }
+
   // Nav
   window.showPage=function(name){
     document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
@@ -1279,6 +1465,7 @@
     if(window._watchOther)window._watchOther();
     updateDistanceAndSleep();
     setInterval(updateDistanceAndSleep, 60000);
+    initPulse();
     function tickClocks(){document.getElementById("my-time").textContent=fmtTime(myTz);document.getElementById("my-date").textContent=fmtDate(myTz);document.getElementById("other-time").textContent=fmtTime(otherTz||DEFAULTS[OTHER]);document.getElementById("other-date").textContent=fmtDate(otherTz||DEFAULTS[OTHER]);}
     tickClocks();setInterval(tickClocks,1000);
     const start=new Date("2026-01-01");document.getElementById("days-together").textContent=Math.floor((Date.now()-start)/86400000)+1;
