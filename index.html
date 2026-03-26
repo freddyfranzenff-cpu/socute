@@ -490,7 +490,7 @@
     <div id="pulse-received" style="display:none;">
       <div class="pulse-banner">
         <div class="pulse-banner-icon">
-          <svg width="14" height="13" viewBox="0 0 24 22" fill="#c4856a"><path d="M12 21C12 21 2 14 2 7a6 6 0 0112 0 6 6 0 0112 0c0 7-10 14-10 14z"/></svg>
+          <svg width="14" height="13" viewBox="0 0 32 30" fill="#c4856a"><path d="M16 28C14 26 2 19 2 10.5A7.5 7.5 0 0116 15a7.5 7.5 0 0114-4.5C30 19 18 26 16 28z"/></svg>
         </div>
         <div>
           <p class="pulse-banner-title" id="pulse-received-title">— was thinking of you</p>
@@ -504,7 +504,7 @@
         <div class="pulse-ring-sm"></div>
         <div class="pulse-ring-sm r2"></div>
         <div class="pulse-heart-sm" id="pulse-heart-btn">
-          <svg width="15" height="14" viewBox="0 0 32 29" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M16 27S2 18.5 2 10a8 8 0 0114 5.3A8 8 0 0130 10c0 8.5-14 17-14 17z"/></svg>
+          <svg width="15" height="14" viewBox="0 0 32 30" fill="white"><path d="M16 28C14 26 2 19 2 10.5A7.5 7.5 0 0116 15a7.5 7.5 0 0114-4.5C30 19 18 26 16 28z"/></svg>
         </div>
       </div>
       <div style="flex:1;">
@@ -927,7 +927,7 @@
       </div>
       <div class="note-actions">
         <button class="note-react-btn${myReaction?" reacted":""}" onclick="reactToNote('${note._key||""}')" title="React with heart">
-          <svg width="12" height="11" viewBox="0 0 24 22" fill="${myReaction?"#c4856a":"none"}" stroke="#c4856a" stroke-width="1.5"><path d="M12 21C12 21 2 14 2 7a6 6 0 0112 0 6 6 0 0112 0c0 7-10 14-10 14z"/></svg>
+          <svg width="12" height="11" viewBox="0 0 32 30" fill="${myReaction?"#c4856a":"none"}" stroke="#c4856a" stroke-width="1.5" stroke-linejoin="round"><path d="M16 28C14 26 2 19 2 10.5A7.5 7.5 0 0116 15a7.5 7.5 0 0114-4.5C30 19 18 26 16 28z"/></svg>
           ${reactLabel}
         </button>
         ${canDelete&&note._key?`<button class="note-delete-btn" onclick="deleteNote('${note._key}')" title="Delete">✕</button>`:""}
@@ -1900,15 +1900,7 @@
     fbOnValue(dbRef(db,"letters"), snap=>{
       const data = snap.val();
       const rounds = data ? Object.entries(data).map(([k,v])=>({...v,_key:k})) : [];
-      // Filter rounds relevant to meetup dates
       renderLetterTimeline(rounds);
-      // Also render current round if not already in rounds
-      if(rounds.length === 0) renderCurrentRound([]);
-      else {
-        const unlockDateStr = meetupDate ? meetupDate.toISOString().split("T")[0] : null;
-        const hasCurrentRound = rounds.some(r=>r.unlockDate&&r.unlockDate.startsWith(unlockDateStr||""));
-        if(!hasCurrentRound) renderCurrentRound(rounds);
-      }
     },{onlyOnce:true});
   }
 
