@@ -286,6 +286,85 @@
     .pulse-history-text{font-size:.72rem;color:var(--muted);flex:1}
     .pulse-history-text strong{color:var(--text);font-weight:400}
     .pulse-history-time{font-size:.62rem;color:var(--muted);opacity:.6;white-space:nowrap}
+    /* ── Notes: delete + reactions ── */
+    .note-card{position:relative}
+    .note-actions{display:flex;align-items:center;gap:.4rem;margin-top:.4rem;padding-top:.4rem;border-top:1px solid var(--border)}
+    .note-react-btn{background:none;border:none;cursor:pointer;font-size:.72rem;color:var(--muted);display:flex;align-items:center;gap:.25rem;padding:.15rem .4rem;border-radius:8px;transition:all .2s;font-family:'Jost',sans-serif}
+    .note-react-btn:hover{background:rgba(196,133,106,.08);color:var(--accent)}
+    .note-react-btn.reacted{color:var(--accent);font-weight:500}
+    .note-delete-btn{margin-left:auto;background:none;border:none;cursor:pointer;font-size:.65rem;color:var(--muted);opacity:0;transition:opacity .2s;padding:.15rem .35rem;border-radius:6px;font-family:'Jost',sans-serif}
+    .note-card:hover .note-delete-btn{opacity:.5}
+    .note-delete-btn:hover{opacity:1!important;color:#b04040}
+    .note-react-count{font-size:.65rem;color:var(--muted)}
+
+    /* ── Letter ── */
+    .letter-countdown-bar{background:var(--warm);border:1px solid var(--border);border-radius:14px;padding:1rem 1.25rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:1.25rem}
+    .letter-cd-icon{width:38px;height:38px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .letter-cd-label{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem}
+    .letter-cd-nums{display:flex;gap:.65rem;align-items:baseline}
+    .letter-cd-num{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--accent2);line-height:1}
+    .letter-cd-unit{font-size:.5rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+    .letter-cd-caption{font-size:.62rem;color:var(--muted);margin-top:.3rem}
+    .letter-round{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:1.25rem 1.4rem;margin-bottom:1.25rem;position:relative;overflow:hidden}
+    .letter-round::before{content:'';position:absolute;top:0;left:1.4rem;right:1.4rem;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.25}
+    .letter-round.active-round{border-color:rgba(138,171,170,.35)}
+    .letter-round-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+    .letter-round-date{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;color:var(--text)}
+    .letter-round-badge{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .65rem;border-radius:20px}
+    .letter-round-badge.active{color:var(--accent2);background:rgba(138,171,170,.1);border:1px solid rgba(138,171,170,.25)}
+    .letter-round-badge.read{color:#5a8a6a;background:rgba(90,138,106,.1);border:1px solid rgba(90,138,106,.2)}
+    .letter-tiles{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+    .letter-tile{border:1px solid var(--border);border-radius:12px;padding:.9rem 1rem;transition:border-color .2s;position:relative;overflow:hidden}
+    .letter-tile.clickable{cursor:pointer}
+    .letter-tile.clickable:hover{border-color:#d8c8bc}
+    .letter-tile.sealed{background:var(--warm)}
+    .letter-tile-eyebrow{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem;display:flex;align-items:center;gap:.3rem}
+    .letter-tile-status{display:inline-flex;align-items:center;gap:.3rem;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:.15rem .55rem;border-radius:20px;margin-bottom:.5rem}
+    .letter-tile-status.written{color:var(--accent2);background:rgba(138,171,170,.1);border:1px solid rgba(138,171,170,.25)}
+    .letter-tile-status.read{color:#5a8a6a;background:rgba(90,138,106,.1);border:1px solid rgba(90,138,106,.2)}
+    .letter-tile-status.sealed{color:var(--muted);background:var(--warm);border:1px solid var(--border)}
+    .letter-tile-status.empty{color:var(--muted);background:transparent;border:1px dashed var(--border)}
+    .letter-tile-preview{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.82rem;color:var(--muted);line-height:1.4;margin-bottom:.4rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .letter-tile-meta{font-size:.6rem;color:var(--muted);opacity:.65;display:flex;justify-content:space-between}
+    .letter-tile-btn{width:100%;background:var(--warm);color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:.38rem;font-family:'Jost',sans-serif;font-size:.7rem;cursor:pointer;margin-top:.5rem;transition:all .2s}
+    .letter-tile-btn:hover{border-color:var(--accent);color:var(--accent)}
+    .letter-tile-btn.primary{background:var(--accent);color:white;border:none}
+    .letter-tile-btn.primary:hover{opacity:.85}
+    .letter-round-cd{display:flex;align-items:center;gap:.5rem;margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--border)}
+    .letter-round-cd-label{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+    .letter-round-cd-nums{display:flex;gap:.5rem;align-items:baseline;margin-left:auto}
+    .letter-round-cd-num{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;color:var(--accent2);line-height:1}
+    .letter-round-cd-unit{font-size:.5rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+    .letter-meetup-sep{display:flex;align-items:center;gap:.75rem;margin:1.5rem 0 1rem}
+    .letter-meetup-sep::before,.letter-meetup-sep::after{content:'';flex:1;height:1px;background:var(--border)}
+    .letter-meetup-sep-label{font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);opacity:.75;white-space:nowrap}
+
+    /* Letter write modal */
+    .letter-modal-overlay{position:fixed;inset:0;background:rgba(28,24,20,.5);z-index:500;display:none;align-items:center;justify-content:center;padding:2rem}
+    .letter-modal-overlay.open{display:flex}
+    .letter-modal{background:var(--surface);border-radius:18px;padding:2rem;width:100%;max-width:520px;position:relative;overflow:hidden;border:1px solid var(--border);animation:fadeUp .3s ease both}
+    .letter-modal::before{content:'';position:absolute;top:0;left:1.4rem;right:1.4rem;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.3}
+    .letter-modal-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:var(--text);margin-bottom:.25rem}
+    .letter-modal-sub{font-size:.7rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.5}
+    .letter-modal-textarea{width:100%;min-height:200px;border:1px solid var(--border);border-radius:12px;padding:1rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--text);background:var(--warm);resize:none;outline:none;line-height:1.75;transition:border-color .2s}
+    .letter-modal-textarea:focus{border-color:var(--accent)}
+    .letter-modal-footer{display:flex;align-items:center;justify-content:space-between;margin-top:1rem}
+    .letter-modal-hint{font-size:.62rem;color:var(--muted);display:flex;align-items:center;gap:.35rem}
+    .letter-modal-actions{display:flex;gap:.6rem}
+    .letter-modal-cancel{background:none;border:1px solid var(--border);border-radius:10px;padding:.5rem 1rem;font-family:'Jost',sans-serif;font-size:.75rem;color:var(--muted);cursor:pointer}
+    .letter-modal-save{background:var(--accent);color:white;border:none;border-radius:10px;padding:.5rem 1.2rem;font-family:'Jost',sans-serif;font-size:.75rem;cursor:pointer;transition:opacity .2s}
+    .letter-modal-save:hover{opacity:.85}
+
+    /* Letter read view */
+    .letter-read-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:2rem;position:relative;overflow:hidden;margin-top:1rem}
+    .letter-read-card::before{content:'';position:absolute;top:0;left:1.4rem;right:1.4rem;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.4}
+    .letter-read-eyebrow{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
+    .letter-read-from{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:300;color:var(--text);margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+    .letter-read-body{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--text);line-height:1.85;white-space:pre-wrap}
+    .letter-read-sig{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--accent);margin-top:1.5rem;text-align:right}
+    .letter-unlocked-banner{background:linear-gradient(135deg,rgba(201,169,110,.1),rgba(196,133,106,.07));border:1px solid rgba(201,169,110,.3);border-radius:14px;padding:1rem 1.25rem;margin-bottom:1.25rem;text-align:center}
+    .letter-unlocked-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300;color:var(--text);margin-bottom:.2rem}
+    .letter-unlocked-sub{font-size:.7rem;color:var(--muted)}
   </style>
 </head>
 <body>
@@ -381,9 +460,7 @@
     <button class="nav-item" id="nav-notes" onclick="showPage('notes')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 2h10v9l-3 3H3V2z"/><path d="M10 11v3M10 11h3"/><line x1="5" y1="6" x2="11" y2="6"/><line x1="5" y1="9" x2="9" y2="9"/></svg>Notes</button>
     <button class="nav-item" id="nav-bucket" onclick="showPage('bucket')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2.5 6h4z"/></svg>Bucket list</button>
     <button class="nav-item" id="nav-places" onclick="showPage('places')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 1a5 5 0 015 5c0 3.5-5 9-5 9S3 9.5 3 6a5 5 0 015-5z"/><circle cx="8" cy="6" r="1.8"/></svg>Places</button>
-    <div class="nav-spacer"></div>
-    <p class="nav-section-label">Coming soon</p>
-    <button class="nav-item" style="opacity:.35;pointer-events:none;"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="1" width="10" height="14" rx="1"/><path d="M6 5h4M6 8h4M6 11h2"/></svg>Letter</button>
+    <button class="nav-item" id="nav-letter" onclick="showPage('letter')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M2 6l6 4 6-4"/></svg>Letter</button>
   </nav>
   <div class="sidebar-footer">
     <p class="sidebar-cd-label">Next meetup</p>
@@ -646,6 +723,49 @@
     <p class="empty" id="places-empty" style="display:none;">No milestone locations yet. Add a location to a milestone to see it here!</p>
   </div>
 
+  <!-- LETTER -->
+  <div class="page" id="page-letter">
+    <div class="page-header">
+      <div>
+        <p class="page-eyebrow" id="letter-page-eyebrow">For the day we meet</p>
+        <h1 class="page-title">Our <em>letters</em></h1>
+      </div>
+      <svg class="page-corner-orn" width="70" height="44" viewBox="0 0 70 44"><path d="M70 44 Q48 22 24 34 Q12 40 0 44" stroke="#c9a96e" stroke-width=".8" fill="none"/><circle cx="24" cy="34" r="3" fill="none" stroke="#c9a96e" stroke-width=".6"/><circle cx="48" cy="24" r="2" fill="none" stroke="#c9a96e" stroke-width=".6"/></svg>
+    </div>
+
+    <!-- Unlocked banner (shown on meetup day) -->
+    <div id="letter-unlocked-banner" style="display:none;" class="letter-unlocked-banner">
+      <p style="font-size:1.1rem;margin-bottom:.3rem;">🎉</p>
+      <p class="letter-unlocked-title">Today is the day</p>
+      <p class="letter-unlocked-sub">Your letters have been unlocked. Read what the other wrote for you.</p>
+    </div>
+
+    <!-- Letter rounds timeline -->
+    <div id="letter-timeline"></div>
+
+    <!-- Empty state -->
+    <p class="empty" id="letter-empty" style="display:none;">No letters yet. Write your first one above!</p>
+  </div>
+
+  <!-- Letter write modal -->
+  <div class="letter-modal-overlay" id="letter-modal-overlay" onclick="if(event.target===this)closeLetterModal()">
+    <div class="letter-modal">
+      <p class="letter-modal-title" id="letter-modal-title">Your letter</p>
+      <p class="letter-modal-sub" id="letter-modal-sub">Only you can see this until the unlock date.</p>
+      <textarea class="letter-modal-textarea" id="letter-modal-textarea" placeholder="Dear Sarah,&#10;&#10;I've been thinking about what to write…" rows="10"></textarea>
+      <div class="letter-modal-footer">
+        <div class="letter-modal-hint">
+          <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3" y="8" width="10" height="7" rx="1"/><path d="M5 8V6a3 3 0 016 0v2"/></svg>
+          Saved privately · <span id="letter-modal-hint-name">—</span> can't see this
+        </div>
+        <div class="letter-modal-actions">
+          <button class="letter-modal-cancel" onclick="closeLetterModal()">Cancel</button>
+          <button class="letter-modal-save" onclick="saveLetterContent()">Save letter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <footer>Freddy & Sarah</footer>
 </main>
 
@@ -736,7 +856,7 @@
       const{getDatabase,ref,set,push,onValue,remove,serverTimestamp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
       const app=initializeApp(FIREBASE_CONFIG);
       db=getDatabase(app);dbRef=ref;dbSet=set;dbPush=push;dbRemove=remove;fbOnValue=onValue;
-      onValue(ref(db,"notes"),snap=>{const d=snap.val();const n=d?Object.values(d).reverse():[];renderNotes(n);renderNotesPreview(n);});
+      onValue(ref(db,"notes"),snap=>{const d=snap.val();const n=d?Object.entries(d).map(([k,v])=>({...v,_key:k})).reverse():[];renderNotes(n);renderNotesPreview(n);});
       onValue(ref(db,"bucket"),snap=>{const d=snap.val();renderBucket(d?Object.entries(d).map(([k,v])=>({...v,_key:k})):[]);});
       onValue(ref(db,"milestones"),snap=>{const d=snap.val();renderMilestones(d?Object.entries(d).map(([k,v])=>({...v,_key:k})):[]); });
       onValue(ref(db,"meetupDate"),snap=>{const v=snap.val();if(v){meetupDate=new Date(v);document.getElementById("meetup-date-input").value=v.substring(0,10);updateCdCaption(meetupDate);startCountdown();}});
@@ -793,9 +913,46 @@
 
   // Notes
   function fmtTs(ts){if(!ts)return"";const d=new Date(ts),p=n=>String(n).padStart(2,"0");return`${p(d.getDate())}.${p(d.getMonth()+1)}.${String(d.getFullYear()).slice(2)} · ${p(d.getHours())}:${p(d.getMinutes())}`;}
-  function noteCardHTML(note){return`<div class="note-card"><p class="note-text">${note.text}</p><div class="note-footer"><span class="note-author">${note.author}</span>${note.time?`<span class="note-time">${fmtTs(note.time)}</span>`:""}</div></div>`;}
+  function noteCardHTML(note){
+    const canDelete=note.author===ME;
+    const reactions=note.reactions||{};
+    const myReaction=ME&&reactions[ME.toLowerCase()];
+    const heartCount=Object.keys(reactions).length;
+    const reactLabel=heartCount>0?`${heartCount}`:"";
+    return`<div class="note-card">
+      <p class="note-text">${note.text}</p>
+      <div class="note-footer">
+        <span class="note-author">${note.author}</span>
+        ${note.time?`<span class="note-time">${fmtTs(note.time)}</span>`:""}
+      </div>
+      <div class="note-actions">
+        <button class="note-react-btn${myReaction?" reacted":""}" onclick="reactToNote('${note._key||""}')" title="React with heart">
+          <svg width="12" height="11" viewBox="0 0 24 22" fill="${myReaction?"#c4856a":"none"}" stroke="#c4856a" stroke-width="1.5"><path d="M12 21C12 21 2 14 2 7a6 6 0 0112 0 6 6 0 0112 0c0 7-10 14-10 14z"/></svg>
+          ${reactLabel}
+        </button>
+        ${canDelete&&note._key?`<button class="note-delete-btn" onclick="deleteNote('${note._key}')" title="Delete">✕</button>`:""}
+      </div>
+    </div>`;
+  }
   function renderNotes(notes){const w=document.getElementById("notes-wall");if(!notes.length){w.innerHTML=`<p class="empty">No notes yet.</p>`;return;}w.innerHTML=notes.map(noteCardHTML).join("");}
   function renderNotesPreview(notes){const p=document.getElementById("home-notes-preview");const r=notes.slice(0,2);if(!r.length){p.innerHTML=`<p class="empty">No notes yet.</p>`;return;}p.innerHTML=r.map(noteCardHTML).join("");}
+  window.deleteNote=function(key){
+    if(!key)return;
+    if(db&&dbRemove)dbRemove(dbRef(db,`notes/${key}`));
+    else{localNotes=localNotes.filter(n=>n._key!==key);renderNotes(localNotes);renderNotesPreview(localNotes);}
+  };
+
+  window.reactToNote=function(key){
+    if(!key||!ME)return;
+    const reactionKey=`notes/${key}/reactions/${ME.toLowerCase()}`;
+    if(db&&fbOnValue){
+      fbOnValue(dbRef(db,reactionKey),snap=>{
+        if(snap.val()){dbRemove(dbRef(db,reactionKey));}
+        else{dbSet(dbRef(db,reactionKey),true);}
+      },{onlyOnce:true});
+    }
+  };
+
   window.submitNote=function(){const text=document.getElementById("note-input").value.trim();if(!text||!ME)return;const note={text,author:ME,time:Date.now()};if(db&&dbPush){dbPush(dbRef(db,"notes"),note);}else{localNotes.unshift(note);renderNotes(localNotes);renderNotesPreview(localNotes);}document.getElementById("note-input").value="";};
 
   // Milestones
@@ -937,10 +1094,51 @@
 
   // Meetup
   function updateCdCaption(date){const s=date.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});document.getElementById("cd-caption").textContent=s;document.getElementById("scd-caption").textContent=s;}
-  window.updateMeetupDate=function(val){meetupDate=new Date(val+"T00:00:00");updateCdCaption(meetupDate);startCountdown();if(db&&dbSet)dbSet(dbRef(db,"meetupDate"),val+"T00:00:00");};
+  window.updateMeetupDate=function(val){
+    if(!val){meetupDate=null;startCountdown();return;}
+    meetupDate=new Date(val+"T00:00:00");
+    startCountdown();
+    if(db&&dbSet)dbSet(dbRef(db,"meetupDate"),val+"T00:00:00");
+  };
+
+  function checkMeetupDateInput(){
+    const input=document.getElementById("meetup-date-input");
+    if(!input)return;
+    if(!meetupDate||meetupDate<=new Date()){
+      // Date is past or not set — clear the input value and show placeholder
+      input.value="";
+      input.setAttribute("placeholder","Set next meetup");
+      input.style.color="var(--muted)";
+    }
+  }
 
   // Countdown
-  function startCountdown(){if(countdownInterval)clearInterval(countdownInterval);function tick(){const diff=meetupDate-Date.now();const d=Math.max(0,Math.floor(diff/86400000)),h=Math.max(0,Math.floor((diff%86400000)/3600000)),m=Math.max(0,Math.floor((diff%3600000)/60000)),s=Math.max(0,Math.floor((diff%60000)/1000));["cd","scd"].forEach(p=>{document.getElementById(`${p}-d`).textContent=d;document.getElementById(`${p}-h`).textContent=h;document.getElementById(`${p}-m`).textContent=m;document.getElementById(`${p}-s`).textContent=s;});}tick();countdownInterval=setInterval(tick,1000);}
+  function startCountdown(){
+    if(countdownInterval)clearInterval(countdownInterval);
+    function tick(){
+      const diff=meetupDate-Date.now();
+      const isPast=diff<=0;
+      // Main countdown on home page
+      const cdCaption=document.getElementById("cd-caption");
+      if(isPast){
+        ["cd-d","cd-h","cd-m","cd-s"].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent="—";});
+        if(cdCaption)cdCaption.textContent="Set your next meetup date 🗓️";
+        // Sidebar countdown
+        ["scd-d","scd-h","scd-m","scd-s"].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent="—";});
+        const scdCaption=document.getElementById("scd-caption");
+        if(scdCaption)scdCaption.textContent="Pick a new date";
+      } else {
+        const d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
+        ["cd","scd"].forEach(p=>{
+          const de=document.getElementById(`${p}-d`),he=document.getElementById(`${p}-h`),me=document.getElementById(`${p}-m`),se=document.getElementById(`${p}-s`);
+          if(de)de.textContent=d;if(he)he.textContent=h;if(me)me.textContent=m;if(se)se.textContent=s;
+        });
+        if(cdCaption)cdCaption.textContent=meetupDate.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+      }
+    }
+    tick();
+    countdownInterval=setInterval(tick,1000);
+  }
 
   // Greeting
   function greeting(name,tz){const h=parseInt(new Date().toLocaleTimeString("en-GB",{timeZone:tz,hour:"2-digit"}));const g=h<12?"Good morning":h<18?"Good afternoon":"Good evening";return`${g}, <em>${name}</em>`;}
@@ -1421,6 +1619,299 @@
     });
   }
 
+  // Letter
+  let currentLetterRoundId = null;
+  let letterRounds = [];
+
+  function isUnlocked(unlockDate){
+    if(!unlockDate) return false;
+    return new Date() >= new Date(unlockDate);
+  }
+
+  function renderLetterTimeline(rounds){
+    const tl = document.getElementById("letter-timeline");
+    const emptyEl = document.getElementById("letter-empty");
+    if(!tl) return;
+
+    if(!rounds||!rounds.length){
+      tl.innerHTML = "";
+      if(emptyEl) emptyEl.style.display = "block";
+      // No rounds yet — show write prompt for current meetup
+      renderCurrentRound(null);
+      return;
+    }
+    if(emptyEl) emptyEl.style.display = "none";
+
+    // Sort rounds by unlockDate descending (newest first)
+    rounds.sort((a,b) => new Date(b.unlockDate) - new Date(a.unlockDate));
+    letterRounds = rounds;
+
+    // Check if today is unlock day for any round
+    const unlockedToday = rounds.some(r => {
+      const d = new Date(r.unlockDate);
+      const today = new Date();
+      return d.toDateString() === today.toDateString();
+    });
+    const banner = document.getElementById("letter-unlocked-banner");
+    if(banner) banner.style.display = unlockedToday ? "block" : "none";
+
+    tl.innerHTML = "";
+    rounds.forEach((round, i) => {
+      const unlocked = isUnlocked(round.unlockDate);
+      const isActive = i === 0 && !unlocked;
+
+      // Separator
+      const sep = document.createElement("div");
+      sep.className = "letter-meetup-sep";
+      const d = new Date(round.unlockDate);
+      const label = isActive ? `Next meetup · ${d.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})}` : `Meetup · ${d.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})}`;
+      sep.innerHTML = `<span class="letter-meetup-sep-label">${label}</span>`;
+      tl.appendChild(sep);
+
+      // Round card
+      const card = document.createElement("div");
+      card.className = `letter-round${isActive?" active-round":""}${unlocked?" ":""}`;
+      if(!isActive) card.style.opacity = ".85";
+
+      const badge = isActive
+        ? `<span class="letter-round-badge active">Active · Writing phase</span>`
+        : `<span class="letter-round-badge read">Read · ${new Date(round.unlockDate).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})}</span>`;
+
+      const myLetter = round[ME.toLowerCase()] || {};
+      const otherLetter = round[OTHER.toLowerCase()] || {};
+
+      card.innerHTML = `
+        <div class="letter-round-header">
+          <p class="letter-round-date">${d.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})}</p>
+          ${badge}
+        </div>
+        <div class="letter-tiles">
+          ${renderLetterTile(myLetter, true, round._key, unlocked, isActive)}
+          ${renderLetterTile(otherLetter, false, round._key, unlocked, isActive)}
+        </div>
+        ${isActive ? renderRoundCountdown(round.unlockDate) : ""}
+      `;
+      tl.appendChild(card);
+    });
+  }
+
+  function renderLetterTile(letter, isMe, roundKey, unlocked, isActive){
+    const name = isMe ? ME : OTHER;
+    const hasContent = !!(letter && letter.content);
+
+    if(isMe){
+      if(hasContent){
+        const preview = letter.content.substring(0,80) + (letter.content.length>80?"…":"");
+        const statusClass = unlocked && letter.readAt ? "read" : "written";
+        const statusText = unlocked && letter.readAt ? "Read by "+OTHER : "Written & sealed";
+        return `<div class="letter-tile${isActive?" clickable":""}" onclick="${isActive?`openLetterModal('${roundKey}',true)`:""}">
+          <p class="letter-tile-eyebrow"><svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M2 6l6 4 6-4"/></svg>Your letter to ${OTHER}</p>
+          <div class="letter-tile-status ${statusClass}">${statusClass==="read"?"✓ "+statusText:"✎ "+statusText}</div>
+          <p class="letter-tile-preview">${preview}</p>
+          ${isActive?`<button class="letter-tile-btn" onclick="event.stopPropagation();openLetterModal('${roundKey}',true)">Edit ✎</button>`:`<div class="letter-tile-meta"><span>Written ${letter.writtenAt?new Date(letter.writtenAt).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"2-digit"}):""}</span></div>`}
+        </div>`;
+      } else {
+        return `<div class="letter-tile clickable" onclick="openLetterModal('${roundKey}',true)">
+          <p class="letter-tile-eyebrow"><svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M2 6l6 4 6-4"/></svg>Your letter to ${OTHER}</p>
+          <div class="letter-tile-status empty">Not written yet</div>
+          <p class="letter-tile-preview" style="opacity:.5;">Tap to write your letter to ${OTHER}…</p>
+          <button class="letter-tile-btn primary" onclick="event.stopPropagation();openLetterModal('${roundKey}',true)">Write letter</button>
+        </div>`;
+      }
+    } else {
+      // Other person's letter
+      if(unlocked && hasContent){
+        const preview = letter.content.substring(0,80) + (letter.content.length>80?"…":"");
+        return `<div class="letter-tile clickable" onclick="openLetterRead('${roundKey}')">
+          <p class="letter-tile-eyebrow"><svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M2 6l6 4 6-4"/></svg>${OTHER}'s letter to you</p>
+          <div class="letter-tile-status read">✓ Read</div>
+          <p class="letter-tile-preview">${preview}</p>
+          <div class="letter-tile-meta"><span>Written ${letter.writtenAt?new Date(letter.writtenAt).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"2-digit"}):""}</span><span>Read ${letter.readAt?new Date(letter.readAt).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"2-digit"}):""}</span></div>
+        </div>`;
+      } else {
+        return `<div class="letter-tile sealed">
+          <p class="letter-tile-eyebrow"><svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M2 6l6 4 6-4"/></svg>${OTHER}'s letter to you</p>
+          <div class="letter-tile-status sealed"><svg width="8" height="8" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="8" width="10" height="7" rx="1"/><path d="M5 8V6a3 3 0 016 0v2"/></svg> Sealed</div>
+          <p class="letter-tile-preview" style="opacity:.45;">${OTHER} ${hasContent?"has written you a letter.":"is writing you a letter."} You can read it on the day you meet.</p>
+          <button class="letter-tile-btn" style="opacity:.45;pointer-events:none;">Locked until meetup 🔒</button>
+        </div>`;
+      }
+    }
+  }
+
+  function renderRoundCountdown(unlockDate){
+    const diff = new Date(unlockDate) - Date.now();
+    if(diff <= 0) return "";
+    const d = Math.floor(diff/86400000);
+    const h = Math.floor((diff%86400000)/3600000);
+    const m = Math.floor((diff%3600000)/60000);
+    const s = Math.floor((diff%60000)/1000);
+    return `<div class="letter-round-cd">
+      <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="1.3"><rect x="3" y="8" width="10" height="7" rx="1"/><path d="M5 8V6a3 3 0 016 0v2"/><circle cx="8" cy="11" r="1" fill="var(--muted)" stroke="none"/></svg>
+      <span class="letter-round-cd-label">Unlocks on ${new Date(unlockDate).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})}</span>
+      <div class="letter-round-cd-nums">
+        <div><span class="letter-round-cd-num">${d}</span><span class="letter-round-cd-unit">d</span></div>
+        <div><span class="letter-round-cd-num">${h}</span><span class="letter-round-cd-unit">h</span></div>
+        <div><span class="letter-round-cd-num">${m}</span><span class="letter-round-cd-unit">m</span></div>
+        <div><span class="letter-round-cd-num">${s}</span><span class="letter-round-cd-unit">s</span></div>
+      </div>
+    </div>`;
+  }
+
+  function renderCurrentRound(rounds){
+    const tl = document.getElementById("letter-timeline");
+    if(!tl) return;
+    // If no meetup date set or date is in the past with no new date
+    if(!meetupDate || meetupDate <= new Date()){
+      // Only show prompt if there's no active round already
+      const hasActiveRound = rounds && rounds.some(r => r.unlockDate && new Date(r.unlockDate) > new Date());
+      if(!hasActiveRound){
+        const prompt = document.createElement("div");
+        prompt.style.cssText = "text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.78rem;line-height:1.7;";
+        prompt.innerHTML = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--border)" stroke-width="1" stroke-linecap="round" style="display:block;margin:0 auto .75rem;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>Set your next meetup date on the home page<br>to start writing new letters 💌`;
+        tl.appendChild(prompt);
+      }
+      return;
+    }
+    const unlockDateStr = meetupDate.toISOString().split("T")[0];
+    // Check if a round already exists for this date
+    const existing = rounds && rounds.find(r => r.unlockDate && r.unlockDate.startsWith(unlockDateStr));
+    if(existing) return; // already rendered
+    // Create empty round UI
+    const sep = document.createElement("div");
+    sep.className = "letter-meetup-sep";
+    sep.innerHTML = `<span class="letter-meetup-sep-label">Next meetup · ${meetupDate.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})}</span>`;
+    tl.appendChild(sep);
+    const card = document.createElement("div");
+    card.className = "letter-round active-round";
+    card.innerHTML = `
+      <div class="letter-round-header">
+        <p class="letter-round-date">${meetupDate.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})}</p>
+        <span class="letter-round-badge active">Active · Writing phase</span>
+      </div>
+      <div class="letter-tiles">
+        <div class="letter-tile clickable" onclick="openLetterModal('new',true)">
+          <p class="letter-tile-eyebrow"><svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M2 6l6 4 6-4"/></svg>Your letter to ${OTHER}</p>
+          <div class="letter-tile-status empty">Not written yet</div>
+          <p class="letter-tile-preview" style="opacity:.5;">Tap to write your letter to ${OTHER}…</p>
+          <button class="letter-tile-btn primary" onclick="event.stopPropagation();openLetterModal('new',true)">Write letter</button>
+        </div>
+        <div class="letter-tile sealed">
+          <p class="letter-tile-eyebrow"><svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M2 6l6 4 6-4"/></svg>${OTHER}'s letter to you</p>
+          <div class="letter-tile-status sealed"><svg width="8" height="8" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="8" width="10" height="7" rx="1"/><path d="M5 8V6a3 3 0 016 0v2"/></svg> Sealed</div>
+          <p class="letter-tile-preview" style="opacity:.45;">Locked until your meetup.</p>
+          <button class="letter-tile-btn" style="opacity:.45;pointer-events:none;">Locked 🔒</button>
+        </div>
+      </div>
+    `;
+    tl.appendChild(card);
+  }
+
+  window.openLetterModal = function(roundKey, isMe){
+    currentLetterRoundId = roundKey;
+    const modal = document.getElementById("letter-modal-overlay");
+    const titleEl = document.getElementById("letter-modal-title");
+    const subEl = document.getElementById("letter-modal-sub");
+    const hintEl = document.getElementById("letter-modal-hint-name");
+    const ta = document.getElementById("letter-modal-textarea");
+    if(!modal) return;
+
+    titleEl.textContent = `Your letter to ${OTHER}`;
+    subEl.textContent = `Only you can see this. ${OTHER} will read it on the day you meet.`;
+    if(hintEl) hintEl.textContent = OTHER;
+
+    // Pre-fill if existing content
+    ta.value = "";
+    if(roundKey !== "new" && db && fbOnValue){
+      fbOnValue(dbRef(db,`letters/${roundKey}/${ME.toLowerCase()}/content`), snap=>{
+        if(snap.val()) ta.value = snap.val();
+      },{onlyOnce:true});
+    }
+    modal.classList.add("open");
+    setTimeout(()=>ta.focus(),100);
+  };
+
+  window.closeLetterModal = function(){
+    const modal = document.getElementById("letter-modal-overlay");
+    if(modal) modal.classList.remove("open");
+    currentLetterRoundId = null;
+  };
+
+  window.saveLetterContent = async function(){
+    const ta = document.getElementById("letter-modal-textarea");
+    const content_text = ta.value.trim();
+    if(!content_text) return;
+
+    const unlockDate = meetupDate ? meetupDate.toISOString().split("T")[0]+"T00:00:00" : null;
+    if(!unlockDate) return;
+
+    let roundKey = currentLetterRoundId;
+
+    if(db && dbSet && dbPush){
+      if(roundKey === "new"){
+        // Create new round
+        const newRound = {unlockDate, createdAt: Date.now()};
+        const ref_new = await dbPush(dbRef(db,"letters"), newRound);
+        roundKey = ref_new.key;
+      }
+      // Save letter content — only update unlockDate if round not yet read
+      await dbSet(dbRef(db,`letters/${roundKey}/${ME.toLowerCase()}`),{
+        content: content_text,
+        writtenAt: Date.now(),
+        unlockDate
+      });
+    }
+    closeLetterModal();
+    initLetterPage();
+  };
+
+  window.openLetterRead = function(roundKey){
+    if(!roundKey || !db || !fbOnValue) return;
+    fbOnValue(dbRef(db,`letters/${roundKey}`), snap=>{
+      const round = snap.val();
+      if(!round) return;
+      const otherLetter = round[OTHER.toLowerCase()];
+      if(!otherLetter || !isUnlocked(otherLetter.unlockDate)) return;
+
+      // Mark as read
+      if(!otherLetter.readAt){
+        dbSet(dbRef(db,`letters/${roundKey}/${OTHER.toLowerCase()}/readAt`), Date.now());
+      }
+
+      // Show read view in place of timeline
+      const tl = document.getElementById("letter-timeline");
+      const backBtn = `<button onclick="initLetterPage()" style="background:none;border:none;cursor:pointer;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-family:'Jost',sans-serif;text-decoration:underline;text-underline-offset:3px;margin-bottom:1rem;display:block;padding:0;">← Back to letters</button>`;
+      tl.innerHTML = backBtn + `<div class="letter-read-card">
+        <p class="letter-read-eyebrow">Written by ${OTHER} · ${otherLetter.writtenAt?new Date(otherLetter.writtenAt).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"}):""}</p>
+        <p class="letter-read-from">To ${ME}, with love</p>
+        <p class="letter-read-body">${otherLetter.content||""}</p>
+        <p class="letter-read-sig">— ${OTHER} 🤍</p>
+      </div>`;
+    },{onlyOnce:true});
+  };
+
+  window.initLetterPage=function(){
+    const tl = document.getElementById("letter-timeline");
+    if(tl) tl.innerHTML = "";
+    if(!db || !fbOnValue){
+      renderCurrentRound([]);
+      return;
+    }
+    fbOnValue(dbRef(db,"letters"), snap=>{
+      const data = snap.val();
+      const rounds = data ? Object.entries(data).map(([k,v])=>({...v,_key:k})) : [];
+      // Filter rounds relevant to meetup dates
+      renderLetterTimeline(rounds);
+      // Also render current round if not already in rounds
+      if(rounds.length === 0) renderCurrentRound([]);
+      else {
+        const unlockDateStr = meetupDate ? meetupDate.toISOString().split("T")[0] : null;
+        const hasCurrentRound = rounds.some(r=>r.unlockDate&&r.unlockDate.startsWith(unlockDateStr||""));
+        if(!hasCurrentRound) renderCurrentRound(rounds);
+      }
+    },{onlyOnce:true});
+  }
+
   // Nav
   window.showPage=function(name){
     document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
@@ -1428,6 +1919,9 @@
     document.getElementById(`page-${name}`).classList.add("active");
     document.getElementById(`nav-${name}`).classList.add("active");
     closeSidebar();
+    if(name==="letter"){
+      setTimeout(()=>initLetterPage(),50);
+    }
     if(name==="places"){
       setTimeout(()=>{
         if(db&&fbOnValue){
@@ -1466,6 +1960,7 @@
     updateDistanceAndSleep();
     setInterval(updateDistanceAndSleep, 60000);
     initPulse();
+    checkMeetupDateInput();
     function tickClocks(){document.getElementById("my-time").textContent=fmtTime(myTz);document.getElementById("my-date").textContent=fmtDate(myTz);document.getElementById("other-time").textContent=fmtTime(otherTz||DEFAULTS[OTHER]);document.getElementById("other-date").textContent=fmtDate(otherTz||DEFAULTS[OTHER]);}
     tickClocks();setInterval(tickClocks,1000);
     const start=new Date("2026-01-01");document.getElementById("days-together").textContent=Math.floor((Date.now()-start)/86400000)+1;
