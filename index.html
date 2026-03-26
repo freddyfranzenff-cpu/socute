@@ -1684,8 +1684,7 @@
 
     if(!rounds||!rounds.length){
       tl.innerHTML = "";
-      if(emptyEl) emptyEl.style.display = "block";
-      // No rounds yet — show write prompt for current meetup
+      if(emptyEl) emptyEl.style.display = "none";
       renderCurrentRound(null);
       return;
     }
@@ -1780,9 +1779,9 @@
       } else {
         return `<div class="letter-tile sealed">
           <p class="letter-tile-eyebrow"><svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M2 6l6 4 6-4"/></svg>${OTHER}'s letter to you</p>
-          <div class="letter-tile-status sealed"><svg width="8" height="8" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="8" width="10" height="7" rx="1"/><path d="M5 8V6a3 3 0 016 0v2"/></svg> Sealed</div>
-          <p class="letter-tile-preview" style="opacity:.45;">${OTHER} ${hasContent?"has written you a letter.":"is writing you a letter."} You can read it on the day you meet.</p>
-          <button class="letter-tile-btn" style="opacity:.45;pointer-events:none;">Locked until meetup 🔒</button>
+          <div class="letter-tile-status sealed"><svg width="8" height="8" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="8" width="10" height="7" rx="1"/><path d="M5 8V6a3 3 0 016 0v2"/></svg> ${hasContent ? "Written &amp; sealed" : "Not written yet"}</div>
+          <p class="letter-tile-preview" style="opacity:.45;">${hasContent ? "You can read it on the day you meet." : OTHER+" hasn't written their letter yet."}</p>
+          ${hasContent ? `<button class="letter-tile-btn" style="opacity:.45;pointer-events:none;">Locked until meetup 🔒</button>` : ""}
         </div>`;
       }
     }
@@ -1847,9 +1846,8 @@
         </div>
         <div class="letter-tile sealed">
           <p class="letter-tile-eyebrow"><svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M2 6l6 4 6-4"/></svg>${OTHER}'s letter to you</p>
-          <div class="letter-tile-status sealed"><svg width="8" height="8" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="8" width="10" height="7" rx="1"/><path d="M5 8V6a3 3 0 016 0v2"/></svg> Sealed</div>
-          <p class="letter-tile-preview" style="opacity:.45;">Locked until your meetup.</p>
-          <button class="letter-tile-btn" style="opacity:.45;pointer-events:none;">Locked 🔒</button>
+          <div class="letter-tile-status empty">Not written yet</div>
+          <p class="letter-tile-preview" style="opacity:.45;">${OTHER} hasn't written their letter yet.</p>
         </div>
       </div>
     `;
