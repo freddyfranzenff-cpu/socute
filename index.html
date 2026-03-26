@@ -1097,16 +1097,64 @@
   function updateCdCaption(date){const s=date.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});document.getElementById("cd-caption").textContent=s;document.getElementById("scd-caption").textContent=s;}
   window.updateMeetupDate=function(val){
     if(!val){meetupDate=null;startCountdown();return;}
-    meetupDate=new Date(val+"T00:00:00");
+    const newDate=new Date(val+"T00:00:00");
+    const now=new Date();
+    const maxDate=new Date(now.getFullYear()+2,now.getMonth(),now.getDate());
+
+    // Fix 2: reject past dates
+    if(newDate<=now){
+      const input=document.getElementById("meetup-date-input");
+      if(input){
+        // Reset to previous valid date or clear
+        input.value=meetupDate&&meetupDate>now?meetupDate.toISOString().split("T")[0]:"";
+        input.style.borderColor="#c4856a";
+        setTimeout(()=>input.style.borderColor="",2000);
+      }
+      return;
+    }
+
+    // Fix 6: reject dates more than 2 years away
+    if(newDate>maxDate){
+      const input=document.getElementById("meetup-date-input");
+      if(input){
+        input.value=meetupDate&&meetupDate>now?meetupDate.toISOString().split("T")[0]:"";
+        input.style.borderColor="#c4856a";
+        setTimeout(()=>input.style.borderColor="",2000);
+      }
+      return;
+    }
+
+    meetupDate=newDate;
     startCountdown();
     if(db&&dbSet)dbSet(dbRef(db,"meetupDate"),val+"T00:00:00");
+
+    // Fix 5: update unlockDate on unread letters to match new meetup date
+    if(db&&fbOnValue&&dbSet){
+      fbOnValue(dbRef(db,"letters"),snap=>{
+        const data=snap.val();
+        if(!data)return;
+        Object.entries(data).forEach(([key,round])=>{
+          // Only update if neither letter has been read yet
+          const freddy=round["freddy"]||{};
+          const sarah=round["sarah"]||{};
+          const neitherRead=!freddy.readAt&&!sarah.readAt;
+          if(neitherRead&&round.unlockDate){
+            dbSet(dbRef(db,`letters/${key}/unlockDate`),val+"T00:00:00");
+          }
+        });
+      },{onlyOnce:true});
+    }
   };
 
   function checkMeetupDateInput(){
     const input=document.getElementById("meetup-date-input");
     if(!input)return;
+    // Set min to tomorrow, max to 2 years from now
+    const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);
+    const maxD=new Date();maxD.setFullYear(maxD.getFullYear()+2);
+    input.min=tomorrow.toISOString().split("T")[0];
+    input.max=maxD.toISOString().split("T")[0];
     if(!meetupDate||meetupDate<=new Date()){
-      // Date is past or not set — clear the input value and show placeholder
       input.value="";
       input.setAttribute("placeholder","Set next meetup");
       input.style.color="var(--muted)";
@@ -1847,8 +1895,19 @@
     const content_text = ta.value.trim();
     if(!content_text) return;
 
-    const unlockDate = meetupDate ? meetupDate.toISOString().split("T")[0]+"T00:00:00" : null;
-    if(!unlockDate) return;
+    // Fix 8: block saving if no meetup date or meetup date is in the past
+    if(!meetupDate || meetupDate <= new Date()){
+      const sub = document.getElementById("letter-modal-sub");
+      if(sub){
+        const orig = sub.textContent;
+        sub.textContent = "Please set a valid future meetup date on the home page first.";
+        sub.style.color = "#c4856a";
+        setTimeout(()=>{sub.textContent=orig;sub.style.color="";},3000);
+      }
+      return;
+    }
+
+    const unlockDate = meetupDate.toISOString().split("T")[0]+"T00:00:00";
 
     let roundKey = currentLetterRoundId;
 
