@@ -384,6 +384,24 @@
     .m-form-photo-btn:hover{border-color:var(--accent);color:var(--accent)}
     .m-form-photo-btn.has-photo{border-color:var(--accent2);color:var(--accent2);border-style:solid}
     @keyframes spin{to{transform:rotate(360deg)}}
+    /* ── Photo reposition ── */
+    .m-reposition-overlay{position:fixed;inset:0;background:rgba(28,24,20,.6);z-index:600;display:none;align-items:center;justify-content:center;padding:1.5rem}
+    .m-reposition-overlay.open{display:flex}
+    .m-reposition-modal{background:var(--surface);border-radius:18px;overflow:hidden;width:100%;max-width:480px;border:1px solid var(--border);animation:fadeUp .3s ease both}
+    .m-reposition-header{background:rgba(28,24,20,.9);padding:.65rem 1rem;display:flex;align-items:center;justify-content:space-between}
+    .m-reposition-hint{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:.4rem}
+    .m-reposition-title{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3)}
+    .m-reposition-frame{height:150px;overflow:hidden;position:relative;cursor:grab;user-select:none}
+    .m-reposition-frame:active{cursor:grabbing}
+    .m-reposition-frame img{width:100%;height:100%;object-fit:cover;pointer-events:none;transition:object-position .05s}
+    .m-reposition-grid{position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:33.33% 33.33%;pointer-events:none}
+    .m-reposition-footer{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;border-top:1px solid var(--border)}
+    .m-reposition-tip{font-size:.62rem;color:var(--muted);display:flex;align-items:center;gap:.35rem}
+    .m-reposition-actions{display:flex;gap:.5rem}
+    .m-reposition-reset{font-size:.68rem;color:var(--muted);border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:.32rem .8rem;cursor:pointer;font-family:"Jost",sans-serif}
+    .m-reposition-save{font-size:.68rem;color:white;border:none;background:var(--accent);border-radius:8px;padding:.32rem .9rem;cursor:pointer;font-family:"Jost",sans-serif}
+    /* Add reposition btn to photo actions */
+    .m-photo-wrap .m-photo-actions{gap:.3rem}
   </style>
 </head>
 <body>
@@ -766,6 +784,33 @@
     <p class="empty" id="letter-empty" style="display:none;">No letters yet. Write your first one above!</p>
   </div>
 
+  <!-- Photo reposition modal -->
+  <div class="m-reposition-overlay" id="m-reposition-overlay" onclick="if(event.target===this)closeRepositionModal()">
+    <div class="m-reposition-modal">
+      <div class="m-reposition-header">
+        <div class="m-reposition-hint">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg>
+          Drag to reposition
+        </div>
+        <span class="m-reposition-title" id="m-reposition-title"></span>
+      </div>
+      <div class="m-reposition-frame" id="m-reposition-frame">
+        <img id="m-reposition-img" src="" alt=""/>
+        <div class="m-reposition-grid"></div>
+      </div>
+      <div class="m-reposition-footer">
+        <div class="m-reposition-tip">
+          <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 11h.01"/></svg>
+          Drag up/down/left/right to frame
+        </div>
+        <div class="m-reposition-actions">
+          <button class="m-reposition-reset" onclick="resetReposition()">Reset</button>
+          <button class="m-reposition-save" onclick="saveReposition()">Done ✓</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Letter write modal -->
   <div class="letter-modal-overlay" id="letter-modal-overlay" onclick="if(event.target===this)closeLetterModal()">
     <div class="letter-modal">
@@ -999,13 +1044,14 @@
       const icon=TAG_ICONS[item.tag]||"";
       const dateStr=fmtMDateRange(item.date,item.endDate);
       const locationHTML=item.location?`<p class="m-location"><svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 1a5 5 0 015 5c0 3.5-5 9-5 9S3 9.5 3 6a5 5 0 015-5z"/><circle cx="8" cy="6" r="1.8"/></svg>${item.locationDisplay||item.location}</p>`:"";
-      const photoHTML=item.photoURL?`<div class="m-photo-wrap" onclick="viewMilestonePhoto('${item.photoURL}')"><img src="${item.photoURL}" alt=""/><div class="m-photo-actions"><button class="m-photo-action-btn" onclick="event.stopPropagation();removeMilestonePhoto('${item._key}')">Remove photo</button></div></div>`:(item._key?`<div class="m-photo-placeholder" onclick="triggerPhotoUploadFor('${item._key}')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M7 6V5a1 1 0 011-1h2M14 5a1 1 0 011 1v1"/></svg><span>Add photo</span></div>`:"")+"";
+      const photoHTML=item.photoURL?`<div class="m-photo-wrap" onclick="viewMilestonePhoto('${item.photoURL}')"><img src="${item.photoURL}" alt="" style="object-position:${item.photoPosition||'center center'}"/><div class="m-photo-actions"><button class="m-photo-action-btn" onclick="event.stopPropagation();openRepositionModal('${item._key}','${item.photoURL}','${item.title||''}','${item.photoPosition||'center center'}')">Reposition</button><button class="m-photo-action-btn" onclick="event.stopPropagation();removeMilestonePhoto('${item._key}')">Remove</button></div></div>`:(item._key?`<div class="m-photo-placeholder" onclick="triggerPhotoUploadFor('${item._key}')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M7 6V5a1 1 0 011-1h2M14 5a1 1 0 011 1v1"/></svg><span>Add photo</span></div>`:"")+"";
       return`<div class="milestone"><div class="m-dot ${dc}"></div><div class="m-card${isFuture?" future-card":""}">${photoHTML}<div class="m-top"><p class="m-title"><span class="m-icon">${icon}</span>${item.title}</p><span class="m-date-range">${dateStr}</span></div>${item.note?`<p class="m-note">${item.note}</p>`:""}${locationHTML}<div class="m-footer">${item.tag?`<span class="m-tag ${tc}">${item.tag}</span>`:"<span></span>"}<div style="display:flex;align-items:center;gap:.4rem;"><span class="m-author">${item.addedBy||""}</span>${item._key?`<button class="m-edit" onclick="editMilestone('${item._key}')" title="Edit">✎</button><button class="m-delete" onclick="deleteMilestone('${item._key}')" title="Delete">✕</button>`:""}</div></div></div></div>`;
     }).join("");
   }
   window.cancelMilestoneEdit=function(){
     editingKey=null;
     pendingPhotoFile=null;
+    pendingPhotoPosition="50% 50%";
     const pbtn=document.getElementById("m-photo-btn");
     const plbl=document.getElementById("m-photo-btn-label");
     if(pbtn)pbtn.classList.remove("has-photo");
@@ -1117,8 +1163,9 @@
       else{const idx=localMilestones.findIndex(x=>x._key===currentEditKey);if(idx>-1)localMilestones[idx]={...m,_key:currentEditKey};renderMilestones([...localMilestones]);}
       // Upload new photo if selected
       if(pendingPhotoFile && currentEditKey && storage){
-        await safeUploadPhotoForKey(currentEditKey, pendingPhotoFile);
+        await safeUploadPhotoForKey(currentEditKey, pendingPhotoFile, pendingPhotoPosition);
         pendingPhotoFile=null;
+    pendingPhotoPosition="50% 50%";
         const pbtn=document.getElementById("m-photo-btn");
         const plbl=document.getElementById("m-photo-btn-label");
         if(pbtn)pbtn.classList.remove("has-photo");
@@ -1131,8 +1178,9 @@
       else{finalKey=Date.now().toString();localMilestones.push({...m,_key:finalKey});renderMilestones([...localMilestones]);}
       // Upload pending photo if selected
       if(pendingPhotoFile && finalKey && storage){
-        await safeUploadPhotoForKey(finalKey, pendingPhotoFile);
+        await safeUploadPhotoForKey(finalKey, pendingPhotoFile, pendingPhotoPosition);
         pendingPhotoFile=null;
+    pendingPhotoPosition="50% 50%";
         const pbtn=document.getElementById("m-photo-btn");
         const plbl=document.getElementById("m-photo-btn-label");
         if(pbtn)pbtn.classList.remove("has-photo");
@@ -2038,6 +2086,8 @@
   // Milestone photos
   let pendingPhotoFile = null;
   let pendingPhotoForKey = null;
+  let pendingPhotoPosition = "50% 50%"; // set during reposition before upload
+  let repositionMode = "new"; // "new" = from form, "card" = from existing card
 
   window.handleMilestonePhotoSelect = function(input){
     const file = input.files[0];
@@ -2058,10 +2108,11 @@
       return;
     }
     pendingPhotoFile = file;
-    const btn = document.getElementById("m-photo-btn");
-    const label = document.getElementById("m-photo-btn-label");
-    if(btn) btn.classList.add("has-photo");
-    if(label) label.textContent = "Photo added ✓";
+    pendingPhotoPosition = "50% 50%";
+    repositionMode = "new";
+    // Show reposition modal immediately with local blob URL
+    const blobUrl = URL.createObjectURL(file);
+    openRepositionModalForNew(blobUrl);
   };
 
   window.triggerPhotoUploadFor = function(key){
@@ -2078,12 +2129,17 @@
       if(!validTypes.includes(file.type) && !file.name.match(/\.(jpg|jpeg|png|gif|webp|heic|heif)$/i)) return;
       // Validate size (max 10MB)
       if(file.size > 10 * 1024 * 1024) return;
-      await safeUploadPhotoForKey(key, file);
+      // Show reposition modal first, upload happens on "Done"
+      repositionMode = "card";
+      pendingPhotoFile = file;
+      pendingPhotoPosition = "50% 50%";
+      const blobUrl = URL.createObjectURL(file);
+      openRepositionModalForCard(key, blobUrl);
     };
     input.click();
   };
 
-  async function uploadPhotoForKey(key, file){
+  async function uploadPhotoForKey(key, file, position){
     if(!storage || !fbStorageRef || !fbUploadBytes || !fbGetDownloadURL) return;
     // Show uploading feedback
     const saveBtn = document.getElementById("m-save-btn");
@@ -2101,6 +2157,7 @@
     if(db && dbSet){
       await dbSet(dbRef(db,`milestones/${key}/photoURL`), url);
       await dbSet(dbRef(db,`milestones/${key}/photoPath`), path);
+      if(position) await dbSet(dbRef(db,`milestones/${key}/photoPosition`), position);
     }
     // Immediately update card in DOM without waiting for Firebase listener
     const existingPlaceholder = document.querySelector(`.m-photo-placeholder[onclick*="${key}"]`);
@@ -2108,7 +2165,7 @@
       const wrap = document.createElement("div");
       wrap.className = "m-photo-wrap";
       wrap.setAttribute("onclick", `viewMilestonePhoto('${url}')`);
-      wrap.innerHTML = `<img src="${url}" alt=""/><div class="m-photo-actions"><button class="m-photo-action-btn" onclick="event.stopPropagation();removeMilestonePhoto('${key}')">Remove photo</button></div>`;
+      wrap.innerHTML = `<img src="${url}" alt="" style="object-position:${position||'center center'}"/><div class="m-photo-actions"><button class="m-photo-action-btn" onclick="event.stopPropagation();openRepositionModal('${key}','${url}','','center center')">Reposition</button><button class="m-photo-action-btn" onclick="event.stopPropagation();removeMilestonePhoto('${key}')">Remove</button></div>`;
       existingPlaceholder.replaceWith(wrap);
     }
     // Reset save btn
@@ -2116,9 +2173,9 @@
     if(saveBtn2 && saveBtn2.textContent === "Uploading…") saveBtn2.textContent = "Save";
   }
 
-  async function safeUploadPhotoForKey(key, file){
+  async function safeUploadPhotoForKey(key, file, position){
     try{
-      await uploadPhotoForKey(key, file);
+      await uploadPhotoForKey(key, file, position);
     } catch(e){
       console.error("Photo upload failed:", e);
       const saveBtn = document.getElementById("m-save-btn");
@@ -2182,6 +2239,140 @@
     overlay.appendChild(img);
     document.body.appendChild(overlay);
   };
+
+  // Photo reposition
+  let repositionKey = null;
+  let repositionPos = {x: 50, y: 50}; // percentage
+  let repositionDragging = false;
+  let repositionStart = {x: 0, y: 0};
+  let repositionStartPos = {x: 50, y: 50};
+
+  function openRepositionBase(url, title, position){
+    const parts = (position || "center center").split(" ");
+    const px = parts[0] === "center" ? 50 : parseFloat(parts[0]);
+    const py = parts[1] === "center" ? 50 : parseFloat(parts[1]);
+    repositionPos = {x: isNaN(px)?50:px, y: isNaN(py)?50:py};
+    repositionStartPos = {...repositionPos};
+    const overlay = document.getElementById("m-reposition-overlay");
+    const img = document.getElementById("m-reposition-img");
+    const titleEl = document.getElementById("m-reposition-title");
+    const frame = document.getElementById("m-reposition-frame");
+    if(!overlay || !img) return;
+    img.src = url;
+    if(titleEl) titleEl.textContent = title || "";
+    applyRepositionPos();
+    frame.onmousedown = startRepositionDrag;
+    frame.ontouchstart = startRepositionDrag;
+    overlay.classList.add("open");
+  }
+
+  function openRepositionModalForNew(blobUrl){
+    repositionKey = null;
+    repositionMode = "new";
+    openRepositionBase(blobUrl, "New photo", "50% 50%");
+  }
+
+  function openRepositionModalForCard(key, blobUrl){
+    repositionKey = key;
+    repositionMode = "card";
+    openRepositionBase(blobUrl, "", "50% 50%");
+  }
+
+  window.openRepositionModal = function(key, url, title, currentPosition){
+    repositionKey = key;
+    repositionMode = "existing";
+    openRepositionBase(url, title, currentPosition);
+  };
+
+  window.closeRepositionModal = function(){
+    const overlay = document.getElementById("m-reposition-overlay");
+    if(overlay) overlay.classList.remove("open");
+    repositionKey = null;
+    // Remove drag events
+    const frame = document.getElementById("m-reposition-frame");
+    if(frame){ frame.onmousedown = null; frame.ontouchstart = null; }
+  };
+
+  window.resetReposition = function(){
+    repositionPos = {x: 50, y: 50};
+    applyRepositionPos();
+  };
+
+  window.saveReposition = async function(){
+    const posStr = `${repositionPos.x}% ${repositionPos.y}%`;
+    pendingPhotoPosition = posStr;
+
+    if(repositionMode === "new"){
+      // From form — just store position, actual upload happens on Save milestone
+      const btn = document.getElementById("m-photo-btn");
+      const label = document.getElementById("m-photo-btn-label");
+      if(btn) btn.classList.add("has-photo");
+      if(label) label.textContent = "Photo added ✓";
+      // Revoke blob URL to free memory
+      const img = document.getElementById("m-reposition-img");
+      if(img && img.src.startsWith("blob:")) URL.revokeObjectURL(img.src);
+      closeRepositionModal();
+      return;
+    }
+
+    if(repositionMode === "card"){
+      // From card placeholder — upload now with chosen position
+      if(!repositionKey || !pendingPhotoFile) { closeRepositionModal(); return; }
+      const key = repositionKey;
+      closeRepositionModal();
+      await safeUploadPhotoForKey(key, pendingPhotoFile, posStr);
+      pendingPhotoFile = null;
+      return;
+    }
+
+    // "existing" mode — just update position in Firebase
+    if(!repositionKey) return;
+    if(db && dbSet) await dbSet(dbRef(db,`milestones/${repositionKey}/photoPosition`), posStr);
+    const cardImg = document.querySelector(`.m-photo-wrap[onclick*="${repositionKey}"] img`);
+    if(cardImg) cardImg.style.objectPosition = posStr;
+    closeRepositionModal();
+  };
+
+  function applyRepositionPos(){
+    const img = document.getElementById("m-reposition-img");
+    if(img) img.style.objectPosition = `${repositionPos.x}% ${repositionPos.y}%`;
+  }
+
+  function startRepositionDrag(e){
+    repositionDragging = true;
+    repositionStartPos = {...repositionPos};
+    const pt = e.touches ? e.touches[0] : e;
+    repositionStart = {x: pt.clientX, y: pt.clientY};
+    document.onmousemove = onRepositionMove;
+    document.ontouchmove = onRepositionMove;
+    document.onmouseup = stopRepositionDrag;
+    document.ontouchend = stopRepositionDrag;
+    e.preventDefault();
+  }
+
+  function onRepositionMove(e){
+    if(!repositionDragging) return;
+    const pt = e.touches ? e.touches[0] : e;
+    const frame = document.getElementById("m-reposition-frame");
+    if(!frame) return;
+    const rect = frame.getBoundingClientRect();
+    // Sensitivity: drag distance relative to frame size
+    const dx = (pt.clientX - repositionStart.x) / rect.width * 100;
+    const dy = (pt.clientY - repositionStart.y) / rect.height * 100;
+    // Dragging right moves position left (natural feel)
+    repositionPos.x = Math.max(0, Math.min(100, repositionStartPos.x - dx));
+    repositionPos.y = Math.max(0, Math.min(100, repositionStartPos.y - dy));
+    applyRepositionPos();
+    e.preventDefault();
+  }
+
+  function stopRepositionDrag(){
+    repositionDragging = false;
+    document.onmousemove = null;
+    document.ontouchmove = null;
+    document.onmouseup = null;
+    document.ontouchend = null;
+  }
 
   // Nav
   window.showPage=function(name){
