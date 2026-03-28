@@ -144,11 +144,11 @@
   .page{display:none;animation:fadeUp .35s ease both}
   .page.active{display:block}
   .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);position:relative}
-  .page-eyebrow{font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem;display:block}
-  .page-title{font-size:clamp(1.6rem,2.8vw,2.2rem);font-weight:700;letter-spacing:-.025em;color:var(--text);line-height:1.2}
+  .page-eyebrow{font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .page-title{font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:700;letter-spacing:-.025em;color:var(--text);line-height:1.2}
   .page-title em{font-style:normal;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;padding-bottom:.2em;margin-bottom:-.2em;line-height:1;vertical-align:top}
   .page-corner-orn{display:none}
-  .section-heading{font-size:.48rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem;margin-top:.25rem;display:flex;align-items:center;gap:.5rem}
+  .section-heading{font-size:.48rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem;margin-top:.85rem;display:flex;align-items:center;gap:.5rem}
   .section-heading::after{content:'';flex:1;height:1px;background:var(--border)}
   .orn-divider{display:none}
 
@@ -166,9 +166,7 @@
   .card-accent{background:linear-gradient(135deg,#fff8f5,#ffeee6)!important;border:1.5px solid rgba(232,98,42,0.3)!important;box-shadow:0 4px 20px rgba(232,98,42,0.12)!important;}
   .card-accent::before{background:linear-gradient(90deg,transparent,rgba(232,98,42,0.2),transparent)!important;}
   .card-accent .card-label,.card-accent .stat-unit{color:var(--muted)!important;}
-  .card-accent .stat-value{background:linear-gradient(135deg,var(--k),var(--pk))!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;}
-
-  /* ── CLOCKS ── */
+  .card-accent   /* ── CLOCKS ── */
   .clock-time{font-size:1.9rem;font-weight:300;color:var(--text);line-height:1;letter-spacing:-.02em}
   .clock-date{font-size:.6rem;color:var(--muted);margin-top:.18rem}
 
@@ -455,9 +453,9 @@
   .m-reposition-header{background:rgba(42,18,8,.9);padding:.62rem 1rem;display:flex;align-items:center;justify-content:space-between}
   .m-reposition-hint{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:.4rem}
   .m-reposition-title{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3)}
-  .m-reposition-frame{height:150px;overflow:hidden;position:relative;cursor:grab;user-select:none;touch-action:none}
+  .m-reposition-frame{height:180px;overflow:hidden;position:relative;cursor:grab;user-select:none;touch-action:none}
   .m-reposition-frame:active{cursor:grabbing}
-  .m-reposition-frame img{width:100%;height:100%;object-fit:cover;pointer-events:none;transition:object-position .05s}
+  .m-reposition-frame img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) translate(var(--pan-x,0px),var(--pan-y,0px));min-width:100%;min-height:100%;width:auto;height:auto;max-width:none;object-fit:none;pointer-events:none}
   .m-reposition-grid{position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:33.33% 33.33%;pointer-events:none}
   .m-reposition-footer{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1rem;border-top:1px solid var(--border)}
   .m-reposition-tip{font-size:.6rem;color:var(--muted);display:flex;align-items:center;gap:.35rem}
@@ -482,22 +480,30 @@
 
 
   /* ── HOME REDESIGN ── */
-  .home-greeting-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem;gap:1rem}
+  .home-greeting-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);gap:1rem}
   .home-greeting-left{flex:1;min-width:0}
-  .home-days-badge{flex-shrink:0;text-align:right;padding-top:.15rem}
+  .home-days-badge{flex-shrink:0;text-align:right}
   .home-days-num{font-size:2.6rem;font-weight:700;letter-spacing:-.04em;line-height:1;
     background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;
     display:inline-block;padding-bottom:.1em}
   .home-days-lbl{font-size:.42rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
 
   .home-hero-row{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-bottom:.85rem}
-  .home-map-card{} /* inherits .map-card */
-  .home-cd-card{padding:1.1rem 1.2rem;display:flex;flex-direction:column;justify-content:space-between;min-height:100%}
+  .home-map-card{margin-bottom:0!important}
+  .home-cd-card{padding:1.1rem 1.2rem;display:flex;flex-direction:column;justify-content:space-between}
 
-  .home-dist-strip{display:flex;align-items:center;gap:1.25rem;padding:.85rem 1.2rem}
-  .home-dist-bar-wrap{flex:1;min-width:0}
-  .home-dist-bar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:.3rem}
-  .home-dist-fill{height:100%;background:linear-gradient(90deg,var(--k),var(--pk));border-radius:2px;width:0%;transition:width .6s ease}
+  .home-dist-strip{display:flex;align-items:center;gap:.75rem;padding:.9rem 1.2rem}
+  .home-dist-city{flex-shrink:0;min-width:44px;max-width:90px;overflow:hidden}
+  .home-dist-city-name{font-size:.8rem;font-weight:600;color:var(--text);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .home-dist-city-sub{font-size:.46rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:.1rem}
+  .home-dist-center{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:.28rem}
+  .home-dist-line{display:flex;align-items:center;gap:4px;width:100%}
+  .home-dist-line-seg{flex:1;height:1.5px;background:linear-gradient(90deg,var(--border),rgba(232,98,42,0.3));border-radius:1px}
+  .home-dist-plane{flex-shrink:0;opacity:.7;transform:rotate(45deg)}
+  .home-dist-km{font-size:.68rem;font-weight:600;color:var(--k);letter-spacing:-.01em;white-space:nowrap}
+  .home-dist-km-unit{font-size:.52rem;font-weight:400;color:var(--muted)}
+  /* keep bar classes for JS compat but hide */
+  .home-dist-bar-wrap,.home-dist-bar,.home-dist-fill{display:none}
 
   /* Pulse received pill (replaces pulse-banner) */
   .pulse-recv-pill{display:inline-flex;align-items:center;gap:.45rem;
@@ -569,15 +575,17 @@
     .letter-round-date{font-size:.88rem}
     .letter-round-badge{font-size:.48rem;padding:.16rem .5rem}
     /* Home redesign mobile */
-    .home-greeting-row{margin-bottom:1rem;gap:.65rem}
+    .home-greeting-row{margin-bottom:2rem;padding-bottom:1.25rem;gap:.65rem}
     .home-days-num{font-size:2rem}
+    .home-greeting-left{flex:1;min-width:0}
+    .home-cd-card .stat-card-header{flex-direction:row;align-items:center}
     .home-hero-row{grid-template-columns:1fr;gap:.65rem;margin-bottom:.65rem}
     .home-cd-card{min-height:unset;padding:.9rem 1rem}
     .home-dist-strip{flex-direction:row;padding:.75rem 1rem;gap:.85rem}
     .home-map-card #map{height:140px}
     #map{height:140px}
     .pulse-recv-pill{font-size:.55rem}
-    .pulse-send-pill{padding:.3rem .65rem .3rem .3rem}
+    .pulse-send-pill{padding:.3rem .65rem .3rem .3rem;max-width:100%;box-sizing:border-box}
     .pulse-send-pill-btn{width:24px;height:24px}
     .pulse-send-pill-btn .pulse-heart-sm{inset:2px}
   }
@@ -774,13 +782,21 @@
 
     <!-- ── DISTANCE STRIP ── -->
     <div class="card home-dist-strip" style="margin-top:.85rem;">
-      <div>
-        <p class="card-label"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 8h12M8 2l6 6-6 6"/></svg>Distance apart</p>
-        <p class="stat-value" id="distance-apart" style="font-size:1.8rem;">—</p>
-        <p class="stat-unit">km</p>
+      <div class="home-dist-city">
+        <p class="home-dist-city-name" id="home-dist-city-a">Bonn</p>
+        <p class="home-dist-city-sub">Freddy</p>
       </div>
-      <div class="home-dist-bar-wrap">
-        <div class="home-dist-bar"><div class="home-dist-fill" id="home-dist-fill"></div></div>
+      <div class="home-dist-center">
+        <div class="home-dist-line">
+          <div class="home-dist-line-seg"></div>
+          <svg class="home-dist-plane" width="14" height="14" viewBox="0 0 24 24" fill="var(--k)"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 00-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+          <div class="home-dist-line-seg"></div>
+        </div>
+        <p class="home-dist-km"><span id="distance-apart">—</span> <span class="home-dist-km-unit">km</span></p>
+      </div>
+      <div class="home-dist-city" style="text-align:right;">
+        <p class="home-dist-city-name" id="home-dist-city-b">Kaohsiung</p>
+        <p class="home-dist-city-sub">Sarah</p>
       </div>
     </div>
 
@@ -1510,8 +1526,11 @@
       const km=calcDistance(myCoords[0],myCoords[1],otherCoords[0],otherCoords[1]);
       const el=document.getElementById("distance-apart");
       if(el)el.textContent=km.toLocaleString("en-GB");
-      const bar=document.getElementById("home-dist-fill");
-      if(bar)bar.style.width=Math.min(100,Math.round(km/20000*100))+"%";
+      // Update city names in flight strip
+      const ca=document.getElementById("home-dist-city-a");
+      const cb=document.getElementById("home-dist-city-b");
+      if(ca&&myCoords)ca.textContent=myCity||"Here";
+      if(cb&&otherCoords)cb.textContent=otherCity||"There";
     }
     // Sleep indicators
     function sleepStatus(name,tz){
@@ -2341,15 +2360,28 @@
     }
     // Show uploading feedback
     const saveBtn = document.getElementById("m-save-btn");
-    const placeholder = document.querySelector(`.m-photo-placeholder[onclick*="${key}"]`);
+    // Find placeholder for this card — query all and find the one in this card's DOM area
+    let placeholder = null;
+    document.querySelectorAll(".m-card").forEach(card=>{
+      // Check if this card contains our key in any of its action buttons
+      if(card.innerHTML.includes(key)) placeholder = card.querySelector(".m-photo-placeholder");
+    });
     if(saveBtn && saveBtn.textContent !== "Saving…") saveBtn.textContent = "Uploading…";
     if(placeholder) placeholder.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.2" stroke-linecap="round" style="animation:spin 1s linear infinite;opacity:.4;"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg><span style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);">Uploading…</span>`;
-    // Compress if large
+    // Compress — always outputs JPEG blob
     const compressed = await compressImage(file, 1200);
-    const safeName = file.name.replace(/[^a-z0-9.]/gi,"_").substring(0,60);
+    // Force safe .jpg filename regardless of input (handles HEIC, no-extension, etc.)
+    const baseName = file.name.replace(/\.[^.]+$/, "").replace(/[^a-z0-9]/gi,"_").substring(0,40) || "photo";
+    const safeName = `${baseName}.jpg`;
     const path = `milestones/${key}/${Date.now()}_${safeName}`;
     const ref = fbStorageRef(storage, path);
-    await fbUploadBytes(ref, compressed);
+    // uploadBytes needs a Blob — if compressImage fell back to File, wrap it
+    const uploadData = (compressed instanceof Blob) ? compressed : new Blob([compressed], {type:"image/jpeg"});
+    // Add upload timeout — Firebase can hang on poor connections
+    await Promise.race([
+      fbUploadBytes(ref, uploadData, {contentType:"image/jpeg"}),
+      new Promise((_,rej)=>setTimeout(()=>rej(new Error("Upload timeout after 30s")),30000))
+    ]);
     const url = await fbGetDownloadURL(ref);
     // Save URL AND path to Firebase (path needed for proper deletion)
     if(db && dbSet){
@@ -2381,8 +2413,12 @@
       const label = document.getElementById("m-photo-btn-label");
       if(label){ label.textContent = "Upload failed ✕"; setTimeout(()=>label.textContent="Add photo",3000); }
       // Reset any stuck placeholder spinner back to "Add photo"
-      const stuck = document.querySelector(`.m-photo-placeholder[onclick*="${key}"]`);
-      if(stuck) stuck.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M7 6V5a1 1 0 011-1h2M14 5a1 1 0 011 1v1"/></svg><span>Add photo</span>`;
+      // Reset placeholder — query all placeholders and reset the spinning one
+      document.querySelectorAll(".m-photo-placeholder").forEach(ph=>{
+        if(ph.querySelector("span") && ph.querySelector("span").textContent.includes("Uploading"))
+          ph.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M7 6V5a1 1 0 011-1h2M14 5a1 1 0 011 1v1"/></svg><span>Upload failed ✕</span>`;
+      });
+      setTimeout(()=>{ document.querySelectorAll(".m-photo-placeholder span").forEach(sp=>{ if(sp.textContent.includes("failed")) sp.textContent="Add photo"; }); }, 3000);
     }
   }
 
@@ -2471,7 +2507,9 @@
     if(!overlay || !img) return;
     img.src = url;
     if(titleEl) titleEl.textContent = title || "";
-    applyRepositionPos();
+    // Wait for image to load so naturalWidth/Height are available for overflow calc
+    img.onload = ()=>{ applyRepositionPos(); };
+    if(img.complete && img.naturalWidth) applyRepositionPos();
     frame.onmousedown = startRepositionDrag;
     frame.ontouchstart = startRepositionDrag;
     overlay.classList.add("open");
@@ -2530,9 +2568,14 @@
       // From card placeholder — upload now with chosen position
       if(!repositionKey || !pendingPhotoFile) { closeRepositionModal(); return; }
       const key = repositionKey;
+      const fileToUpload = pendingPhotoFile;
+      pendingPhotoFile = null; // clear before async so it can't be double-used
       closeRepositionModal();
-      await safeUploadPhotoForKey(key, pendingPhotoFile, posStr);
-      pendingPhotoFile = null;
+      // Show uploading state on the save button
+      const sb = document.getElementById("m-save-btn");
+      if(sb) sb.textContent = "Uploading…";
+      await safeUploadPhotoForKey(key, fileToUpload, posStr);
+      if(sb && sb.textContent === "Uploading…") sb.textContent = "Save";
       return;
     }
 
@@ -2546,7 +2589,24 @@
 
   function applyRepositionPos(){
     const img = document.getElementById("m-reposition-img");
-    if(img) img.style.objectPosition = `${repositionPos.x}% ${repositionPos.y}%`;
+    if(!img) return;
+    // Calculate pixel overflow and clamp translation
+    const frame = document.getElementById("m-reposition-frame");
+    if(!frame){ img.style.setProperty("--pan-x","0px"); img.style.setProperty("--pan-y","0px"); return; }
+    const fw = frame.offsetWidth, fh = frame.offsetHeight;
+    const iw = img.naturalWidth  || img.offsetWidth  || fw;
+    const ih = img.naturalHeight || img.offsetHeight || fh;
+    // Scale factor: image scaled to cover frame minimally
+    const scale = Math.max(fw/iw, fh/ih);
+    const scaledW = iw * scale, scaledH = ih * scale;
+    // Max pan = half of overflow in each direction
+    const maxX = Math.max(0, (scaledW - fw) / 2);
+    const maxY = Math.max(0, (scaledH - fh) / 2);
+    // repositionPos.x/y are 0-100 → map to -maxX..+maxX
+    const panX = ((repositionPos.x - 50) / 50) * maxX;
+    const panY = ((repositionPos.y - 50) / 50) * maxY;
+    img.style.setProperty("--pan-x", panX.toFixed(1)+"px");
+    img.style.setProperty("--pan-y", panY.toFixed(1)+"px");
   }
 
   function startRepositionDrag(e){
@@ -2569,10 +2629,11 @@
     const rect = frame.getBoundingClientRect();
     // Use same reference for both axes so horizontal = vertical sensitivity
     // Smaller dimension (height=150px) gives better feel on mobile
-    const ref = Math.min(rect.width, rect.height) * 0.65;
-    const dx = (pt.clientX - repositionStart.x) / ref * 100;
-    const dy = (pt.clientY - repositionStart.y) / ref * 100;
-    // Dragging right moves position left (natural feel)
+    // Sensitivity: 80px drag = full pan across the overflow range
+    const sensitivity = 80;
+    const dx = (pt.clientX - repositionStart.x) / sensitivity * 50;
+    const dy = (pt.clientY - repositionStart.y) / sensitivity * 50;
+    // Dragging right → pan left (natural/intuitive feel)
     repositionPos.x = Math.max(0, Math.min(100, repositionStartPos.x - dx));
     repositionPos.y = Math.max(0, Math.min(100, repositionStartPos.y - dy));
     applyRepositionPos();
