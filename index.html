@@ -46,7 +46,7 @@
   .login-orn-row{display:none}
   .login-eyebrow{font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem}
   .login-title{font-size:2rem;font-weight:700;letter-spacing:-.025em;color:var(--text);line-height:1.1;margin-bottom:1.5rem}
-  .login-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .login-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;padding-bottom:.1em;margin-bottom:-.1em}
   .login-sub-row{display:flex;align-items:center;gap:.65rem;margin:0 0 1.5rem}
   .login-sub-line{flex:1;height:1px;background:var(--border)}
   .login-sub{font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
@@ -63,8 +63,8 @@
 
   /* ── AUTH SCREEN ── */
   #auth-screen{position:fixed;inset:0;background:var(--bg);display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column;gap:1.5rem;text-align:center;padding:2rem}
-  .auth-title{font-size:1.7rem;font-weight:700;letter-spacing:-.025em;color:var(--text)}
-  .auth-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .auth-title{font-size:1.7rem;font-weight:700;letter-spacing:-.025em;color:var(--text);overflow:visible;padding-bottom:.1em}
+  .auth-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;padding-bottom:.15em;margin-bottom:-.15em}
   .auth-sub{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);max-width:300px;line-height:1.6}
   .auth-icon{width:80px;height:80px;border-radius:50%;
     border:2px solid rgba(116,52,243,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto;
@@ -137,7 +137,7 @@
   .mobile-header-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
   .hamburger{background:none;border:none;cursor:pointer;padding:.25rem;display:flex;flex-direction:column;gap:4px;flex-shrink:0}
   .hamburger span{display:block;width:18px;height:1.5px;background:var(--text);border-radius:2px;opacity:.6}
-  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(22,8,46,.35);z-index:150}
+  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(22,8,46,.45);z-index:350;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
 
   /* ── MAIN ── */
   .main{margin-left:var(--sidebar-w);flex:1;padding:2.5rem 2.5rem 5rem;min-width:0;position:relative;z-index:1;scroll-behavior:smooth}
@@ -146,7 +146,7 @@
   .page-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);position:relative}
   .page-eyebrow{font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem}
   .page-title{font-size:clamp(1.6rem,2.8vw,2.2rem);font-weight:700;letter-spacing:-.025em;color:var(--text);line-height:1.1}
-  .page-title em{font-style:normal;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .page-title em{font-style:normal;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;padding-bottom:.1em;margin-bottom:-.1em}
   .page-corner-orn{display:none}
   .section-heading{font-size:.48rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
   .section-heading::after{content:'';flex:1;height:1px;background:var(--border)}
@@ -490,7 +490,7 @@
 
   @media(max-width:680px){
     .sidebar{transform:translateX(-100%)}
-    .sidebar.open{transform:translateX(0);box-shadow:4px 0 20px rgba(116,52,243,.2)}
+    .sidebar.open{transform:translateX(0);box-shadow:4px 0 30px rgba(116,52,243,.25);z-index:400;background:rgba(255,255,255,0.92);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);}
     .sidebar-overlay.open{display:block}
     .mobile-header{display:flex}
     .main{margin-left:0;padding:4rem 1.1rem 4rem}
