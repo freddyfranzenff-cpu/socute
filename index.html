@@ -46,7 +46,7 @@
   .login-orn-row{display:none}
   .login-eyebrow{font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem}
   .login-title{font-size:2rem;font-weight:700;letter-spacing:-.025em;color:var(--text);line-height:1.3;margin-bottom:1.5rem;overflow:visible}
-  .login-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;line-height:1.3;vertical-align:middle}
+  .login-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;line-height:inherit;vertical-align:baseline}
   .login-sub-row{display:flex;align-items:center;gap:.65rem;margin:0 0 1.5rem}
   .login-sub-line{flex:1;height:1px;background:var(--border)}
   .login-sub{font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
@@ -64,7 +64,7 @@
   /* ── AUTH SCREEN ── */
   #auth-screen{position:fixed;inset:0;background:var(--bg);display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column;gap:1.5rem;text-align:center;padding:2rem}
   .auth-title{font-size:1.7rem;font-weight:700;letter-spacing:-.025em;color:var(--text);line-height:1.3;overflow:visible}
-  .auth-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;line-height:1.3;vertical-align:middle}
+  .auth-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;line-height:inherit;vertical-align:baseline}
   .auth-sub{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);max-width:300px;line-height:1.6}
   .auth-icon{width:80px;height:80px;border-radius:50%;
     border:2px solid rgba(232,98,42,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto;
@@ -87,7 +87,7 @@
   .auth-step.active{display:flex}
   #locating{position:fixed;inset:0;background:var(--bg);display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column;gap:1rem;text-align:center}
   .locating-title{font-size:1.7rem;font-weight:700;letter-spacing:-.02em;color:var(--text)}
-  .locating-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;line-height:1.3;vertical-align:middle}
+  .locating-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;line-height:inherit;vertical-align:baseline}
   .locating-sub{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 
   /* ── SIDEBAR ── */
@@ -101,7 +101,7 @@
   .sidebar-logo{padding:1.5rem 1.4rem 1.25rem;border-bottom:1px solid rgba(232,98,42,0.08)}
   .sidebar-eyebrow{font-size:.48rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
   .sidebar-title{font-size:1rem;font-weight:700;color:var(--text);line-height:1.2;letter-spacing:-.01em}
-  .sidebar-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;line-height:1.3;vertical-align:middle}
+  .sidebar-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;line-height:inherit;vertical-align:baseline}
   .sidebar-ornament{display:none}
   .user-badge{margin:.7rem 1.4rem 0;display:inline-flex;align-items:center;gap:.3rem;
     background:rgba(232,98,42,0.08);border:1px solid rgba(232,98,42,0.2);
@@ -134,7 +134,7 @@
     height:52px;align-items:center;padding:0 1.25rem;
     border-bottom:1px solid rgba(232,98,42,0.1);}
   .mobile-header-title{font-size:1rem;font-weight:700;color:var(--text);flex:1;text-align:center;letter-spacing:-.01em}
-  .mobile-header-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;line-height:1.3;vertical-align:middle}
+  .mobile-header-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;line-height:inherit;vertical-align:baseline}
   .hamburger{background:none;border:none;cursor:pointer;padding:.25rem;display:flex;flex-direction:column;gap:4px;flex-shrink:0}
   .hamburger span{display:block;width:18px;height:1.5px;background:var(--text);border-radius:2px;opacity:.6}
   .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(42,18,8,.4);z-index:350;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
@@ -145,8 +145,8 @@
   .page.active{display:block}
   .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);position:relative}
   .page-eyebrow{font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem;display:block}
-  .page-title{font-size:clamp(1.6rem,2.8vw,2.2rem);font-weight:700;letter-spacing:-.025em;color:var(--text);line-height:1.3;margin-top:.2rem}
-  .page-title em{font-style:normal;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;line-height:1.3;vertical-align:middle}
+  .page-title{font-size:clamp(1.6rem,2.8vw,2.2rem);font-weight:700;letter-spacing:-.025em;color:var(--text);line-height:1.2}
+  .page-title em{font-style:normal;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;line-height:inherit;vertical-align:baseline}
   .page-corner-orn{display:none}
   .section-heading{font-size:.48rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem;margin-top:.25rem;display:flex;align-items:center;gap:.5rem}
   .section-heading::after{content:'';flex:1;height:1px;background:var(--border)}
@@ -500,7 +500,6 @@
     .grid-2{grid-template-columns:1fr}
     .home-stats-row{grid-template-columns:1fr}
     .places-stat-row{grid-template-columns:1fr}
-    .letter-tiles{grid-template-columns:1fr}
     .letter-round-cd{flex-direction:column;gap:.35rem;align-items:flex-start}
     .letter-round-cd-nums{margin-left:0}
     .weather-row{grid-template-columns:1fr}
@@ -526,6 +525,12 @@
     .auth-icon{width:70px;height:70px}
     .bl-filters{gap:.35rem}
     .bl-filter,.bl-cat-pill{font-size:.52rem;padding:.2rem .5rem}
+    .letter-tile{padding:.65rem .75rem}
+    .letter-tile-btn{font-size:.62rem;padding:.3rem .4rem}
+    .letter-tile-preview{font-size:.66rem}
+    .letter-tile-status{font-size:.48rem;padding:.12rem .42rem}
+    .letter-round-date{font-size:.88rem}
+    .letter-round-badge{font-size:.48rem;padding:.16rem .5rem}
   }
 </style>
 </head>
@@ -2265,7 +2270,17 @@
   };
 
   async function uploadPhotoForKey(key, file, position){
-    if(!storage || !fbStorageRef || !fbUploadBytes || !fbGetDownloadURL) return;
+    if(!storage || !fbStorageRef || !fbUploadBytes || !fbGetDownloadURL){
+      console.error("Storage not ready");
+      const label = document.getElementById("m-photo-btn-label");
+      const saveBtn = document.getElementById("m-save-btn");
+      if(label){ label.textContent = "Storage not ready ✕"; setTimeout(()=>label.textContent="Add photo",3000); }
+      if(saveBtn) saveBtn.textContent = "Save";
+      // Also reset any placeholder spinner
+      const ph = document.querySelector(`.m-photo-placeholder`);
+      if(ph) ph.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M7 6V5a1 1 0 011-1h2M14 5a1 1 0 011 1v1"/></svg><span>Add photo</span>`;
+      return;
+    }
     // Show uploading feedback
     const saveBtn = document.getElementById("m-save-btn");
     const placeholder = document.querySelector(`.m-photo-placeholder[onclick*="${key}"]`);
@@ -2305,24 +2320,37 @@
       console.error("Photo upload failed:", e);
       const saveBtn = document.getElementById("m-save-btn");
       if(saveBtn) saveBtn.textContent = "Save";
-      // Show brief error on photo btn
       const label = document.getElementById("m-photo-btn-label");
       if(label){ label.textContent = "Upload failed ✕"; setTimeout(()=>label.textContent="Add photo",3000); }
+      // Reset any stuck placeholder spinner back to "Add photo"
+      const stuck = document.querySelector(`.m-photo-placeholder[onclick*="${key}"]`);
+      if(stuck) stuck.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M7 6V5a1 1 0 011-1h2M14 5a1 1 0 011 1v1"/></svg><span>Add photo</span>`;
     }
   }
 
   async function compressImage(file, maxWidth){
     return new Promise(resolve=>{
+      // Safety timeout — if compression hangs for any reason, use original file
+      const timeout = setTimeout(()=>{ console.warn("compressImage timeout — using original"); resolve(file); }, 15000);
+      const done = (result)=>{ clearTimeout(timeout); resolve(result||file); };
+
       const img = new Image();
       const reader = new FileReader();
+
+      reader.onerror = ()=>done(file);
       reader.onload = e=>{
+        img.onerror = ()=>done(file);
         img.onload = ()=>{
-          const canvas = document.createElement("canvas");
-          let w = img.width, h = img.height;
-          if(w > maxWidth){ h = Math.round(h*maxWidth/w); w = maxWidth; }
-          canvas.width = w; canvas.height = h;
-          canvas.getContext("2d").drawImage(img,0,0,w,h);
-          canvas.toBlob(blob=>resolve(blob),"image/jpeg",0.82);
+          try{
+            const canvas = document.createElement("canvas");
+            let w = img.width, h = img.height;
+            if(w > maxWidth){ h = Math.round(h*maxWidth/w); w = maxWidth; }
+            canvas.width = w; canvas.height = h;
+            const ctx = canvas.getContext("2d");
+            if(!ctx){ done(file); return; }
+            ctx.drawImage(img,0,0,w,h);
+            canvas.toBlob(blob=>done(blob||file),"image/jpeg",0.82);
+          } catch(err){ console.error("Canvas error:", err); done(file); }
         };
         img.src = e.target.result;
       };
