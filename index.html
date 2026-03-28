@@ -247,7 +247,7 @@
   .send-btn{margin-left:auto;background:linear-gradient(135deg,var(--k),var(--pk));color:white;border:none;border-radius:9px;padding:.42rem 1.1rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.76rem;font-weight:600;cursor:pointer;transition:opacity .2s;}
   .send-btn:hover{opacity:.88}
   #notes-wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.8rem}
-  .note-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem;position:relative;box-shadow:0 2px 10px rgba(116,52,243,0.06);}
+  .note-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem;position:relative;box-shadow:0 2px 10px rgba(116,52,243,0.06);animation:fadeUp .3s ease both;}
   .note-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(188,145,247,0.4),transparent)}
   .note-text{font-size:.78rem;font-weight:300;color:var(--text2);line-height:1.6;margin-bottom:.5rem;animation:fadeUp .3s ease both}
   .note-footer{display:flex;justify-content:space-between;align-items:center}
@@ -347,6 +347,7 @@
   .places-map-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:.9rem;box-shadow:0 2px 14px rgba(116,52,243,0.07);}
   .places-popup{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:.9rem;box-shadow:0 2px 12px rgba(116,52,243,0.06);}
   .places-popup-header{padding:.7rem 1.1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+  .places-popup-body{flex:1;min-width:0;overflow:hidden}
   .places-popup-loc{font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.35rem}
   .places-popup-count{font-size:.6rem;color:var(--muted);background:var(--kll);border-radius:20px;padding:.13rem .55rem;border:1px solid var(--border)}
   .places-popup-item{display:flex;align-items:center;gap:10px;padding:.75rem 1.1rem;border-bottom:1px solid var(--border)}
@@ -1653,8 +1654,7 @@
       .setView([centerLat, centerLng], 2);
 
     L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-      att
-      subdomains:"abcd",ribution:"© OpenStreetMap", maxZoom:18
+      attribution:"© OpenStreetMap", subdomains:"abcd", maxZoom:18
     }).addTo(placesMapInstance);
 
     // Draw pins
@@ -1664,7 +1664,7 @@
       const size = isMulti ? 24 : 20;
 
       const badgeHTML = isMulti
-        ? `<div style="position:absolute;top:-5px;right:-5px;background:white;border:1.5px solid ${color};border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:bold;color:${color};font-family:Jost,sans-serif;">${g.items.length}</div>`
+        ? `<div style="position:absolute;top:-5px;right:-5px;background:white;border:1.5px solid ${color};border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:bold;color:${color};font-family:'Plus Jakarta Sans',sans-serif;">${g.items.length}</div>`
         : "";
 
       // Heart SVG path scaled to size
