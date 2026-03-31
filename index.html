@@ -2,23 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>Your Little Corner 🍑</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+  <title>Snug 🍑</title>
 
   <!-- PWA -->
-  <link rel="manifest" href="/socute/manifest.json"/>
+  <link rel="manifest" href="/manifest.json"/>
   <meta name="theme-color" content="#e8622a"/>
   <meta name="mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
-  <meta name="apple-mobile-web-app-title" content="Our Corner"/>
-  <link rel="apple-touch-icon" href="/socute/icons/icon-180.png"/>
-  <link rel="apple-touch-icon" sizes="152x152" href="/socute/icons/icon-152.png"/>
-  <link rel="icon" type="image/png" sizes="192x192" href="/socute/icons/icon-192.png"/>
+  <meta name="apple-mobile-web-app-title" content="Snug"/>
+  <link rel="apple-touch-icon" href="/icons/icon-180.png"/>
+  <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152.png"/>
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png"/>
 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // ── Prevent iOS PWA pinch-to-zoom ───────────────────────
+    // iOS ignores user-scalable=no since iOS 10, so we block
+    // gesture and multi-touch events at the JS level instead.
+    document.addEventListener('gesturestart', function(e){ e.preventDefault(); }, {passive: false});
+    document.addEventListener('gesturechange', function(e){ e.preventDefault(); }, {passive: false});
+    document.addEventListener('gestureend', function(e){ e.preventDefault(); }, {passive: false});
+    document.addEventListener('touchmove', function(e){
+      if(e.touches && e.touches.length > 1){ e.preventDefault(); }
+    }, {passive: false});
+  </script>
   <style>
   :root{
     --k:#e8622a;--kl:#f0956a;--kll:#fef0e8;--pk:#d4607a;
@@ -30,7 +41,8 @@
     --accent:var(--k);--accent2:var(--kl);--gold:var(--kl);
   }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex}
+  html{overflow:hidden;height:100%}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;overflow:hidden;height:100%;}
 
   /* ── MESH BACKGROUND ── */
   body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
@@ -58,7 +70,7 @@
   .login-orn-row{display:none}
   .login-eyebrow{font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem}
   .login-title{font-size:2rem;font-weight:700;letter-spacing:-.025em;color:var(--text);line-height:1.3;margin-bottom:1.5rem;overflow:visible}
-  .login-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .login-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;display:inline-block;padding-bottom:.35em;margin-bottom:-.35em;overflow:visible;padding-right:.1em}
   .login-sub-row{display:flex;align-items:center;gap:.65rem;margin:0 0 1.5rem}
   .login-sub-line{flex:1;height:1px;background:var(--border)}
   .login-sub{font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
@@ -76,7 +88,7 @@
   /* ── AUTH SCREEN ── */
   #auth-screen{position:fixed;inset:0;background:var(--bg);display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column;gap:1.5rem;text-align:center;padding:2rem}
   .auth-title{font-size:1.7rem;font-weight:700;letter-spacing:-.025em;color:var(--text);line-height:1.4;overflow:visible}
-  .auth-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .auth-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;display:inline-block;padding-bottom:.35em;margin-bottom:-.35em;overflow:visible;padding-right:.1em}
   .auth-sub{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);max-width:300px;line-height:1.6}
   .auth-icon{width:80px;height:80px;border-radius:50%;
     border:2px solid rgba(232,98,42,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto;
@@ -99,7 +111,7 @@
   .auth-step.active{display:flex}
   #locating{position:fixed;inset:0;background:var(--bg);display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column;gap:1rem;text-align:center}
   .locating-title{font-size:1.7rem;font-weight:700;letter-spacing:-.02em;color:var(--text);line-height:1.3;overflow:visible}
-  .locating-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .locating-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;display:inline-block;padding-bottom:.35em;margin-bottom:-.35em;overflow:visible;padding-right:.1em}
   .locating-sub{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 
   /* ── SIDEBAR ── */
@@ -113,7 +125,7 @@
   .sidebar-logo{padding:1.5rem 1.4rem 1.25rem;border-bottom:1px solid rgba(232,98,42,0.08)}
   .sidebar-eyebrow{font-size:.48rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
   .sidebar-title{font-size:1rem;font-weight:700;color:var(--text);line-height:1.3;letter-spacing:-.01em;overflow:visible}
-  .sidebar-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .sidebar-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;display:inline-block;padding-bottom:.35em;margin-bottom:-.35em;overflow:visible;padding-right:.1em}
   .sidebar-ornament{display:none}
   .user-badge{margin:.7rem 1.4rem 0;display:inline-flex;align-items:center;gap:.3rem;
     background:rgba(232,98,42,0.08);border:1px solid rgba(232,98,42,0.2);
@@ -143,22 +155,23 @@
   /* mobile */
   .mobile-header{display:none;position:fixed;top:0;left:0;right:0;z-index:300;
     background:rgba(255,255,255,0.55);backdrop-filter:blur(20px);
-    height:52px;align-items:center;padding:0 1.25rem;
+    height:calc(52px + env(safe-area-inset-top));padding:env(safe-area-inset-top) 1.25rem 0;
+    align-items:center;
     border-bottom:1px solid rgba(232,98,42,0.1);}
   .mobile-header-title{font-size:1rem;font-weight:700;color:var(--text);flex:1;text-align:center;letter-spacing:-.01em;line-height:1.3;overflow:visible}
-  .mobile-header-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .mobile-header-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;display:inline-block;padding-bottom:.35em;margin-bottom:-.35em;overflow:visible;padding-right:.1em}
   .hamburger{background:none;border:none;cursor:pointer;padding:.25rem;display:flex;flex-direction:column;gap:4px;flex-shrink:0}
   .hamburger span{display:block;width:18px;height:1.5px;background:var(--text);border-radius:2px;opacity:.6}
   .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(42,18,8,.4);z-index:350;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
 
   /* ── MAIN ── */
-  .main{margin-left:var(--sidebar-w);flex:1;padding:2.5rem 2.5rem 5rem;min-width:0;position:relative;z-index:1;scroll-behavior:smooth}
+  .main{margin-left:var(--sidebar-w);flex:1;padding:2.5rem 2.5rem 5rem;min-width:0;position:relative;z-index:1;scroll-behavior:smooth;overflow-y:auto;height:100%;-webkit-overflow-scrolling:touch;}
   .page{display:none;animation:fadeUp .35s ease both}
   .page.active{display:block}
   .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);position:relative}
   .page-eyebrow{font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .page-title{font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:700;letter-spacing:-.025em;color:var(--text);line-height:1.3;overflow:visible}
-  .page-title em{font-style:normal;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .page-title em{font-style:normal;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;display:inline-block;padding-bottom:.22em;margin-bottom:-.22em;overflow:visible;padding-right:.1em}
   .page-corner-orn{display:none}
   .section-heading{font-size:.48rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem;margin-top:.85rem;display:flex;align-items:center;gap:.5rem}
   .section-heading::after{content:'';flex:1;height:1px;background:var(--border)}
@@ -377,7 +390,7 @@
 
   /* ── LETTER ── */
   .letter-countdown-bar{background:rgba(232,98,42,0.04);border:1px solid var(--border);border-radius:14px;padding:.9rem 1.1rem;margin-bottom:.9rem;display:flex;align-items:center;gap:1.1rem}
-  .letter-cd-icon{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--kll),var(--pkl));border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .letter-cd-icon{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--kll),var(--pk));border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0}
   .letter-cd-label{font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
   .letter-cd-nums{display:flex;gap:.6rem;align-items:baseline}
   .letter-cd-num{font-size:1.5rem;font-weight:300;color:var(--k);line-height:1}
@@ -550,16 +563,52 @@
   .pulse-send-pill-btn .pulse-ring-sm{inset:0}
   .pulse-send-pill-btn .pulse-heart-sm{inset:3px}
 
-    @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  
+  /* ── SESSION 6 AUTH SCREENS ── */
+  .auth-screen-card{position:relative;width:100%;max-width:400px;background:rgba(255,255,255,0.6);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,0.85);border-radius:24px;
+    padding:2.25rem 2rem;box-shadow:0 12px 50px rgba(232,98,42,0.12);
+    animation:fadeUp .5s ease both;}
+  .auth-field{width:100%;border:1px solid var(--border);border-radius:12px;
+    padding:.72rem 1rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;
+    color:var(--text);background:rgba(255,255,255,0.7);outline:none;
+    transition:border-color .2s;margin-bottom:.65rem;display:block;box-sizing:border-box;}
+  .auth-field:focus{border-color:var(--k)}
+  .auth-label{font-size:.48rem;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--muted);display:block;margin-bottom:.3rem;}
+  .auth-submit-btn{width:100%;background:linear-gradient(135deg,var(--k),var(--pk));
+    color:white;border:none;border-radius:13px;padding:.85rem 1.5rem;
+    font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;font-weight:600;
+    cursor:pointer;transition:opacity .2s;margin-bottom:.5rem;display:block;}
+  .auth-submit-btn:hover{opacity:.88}
+  .auth-switch-btn{background:none;border:none;font-family:'Plus Jakarta Sans',sans-serif;
+    font-size:.65rem;color:var(--muted);cursor:pointer;text-align:center;width:100%;
+    padding:.35rem 0;}
+  .auth-switch-btn strong{color:var(--k)}
+  .auth-field-error{font-size:.62rem;color:#b04040;margin-bottom:.5rem;
+    min-height:.9rem;display:block;}
+  .invite-code-box{font-size:2.4rem;font-weight:700;letter-spacing:.35em;
+    text-align:center;padding:1rem;background:var(--kll);border-radius:16px;
+    color:var(--k);font-family:'Plus Jakarta Sans',sans-serif;margin-bottom:.5rem;}
+  .invite-waiting-dots{display:flex;gap:.4rem;justify-content:center;}
+  .invite-waiting-dots span{width:7px;height:7px;border-radius:50%;background:var(--k);
+    opacity:.3;animation:waitDot 1.4s ease-in-out infinite;}
+  .invite-waiting-dots span:nth-child(2){animation-delay:.2s}
+  .invite-waiting-dots span:nth-child(3){animation-delay:.4s}
+  .invite-link-box{font-size:.62rem;word-break:break-all;text-align:center;padding:.85rem 1rem;background:var(--kll);border-radius:14px;color:var(--k);font-family:'Plus Jakarta Sans',sans-serif;margin-bottom:.5rem;line-height:1.5;}
+  @keyframes waitDot{0%,80%,100%{opacity:.3;transform:scale(1)}40%{opacity:1;transform:scale(1.3)}}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
   @keyframes spin{to{transform:rotate(360deg)}}
 
   @media(max-width:680px){
-    .sidebar{transform:translateX(-100%)}
+    .sidebar{transform:translateX(-100%);padding-top:env(safe-area-inset-top)}
     .sidebar.open{transform:translateX(0);box-shadow:4px 0 30px rgba(232,98,42,.15);z-index:400;background:rgba(255,255,255,0.78);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);}
     .sidebar-overlay.open{display:block}
     .mobile-header{display:flex}
-    .main{margin-left:0;padding:4rem 1.1rem 4rem}
+    .main{margin-left:0;padding:calc(4rem + env(safe-area-inset-top)) 1.1rem calc(4rem + env(safe-area-inset-bottom));overflow-y:auto;height:100%;}
     #map{height:160px;}
     .grid-2{grid-template-columns:1fr}
     .home-stats-row{grid-template-columns:1fr}
@@ -615,6 +664,7 @@
 
   .timeline-end{position:relative;padding-left:1.5rem;margin-top:.35rem;font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);opacity:.55;display:flex;align-items:center;gap:.5rem}
   .timeline-end::before{content:'';position:absolute;left:3px;top:50%;transform:translateY(-50%);width:2px;height:10px;background:linear-gradient(180deg,rgba(232,98,42,0.2),transparent);border-radius:2px}
+  2),transparent);border-radius:2px}
   </style>
 </head>
 <body>
@@ -625,81 +675,120 @@
 <svg class="corner-bracket cb-bl" id="cb3" width="56" height="56" viewBox="0 0 56 56" fill="none"><path d="M2 54 L2 2 L54 2" stroke="#f0956a" stroke-width=".8"/><circle cx="2" cy="2" r="2" fill="#f0956a" opacity=".5"/></svg>
 <svg class="corner-bracket cb-br" id="cb4" width="56" height="56" viewBox="0 0 56 56" fill="none"><path d="M2 54 L2 2 L54 2" stroke="#f0956a" stroke-width=".8"/><circle cx="2" cy="2" r="2" fill="#f0956a" opacity=".5"/></svg>
 
-<!-- Login -->
-<div id="login-screen">
-  <div class="login-card">
-    <div class="login-orn-row">
-      <div class="orn-line"></div>
-      <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="2.5" fill="none" stroke="#f0956a" stroke-width=".7" opacity=".6"/><circle cx="5" cy="5" r="1" fill="#f0956a" opacity=".4"/></svg>
-      <div class="orn-line r"></div>
-    </div>
-    <p class="login-eyebrow">a little corner for</p>
-    <h1 class="login-title">Freddy <em>&</em> Sarah</h1>
-    <div class="login-sub-row">
-      <div class="login-sub-line"></div>
-      <p class="login-sub">Who are you?</p>
-      <div class="login-sub-line"></div>
-    </div>
-    <div class="login-btns">
-      <button class="login-btn" onclick="startAuth('Freddy')"><span class="login-btn-label">I am</span>Freddy</button>
-      <button class="login-btn" onclick="startAuth('Sarah')"><span class="login-btn-label">I am</span>Sarah</button>
-    </div>
-    <div class="login-biometric">
-      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M5 8c0-1.66 1.34-3 3-3s3 1.34 3 3"/><path d="M3 8c0-2.76 2.24-5 5-5s5 2.24 5 5"/><path d="M1 8C1 4.13 4.13 1 8 1s7 3.13 7 7"/><line x1="8" y1="11" x2="8" y2="13"/></svg>
-      Fingerprint or Face ID after selecting
-    </div>
-    <div class="login-bottom-orn"><svg width="90" height="12" viewBox="0 0 90 12" fill="none"><line x1="0" y1="6" x2="32" y2="6" stroke="#f0956a" stroke-width=".5" opacity=".3"/><path d="M37 6 Q39 2 42 6 Q45 10 48 6" stroke="#f0956a" stroke-width=".7" fill="none" opacity=".35"/><line x1="53" y1="6" x2="90" y2="6" stroke="#f0956a" stroke-width=".5" opacity=".3"/></svg></div>
-  </div>
-</div>
+<!-- Auth Screens -->
+<div id="auth-wrap" style="position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:1000;padding:1.5rem;">
+  <div style="position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(ellipse 80% 50% at 20% 0%,rgba(247,197,168,0.4) 0%,transparent 55%),
+    radial-gradient(ellipse 60% 50% at 80% 100%,rgba(212,96,122,0.2) 0%,transparent 55%);"></div>
 
-<!-- Auth screen -->
-<div id="auth-screen">
-  <div class="auth-step" id="auth-biometric">
-    <p class="auth-title">Welcome, <em id="auth-name-bio"></em></p>
-    <div class="auth-icon"><svg width="28" height="28" viewBox="0 0 16 16" fill="none" stroke="#e8622a" stroke-width="1.1"><path d="M5 8c0-1.66 1.34-3 3-3s3 1.34 3 3"/><path d="M3 8c0-2.76 2.24-5 5-5s5 2.24 5 5"/><path d="M1 8C1 4.13 4.13 1 8 1s7 3.13 7 7"/><line x1="8" y1="11" x2="8" y2="13"/></svg></div>
-    <p class="auth-sub">Authenticate with biometrics</p>
-    <button class="auth-btn" onclick="attemptBiometric()">Use Fingerprint / Face ID</button>
-    <button class="auth-link" onclick="showAuthStep('auth-recovery')">Use recovery phrase instead</button>
-    <p class="auth-error" id="bio-error">Authentication failed. Try again or use recovery phrase.</p>
+  <!-- OFFLINE SCREEN -->
+  <div class="auth-screen-card" id="screen-offline" style="display:none;text-align:center;">
+    <p style="font-size:2rem;margin-bottom:.75rem;">📡</p>
+    <h1 class="login-title" style="font-size:1.4rem;margin-bottom:.5rem;">No connection</h1>
+    <p style="font-size:.65rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6;">Snug needs internet to load.<br>Check your connection and try again.</p>
+    <button class="auth-submit-btn" onclick="window.location.reload()">Try again</button>
   </div>
-  <div class="auth-step" id="auth-recovery">
-    <p class="auth-title">Recovery phrase</p>
-    <p class="auth-sub">Enter your secret recovery phrase</p>
-    <input type="password" class="auth-input" id="recovery-input" placeholder="Your phrase…" onkeydown="if(event.key==='Enter')checkRecovery()"/>
-    <button class="auth-btn" onclick="checkRecovery()">Continue</button>
-    <button class="auth-link" onclick="showAuthStep('auth-biometric')">Back to biometrics</button>
-    <p class="auth-error" id="recovery-error">Incorrect phrase. Please try again.</p>
+
+  <!-- SCREEN 1: Login -->
+  <div class="auth-screen-card" id="screen-login">
+    <p class="login-eyebrow">welcome to</p>
+    <h1 class="login-title">Your little <em>Snug</em></h1>
+    <p style="font-size:.65rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6;">Your private little Snug, together.</p>
+    <input type="email" class="auth-field" id="login-email" placeholder="Email address" autocomplete="email"/>
+    <input type="password" class="auth-field" id="login-password" placeholder="Password" autocomplete="current-password"/>
+    <p class="auth-field-error" id="login-error"></p>
+    <button class="auth-submit-btn" onclick="doLogin()">Sign in</button>
+    <button class="auth-switch-btn" onclick="showAuthScreen('screen-signup')">No account yet? <strong>Sign up</strong></button>
   </div>
-  <div class="auth-step" id="auth-setup">
-    <p class="auth-title">Set up <em id="auth-name-setup"></em></p>
-    <p class="auth-sub">First time here! Register your fingerprint and set a recovery phrase you'll always remember.</p>
-    <div class="auth-icon"><svg width="28" height="28" viewBox="0 0 16 16" fill="none" stroke="#f0956a" stroke-width="1.1"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2.5 6h4z"/></svg></div>
-    <input type="password" class="auth-input" id="setup-phrase" placeholder="Choose a recovery phrase…"/>
-    <input type="password" class="auth-input" id="setup-phrase2" placeholder="Confirm phrase…"/>
-    <p class="auth-error" id="setup-error">Phrases don't match. Try again.</p>
-    <button class="auth-btn" onclick="doSetup()">Register &amp; Continue</button>
+
+  <!-- SCREEN 2: Sign up -->
+  <div class="auth-screen-card" id="screen-signup" style="display:none;">
+    <p class="login-eyebrow">create account</p>
+    <h1 class="login-title">Your little <em>Snug</em></h1>
+    <input type="email" class="auth-field" id="signup-email" placeholder="Email address" autocomplete="email"/>
+    <input type="password" class="auth-field" id="signup-password" placeholder="Choose a password" autocomplete="new-password"/>
+    <input type="password" class="auth-field" id="signup-password2" placeholder="Confirm password" autocomplete="new-password"/>
+    <p class="auth-field-error" id="signup-error"></p>
+    <button class="auth-submit-btn" onclick="doSignup()">Create account</button>
+    <button class="auth-switch-btn" onclick="showAuthScreen('screen-login')">Already have an account? <strong>Sign in</strong></button>
   </div>
+
+  <!-- SCREEN 3: Onboarding -->
+  <div class="auth-screen-card" id="screen-onboarding" style="display:none;">
+    <p class="login-eyebrow">almost there</p>
+    <h1 class="login-title">Tell us about <em>you</em></h1>
+    <p style="font-size:.62rem;color:var(--muted);margin-bottom:1.25rem;">Just a few details to personalise your Snug.</p>
+    <label class="auth-label">Your first name</label>
+    <input type="text" class="auth-field" id="onboard-name" placeholder="e.g. Freddy" autocomplete="given-name"/>
+    <label class="auth-label">Your city</label>
+    <input type="text" class="auth-field" id="onboard-city" placeholder="e.g. Bonn, Germany" autocomplete="address-level2"/>
+    <p class="auth-field-error" id="onboard-error"></p>
+    <button class="auth-submit-btn" onclick="doOnboarding()">Continue</button>
+  </div>
+
+  <!-- SCREEN 4: Couple linking -->
+  <div class="auth-screen-card" id="screen-linking" style="display:none;">
+    <p class="login-eyebrow">link with your partner</p>
+    <h1 class="login-title">Find your <em>Snug</em></h1>
+
+    <!-- Join existing couple — shown first, highlighted when code present -->
+    <div id="linking-join-section">
+      <p style="font-size:.62rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;">Got an invite code from your partner? Enter it below.</p>
+      <label class="auth-label">Have an invite link? Enter the code</label>
+      <input type="text" class="auth-field" id="invite-code-input" placeholder="e.g. ABC123" style="text-transform:uppercase;letter-spacing:.15em;text-align:center;" maxlength="6" autocomplete="off" oninput="window.onInviteCodeInput()"/>
+      <p class="auth-field-error" id="linking-error"></p>
+      <button class="auth-submit-btn" onclick="doJoinCouple()" id="join-couple-btn">Join Snug</button>
+    </div>
+
+    <div id="linking-or-divider" style="display:flex;align-items:center;gap:.75rem;margin:.9rem 0;">
+      <div style="flex:1;height:1px;background:var(--border);"></div>
+      <span style="font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);">or</span>
+      <div style="flex:1;height:1px;background:var(--border);"></div>
+    </div>
+
+    <!-- Create new couple -->
+    <div id="linking-create-section">
+      <p style="font-size:.62rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;">Starting fresh? Create a new Snug and invite your partner.</p>
+      <label class="auth-label">Together since</label>
+      <input type="date" class="auth-field" id="couple-startdate"/>
+      <button class="auth-submit-btn" style="background:var(--surface);color:var(--k);border:1.5px solid var(--border);" onclick="doCreateCouple()" id="create-couple-btn">Create our Snug</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 5: Invite code display (after creating couple) -->
+  <div class="auth-screen-card" id="screen-invite" style="display:none;">
+    <p class="login-eyebrow">share with your partner</p>
+    <h1 class="login-title">Your invite <em>link</em></h1>
+    <p style="font-size:.62rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6;">Share this link with your partner so they can join your Snug.</p>
+    <div class="invite-link-box" id="invite-link-display">—</div>
+    <p style="font-size:.58rem;color:var(--muted);margin:.75rem 0 1rem;text-align:center;">Waiting for your partner to join…</p>
+    <div class="invite-waiting-dots"><span></span><span></span><span></span></div>
+    <button class="auth-submit-btn" style="margin-top:1rem;" onclick="shareInviteLink()">Share invite link</button>
+    <button class="auth-switch-btn" onclick="copyInviteCode()">or copy link</button>
+    <button class="auth-switch-btn" style="margin-top:.35rem;font-size:.56rem;opacity:.5;" onclick="regenerateInvite()">Link expired? Generate new one</button>
+  </div>
+
 </div>
 
 <!-- Locating -->
-<div id="locating">
-  <p class="locating-title">Freddy <em>&</em> Sarah</p>
-  <p class="locating-sub">Detecting your location…</p>
+<div id="locating" style="position:fixed;inset:0;background:var(--bg);display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column;gap:1rem;text-align:center">
+  <p class="locating-title">Your little <em>Snug</em></p>
+  <p class="locating-sub">Getting things ready…</p>
 </div>
 
 <!-- Sidebar overlay + hamburger -->
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 <div class="mobile-header" id="mobile-header">
   <button class="hamburger" id="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
-  <p class="mobile-header-title">Freddy <em>&</em> Sarah</p>
+  <p class="mobile-header-title" id="mobile-header-couple-name">Snug</p>
   <div style="width:26px;flex-shrink:0;"></div>
 </div>
 
 <!-- Sidebar -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <p class="sidebar-eyebrow">a little corner for</p>
-    <p class="sidebar-title">Freddy <em>&</em> Sarah</p>
+    <p class="sidebar-eyebrow">your little snug</p>
+    <p class="sidebar-title" id="sidebar-couple-name">Snug</p>
     <svg class="sidebar-ornament" width="90" height="10" viewBox="0 0 90 10"><line x1="0" y1="5" x2="34" y2="5" stroke="#f0956a" stroke-width=".6"/><circle cx="45" cy="5" r="2.5" fill="none" stroke="#f0956a" stroke-width=".6"/><circle cx="45" cy="5" r="1" fill="#f0956a"/><line x1="56" y1="5" x2="90" y2="5" stroke="#f0956a" stroke-width=".6"/></svg>
   </div>
   <div class="user-badge"><div class="user-dot"></div><span class="user-name" id="sidebar-user">—</span></div><button id="register-bio-btn" onclick="registerThisDevice()" style="display:none;margin:.5rem 1.4rem 0;background:none;border:1px solid rgba(232,98,42,0.2);border-radius:8px;padding:.3rem .75rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);cursor:pointer;width:calc(100% - 2.8rem);text-align:left;transition:all .2s;" onmouseover="this.style.borderColor='rgba(232,98,42,0.5)';this.style.color='var(--k)'" onmouseout="this.style.borderColor='rgba(232,98,42,0.2)';this.style.color='var(--muted)'">⬡ Register fingerprint</button>
@@ -713,6 +802,7 @@
     <button class="nav-item" id="nav-letter" onclick="showPage('letter')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M2 6l6 4 6-4"/></svg>Letter</button>
   </nav>
   <div class="sidebar-footer">
+    <button onclick="window.doSignOut()" style="display:block;width:100%;text-align:left;background:none;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);cursor:pointer;padding:.5rem 0;margin-bottom:.75rem;opacity:.6;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.6">Sign out</button>
     <p class="sidebar-cd-label">Next meetup</p>
     <div class="sidebar-cd-row">
       <div><span class="sidebar-cd-num" id="scd-d">--</span><span class="sidebar-cd-lbl">d</span></div>
@@ -720,7 +810,7 @@
       <div><span class="sidebar-cd-num" id="scd-m">--</span><span class="sidebar-cd-lbl">m</span></div>
       <div><span class="sidebar-cd-num" id="scd-s">--</span><span class="sidebar-cd-lbl">s</span></div>
     </div>
-    <p class="sidebar-cd-caption" id="scd-caption">4 July 2026</p>
+    <p class="sidebar-cd-caption" id="scd-caption">—</p>
   </div>
 </aside>
 
@@ -767,7 +857,7 @@
         <p class="home-days-lbl">Together</p>
         <p class="home-days-num" id="days-together">—</p>
         <p class="home-days-lbl">days</p>
-        <p class="home-days-since">since 01.01.2026</p>
+        <p class="home-days-since">since <span id="couple-since-date">—</span></p>
       </div>
     </div>
 
@@ -792,11 +882,11 @@
         <div>
           <div class="stat-card-header" style="margin-bottom:.5rem;">
             <p class="card-label" style="margin:0;"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2.5 6h4z"/></svg>Next meetup</p>
-            <input type="date" id="meetup-date-input" class="meetup-input" value="2026-07-04" onchange="updateMeetupDate(this.value)"/>
+            <input type="date" id="meetup-date-input" class="meetup-input" onchange="updateMeetupDate(this.value)"/>
           </div>
           <div class="cd-row"><div><span class="cd-num" id="cd-d">--</span><span class="cd-lbl">d</span></div><div><span class="cd-num" id="cd-h">--</span><span class="cd-lbl">h</span></div><div><span class="cd-num" id="cd-m">--</span><span class="cd-lbl">m</span></div><div><span class="cd-num" id="cd-s">--</span><span class="cd-lbl">s</span></div></div>
         </div>
-        <p class="cd-caption" id="cd-caption">4 July 2026</p>
+        <p class="cd-caption" id="cd-caption">—</p>
       </div>
     </div>
 
@@ -810,8 +900,8 @@
     <!-- ── DISTANCE STRIP ── -->
     <div class="card home-dist-strip" style="margin-top:.85rem;">
       <div class="home-dist-city">
-        <p class="home-dist-city-name" id="home-dist-city-a">Bonn</p>
-        <p class="home-dist-city-sub">Freddy</p>
+        <p class="home-dist-city-name" id="home-dist-city-a">—</p>
+        <p class="home-dist-city-sub" id="home-dist-name-a">—</p>
       </div>
       <div class="home-dist-center">
         <div class="home-dist-line">
@@ -822,8 +912,8 @@
         <p class="home-dist-km"><span id="distance-apart">—</span> <span class="home-dist-km-unit">km</span></p>
       </div>
       <div class="home-dist-city" style="text-align:right;">
-        <p class="home-dist-city-name" id="home-dist-city-b">Kaohsiung</p>
-        <p class="home-dist-city-sub">Sarah</p>
+        <p class="home-dist-city-name" id="home-dist-city-b">—</p>
+        <p class="home-dist-city-sub" id="home-dist-name-b">—</p>
       </div>
     </div>
 
@@ -1067,108 +1157,426 @@
     </div>
   </div>
 
-  <footer>Freddy & Sarah</footer>
+  <footer id="app-footer">Snug</footer>
 </main>
 
 <script type="module">
-  const FIREBASE_CONFIG={apiKey:"AIzaSyAz5CvOXduYUAh2_Zk2L-8PUEy4KfQjeCo",authDomain:"ldrcounter.firebaseapp.com",databaseURL:"https://ldrcounter-default-rtdb.europe-west1.firebasedatabase.app",projectId:"ldrcounter",storageBucket:"ldrcounter.firebasestorage.app",messagingSenderId:"856435037901",appId:"1:856435037901:web:db66ccb1ddcc0278d9fb84"};
-  const DEFAULTS={Freddy:"Europe/Berlin",Sarah:"Asia/Taipei"};
-  const DEFAULT_CITIES={Freddy:"Bonn",Sarah:"Kaohsiung"};
-  const DEFAULT_COORDS={Freddy:[50.7374,7.0982],Sarah:[22.6273,120.3014]};
-  let ME=null,OTHER=null,myTz=null,otherTz=null,myCity=null,otherCity=null,myCoords=null,otherCoords=null;
-  let db=null,dbPush=null,dbSet=null,dbRef=null,dbRemove=null,fbOnValue=null;
+  const FIREBASE_CONFIG={apiKey:"AIzaSyCDwgIJS9_q-rxFI0iQ8TNqMU6bSOPVizQ",authDomain:"ldrcounter.firebaseapp.com",databaseURL:"https://ldrcounter-default-rtdb.europe-west1.firebasedatabase.app",projectId:"ldrcounter",storageBucket:"ldrcounter.firebasestorage.app",messagingSenderId:"856435037901",appId:"1:856435037901:web:9f4a9b2c3d8e7f6a1b2c3d"};
+
+  // ── Global state ────────────────────────────────────────
+  let db=null,dbRef=null,dbSet=null,dbPush=null,dbRemove=null,fbOnValue=null;
   let storage=null,fbStorageRef=null,fbUploadBytes=null,fbGetDownloadURL=null,fbDeleteObject=null;
-  let localNotes=[],localMilestones=[],meetupDate=new Date("2026-07-04T00:00:00+02:00"),countdownInterval=null;
-  let mapInstance=null,myMarker=null,otherMarker=null,connectLine=null;
-  let pendingUser=null;
+  let fbAuth=null,fbCurrentUser=null;
+  // Couple data (loaded after auth)
+  let ME=null,OTHER=null,myUid=null,partnerUid=null,coupleId=null;
+  let myTz=null,otherTz=null,myCity=null,otherCity=null,myCoords=null,otherCoords=null;
+  let myName=null,otherName=null;
+  // Couple info
+  let coupleStartDate=null,coupleMeetupDate=null;
 
-  // Hashing
-  async function hashPhrase(p){const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(p.trim().toLowerCase()));return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");}
+  // ── Auth UI helpers ──────────────────────────────────────
+  window.showAuthScreen = function(id){
+    ['screen-login','screen-signup','screen-onboarding','screen-linking','screen-invite']
+      .forEach(s=>{ const el=document.getElementById(s); if(el) el.style.display='none'; });
+    // Reset linking screen sections to visible when navigating to it
+    if(id==='screen-linking'){
+      const cs=document.getElementById('linking-create-section');
+      const od=document.getElementById('linking-or-divider');
+      if(cs)cs.style.display='';
+      if(od)od.style.display='';
+    }
+    const target = document.getElementById(id);
+    if(target) target.style.display='block';
+  };
 
-  // WebAuthn
-  function b64url(buf){return btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=/g,"");}
-  function b64urlDecode(s){s=s.replace(/-/g,"+").replace(/_/g,"/");const b=atob(s);return new Uint8Array([...b].map(c=>c.charCodeAt(0))).buffer;}
-  async function registerBiometric(uid){try{const ch=crypto.getRandomValues(new Uint8Array(32));const cr=await navigator.credentials.create({publicKey:{challenge:ch,rp:{name:"Freddy & Sarah",id:location.hostname},user:{id:new TextEncoder().encode(uid),name:uid,displayName:uid},pubKeyCredParams:[{type:"public-key",alg:-7},{type:"public-key",alg:-257}],authenticatorSelection:{userVerification:"required"},timeout:60000}});localStorage.setItem(`wc_${uid}`,b64url(cr.rawId));return true;}catch(e){console.warn("reg failed",e);return false;}}
-  async function authenticateBiometric(uid){try{const cid=localStorage.getItem(`wc_${uid}`);if(!cid)return false;const ch=crypto.getRandomValues(new Uint8Array(32));await navigator.credentials.get({publicKey:{challenge:ch,allowCredentials:[{type:"public-key",id:b64urlDecode(cid)}],userVerification:"required",timeout:60000}});return true;}catch(e){return false;}}
-  function webAuthnSupported(){return!!(window.PublicKeyCredential&&navigator.credentials);}
+  function showAuthWrap(){ document.getElementById('auth-wrap').style.display='flex'; }
+  function hideAuthWrap(){ document.getElementById('auth-wrap').style.display='none'; }
 
-  // Auth
-  window.startAuth=async function(name){pendingUser=name;document.getElementById("login-screen").style.display="none";["cb1","cb2","cb3","cb4"].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display="none";});document.getElementById("locating").style.display="flex";await tryInitFirebase();const hasRecovery=await checkHasRecovery(name);const hasCred=!!localStorage.getItem(`wc_${name}`);document.getElementById("locating").style.display="none";document.getElementById("auth-screen").style.display="flex";if(!hasRecovery){document.getElementById("auth-name-setup").textContent=name;showAuthStep("auth-setup");}else if(hasCred&&webAuthnSupported()){document.getElementById("auth-name-bio").textContent=name;showAuthStep("auth-biometric");}else{showAuthStep("auth-recovery");}};
+  // When invite code is pre-filled or typed, dim the Create section to avoid confusion
+  window.onInviteCodeInput = function(){
+    const code = document.getElementById('invite-code-input')?.value||'';
+    const hasPending = !!(sessionStorage.getItem('pendingJoinCode')||localStorage.getItem('pendingJoinCode'));
+    // If a pending code exists in storage OR user has typed something — keep Create hidden
+    // Once user arrives via invite link, Create stays hidden for entire session visit
+    const shouldHide = code.length > 0 || hasPending;
+    const createSection = document.getElementById('linking-create-section');
+    const divider = document.getElementById('linking-or-divider');
+    if(createSection) createSection.style.display = shouldHide ? 'none' : '';
+    if(divider) divider.style.display = shouldHide ? 'none' : '';
+  };
 
-  async function checkHasRecovery(name){
-    if(!db||!fbOnValue)return false;
-    return new Promise(r=>{const t=setTimeout(()=>r(false),5000);fbOnValue(dbRef(db,`auth/${name}/recoveryHash`),s=>{clearTimeout(t);r(!!s.val());},{onlyOnce:true});});
+  // Safe DB key from a name — lowercase, spaces to underscores, strip invalid chars
+  function nameKey(name){ return (name||'').toLowerCase().replace(/\s+/g,'_').replace(/[.#$\[\]/]/g,''); }
+
+  // ── SIGN UP ──────────────────────────────────────────────
+  window.doSignup = async function(){
+    const email = document.getElementById('signup-email').value.trim();
+    const pw    = document.getElementById('signup-password').value;
+    const pw2   = document.getElementById('signup-password2').value;
+    const err   = document.getElementById('signup-error');
+    err.textContent = '';
+    if(!fbAuth){ err.textContent = 'Connection error. Please refresh and try again.'; return; }
+    if(!email || !pw){ err.textContent = 'Please fill in all fields.'; return; }
+    if(pw !== pw2){ err.textContent = "Passwords don't match."; return; }
+    if(pw.length < 6){ err.textContent = 'Password must be at least 6 characters.'; return; }
+    const signupBtn = document.querySelector('#screen-signup .auth-submit-btn');
+    if(signupBtn){ signupBtn.textContent='Creating account…'; signupBtn.disabled=true; }
+    try{
+      await fbAuth.createUserWithEmailAndPassword(email, pw);
+      // onAuthStateChanged will fire → show onboarding
+    } catch(e){
+      err.textContent = friendlyAuthError(e.code);
+      if(signupBtn){ signupBtn.textContent='Create account'; signupBtn.disabled=false; }
+    }
+  };
+
+  // ── SIGN IN ──────────────────────────────────────────────
+  window.doLogin = async function(){
+    const email = document.getElementById('login-email').value.trim();
+    const pw    = document.getElementById('login-password').value;
+    const err   = document.getElementById('login-error');
+    err.textContent = '';
+    if(!fbAuth){ err.textContent = 'Connection error. Please refresh and try again.'; return; }
+    if(!email || !pw){ err.textContent = 'Please fill in all fields.'; return; }
+    const loginBtn = document.querySelector('#screen-login .auth-submit-btn');
+    if(loginBtn){ loginBtn.textContent='Signing in…'; loginBtn.disabled=true; }
+    try{
+      await fbAuth.signInWithEmailAndPassword(email, pw);
+      // onAuthStateChanged will take over — re-enable button in case of DB errors
+      if(loginBtn){ loginBtn.textContent='Sign in'; loginBtn.disabled=false; }
+    } catch(e){
+      err.textContent = friendlyAuthError(e.code);
+      if(loginBtn){ loginBtn.textContent='Sign in'; loginBtn.disabled=false; }
+    }
+  };
+
+  function friendlyAuthError(code){
+    const map = {
+      'auth/email-already-in-use': 'This email is already registered.',
+      'auth/invalid-email': 'Please enter a valid email address.',
+      'auth/weak-password': 'Password is too weak.',
+      'auth/user-not-found': 'No account found with this email.',
+      'auth/wrong-password': 'Incorrect password.',
+      'auth/invalid-credential': 'Incorrect email or password.',
+      'auth/too-many-requests': 'Too many attempts. Please try again later.',
+    };
+    return map[code] || 'Something went wrong. Please try again.';
   }
 
-  window.showAuthStep=function(id){
-    ["auth-biometric","auth-recovery","auth-setup"].forEach(s=>{
-      const el=document.getElementById(s);
-      if(s===id){el.classList.add("active");}else{el.classList.remove("active");}
+  // ── ONBOARDING ───────────────────────────────────────────
+  window.doOnboarding = async function(){
+    const name      = document.getElementById('onboard-name').value.trim();
+    const city      = document.getElementById('onboard-city').value.trim();
+    const err       = document.getElementById('onboard-error');
+    err.textContent = '';
+    if(!name){ err.textContent = 'Please enter your name.'; return; }
+    try{
+      const uid = fbAuth.currentUser.uid;
+      await dbSet(dbRef(db, `users/${uid}`), {
+        name, city: city||'', email: fbAuth.currentUser.email,
+        createdAt: Date.now()
+      });
+      // Go to couple linking
+      showAuthScreen('screen-linking');
+          const _pending=(sessionStorage.getItem('pendingJoinCode')||localStorage.getItem('pendingJoinCode'));
+          if(_pending){
+            const _ci=document.getElementById('invite-code-input');
+            if(_ci)_ci.value=_pending;
+          }
+          // Apply correct hide state based on storage
+          if(window.onInviteCodeInput) window.onInviteCodeInput();
+    } catch(e){
+      err.textContent = 'Something went wrong. Please try again.';
+      console.error(e);
+    }
+  };
+
+  // ── CREATE COUPLE ────────────────────────────────────────
+  window.doCreateCouple = async function(){
+    const btn = document.getElementById('create-couple-btn');
+    if(btn.disabled) return;
+    btn.textContent = 'Creating…';
+    btn.disabled = true;
+    try{
+      const uid = fbAuth.currentUser.uid;
+      // Guard: prevent creating duplicate Snug
+      let existingData=null;
+      await new Promise(res=>fbOnValue(dbRef(db,`users/${uid}`),snap=>{existingData=snap.val();res();},{onlyOnce:true}));
+      if(existingData?.coupleId){
+        btn.textContent='Create our Snug';btn.disabled=false;
+        document.getElementById('linking-error').textContent='You already have a Snug — refreshing…';
+        setTimeout(()=>window.location.reload(),1500);
+        return;
+      }
+      // Read start date
+      const startDate = document.getElementById('couple-startdate')?.value||'';
+      if(!startDate){ document.getElementById('linking-error').textContent='Please enter your start date.'; btn.textContent='Create our Snug'; btn.disabled=false; return; }
+      // Unique code generation with collision check
+      let code = '';
+      for(let i=0;i<10;i++){
+        const c = Math.random().toString(36).substring(2,8).toUpperCase();
+        let exists=false;
+        await new Promise(res=>fbOnValue(dbRef(db,`invites/${c}`),snap=>{exists=!!snap.val();res();},{onlyOnce:true}));
+        if(!exists){code=c;break;}
+      }
+      if(!code){document.getElementById('linking-error').textContent='Could not generate code, please retry.';btn.textContent='Create our Snug';btn.disabled=false;return;}
+      // Create couple
+      const coupleRef = await dbPush(dbRef(db,'couples'), {
+        createdAt: Date.now(),
+        startDate: startDate,
+        meetupDate: '',
+        owner: uid
+      });
+      const newCoupleId = coupleRef.key;
+      // Save member (use existingData which was already read for the duplicate guard)
+      await dbSet(dbRef(db,`couples/${newCoupleId}/members/${uid}`), {
+        name: existingData?.name||'', city: existingData?.city||'', role:'owner'
+      });
+      // Save invite
+      const expiresAt = Date.now()+(48*60*60*1000);
+      await dbSet(dbRef(db,`invites/${code}`), {
+        coupleId: newCoupleId, createdBy: uid, createdAt: Date.now(), expiresAt, used: false
+      });
+      // Link user to couple
+      await dbSet(dbRef(db,`users/${uid}/coupleId`), newCoupleId);
+      await dbSet(dbRef(db,`users/${uid}/inviteCode`), code);
+      // Show invite screen
+      const inviteUrl=`${location.origin}/?join=${code}`;
+      document.getElementById('invite-link-display').textContent=inviteUrl;
+      showAuthScreen('screen-invite');
+      // Watch for partner joining
+      watchForPartner(newCoupleId, uid);
+    } catch(e){
+      console.error(e);
+      btn.textContent = 'Create our Snug';
+      btn.disabled = false;
+      document.getElementById('linking-error').textContent = 'Something went wrong. Try again.';
+    }
+  };
+
+  let _watchPartnerUnsub = null; // prevent duplicate watchForPartner listeners
+  function watchForPartner(cId, myUid){
+    // Cancel any existing watcher before registering a new one
+    if(_watchPartnerUnsub){ try{_watchPartnerUnsub();}catch(e){} _watchPartnerUnsub=null; }
+    let fired = false;
+    _watchPartnerUnsub = fbOnValue(dbRef(db,`couples/${cId}/members`), snap=>{
+      if(fired) return;
+      const members = snap.val();
+      if(!members) return;
+      const uids = Object.keys(members);
+      if(uids.length >= 2){
+        fired = true;
+        if(_watchPartnerUnsub){ try{_watchPartnerUnsub();}catch(e){} _watchPartnerUnsub=null; }
+        const partnerUidFound = uids.find(u=>u!==myUid);
+        if(partnerUidFound) loadCoupleAndStart(cId, myUid, partnerUidFound, members);
+      }
+    });
+  }
+
+  // ── JOIN COUPLE ──────────────────────────────────────────
+  window.doJoinCouple = async function(){
+    const code = document.getElementById('invite-code-input').value.trim().toUpperCase();
+    const err  = document.getElementById('linking-error');
+    err.textContent = '';
+    if(code.length !== 6){ err.textContent = 'Please enter a 6-character code.'; return; }
+    const joinBtn = document.querySelector('#screen-linking .auth-submit-btn:last-of-type');
+    if(joinBtn && joinBtn.disabled) return;
+    if(joinBtn){ joinBtn.textContent='Joining…'; joinBtn.disabled=true; }
+    try{
+      const uid = fbAuth.currentUser.uid;
+      // Check invite
+      let invite = null;
+      await new Promise(res => fbOnValue(dbRef(db,`invites/${code}`), snap=>{ invite=snap.val(); res(); },{onlyOnce:true}));
+      if(!invite){ err.textContent = 'Code not found. Please check and try again.'; return; }
+      if(invite.createdBy === uid){ err.textContent = "You can't join your own Snug with your own code!"; return; }
+      if(invite.used && invite.createdBy !== uid){ err.textContent = 'This invite has already been used.'; return; }
+      if(invite.expiresAt && Date.now() > invite.expiresAt){ err.textContent = 'This invite has expired. Ask your partner for a new one.'; return; }
+      const cId = invite.coupleId;
+      const ownerUid = invite.createdBy;
+      // Read user data
+      let userData = null;
+      await new Promise(res => fbOnValue(dbRef(db,`users/${uid}`), snap=>{ userData=snap.val(); res(); },{onlyOnce:true}));
+      // Add as member
+      await dbSet(dbRef(db,`couples/${cId}/members/${uid}`), {
+        name: userData?.name||'', city: userData?.city||'', role:'partner'
+      });
+      // Mark invite used
+      await dbSet(dbRef(db,`invites/${code}/used`), true);
+      // Link user to couple (partnerId is derived from members, never stored)
+      await dbSet(dbRef(db,`users/${uid}/coupleId`), cId);
+      // Read all members and derive partner uid
+      let members = null;
+      await new Promise(res => fbOnValue(dbRef(db,`couples/${cId}/members`), snap=>{ members=snap.val(); res(); },{onlyOnce:true}));
+      const derivedPartnerUid = (members ? Object.keys(members).find(u => u !== uid) : null) || ownerUid;
+      try{sessionStorage.removeItem('pendingJoinCode');localStorage.removeItem('pendingJoinCode');}catch(e){}
+      loadCoupleAndStart(cId, uid, derivedPartnerUid, members);
+    } catch(e){
+      console.error(e);
+      err.textContent = 'Something went wrong. Please try again.';
+      if(joinBtn){ joinBtn.textContent='Join Snug'; joinBtn.disabled=false; }
+    }
+  };
+
+  window.copyInviteCode = function(){
+    const link = document.getElementById('invite-link-display').textContent;
+    navigator.clipboard.writeText(link).then(()=>{
+      const btn = document.querySelector('#screen-invite .auth-switch-btn');
+      if(btn){ btn.textContent='Copied!'; setTimeout(()=>btn.textContent='or copy link',2000); }
     });
   };
-
-  window.attemptBiometric=async function(){
-    const ok=await authenticateBiometric(pendingUser);
-    if(ok){proceedAfterAuth();}else{document.getElementById("bio-error").style.display="block";}
+  window.regenerateInvite = async function(){
+    if(!fbAuth.currentUser || !db) return;
+    const regBtn=document.querySelector('#screen-invite button:last-child');
+    try{
+      const uid = fbAuth.currentUser.uid;
+      let userData = null;
+      await new Promise(res=>fbOnValue(dbRef(db,`users/${uid}`),snap=>{userData=snap.val();res();},{onlyOnce:true}));
+      if(!userData?.coupleId) return;
+      const cId = userData.coupleId;
+      const oldCode = userData.inviteCode;
+      if(oldCode) await dbSet(dbRef(db,`invites/${oldCode}/used`), true);
+      let code='';
+      for(let i=0;i<10;i++){
+        const c=Math.random().toString(36).substring(2,8).toUpperCase();
+        let exists=false;
+        await new Promise(res=>fbOnValue(dbRef(db,`invites/${c}`),snap=>{exists=!!snap.val();res();},{onlyOnce:true}));
+        if(!exists){code=c;break;}
+      }
+      if(!code){ if(regBtn)regBtn.textContent='Link expired? Generate a new one'; return; }
+      const expiresAt=Date.now()+(48*60*60*1000);
+      await dbSet(dbRef(db,`invites/${code}`),{coupleId:cId,createdBy:uid,createdAt:Date.now(),expiresAt,used:false});
+      await dbSet(dbRef(db,`users/${uid}/inviteCode`),code);
+      const inviteUrl=`${location.origin}/?join=${code}`;
+      document.getElementById('invite-link-display').textContent=inviteUrl;
+      if(regBtn){regBtn.textContent='✓ New link generated!';setTimeout(()=>regBtn.textContent='Link expired? Generate a new one',2500);}
+    }catch(e){
+      console.error('regenerateInvite failed:',e);
+      if(regBtn){regBtn.textContent='Failed — try again';setTimeout(()=>regBtn.textContent='Link expired? Generate a new one',3000);}
+    }
   };
 
-  window.checkRecovery=async function(){
-    const phrase=document.getElementById("recovery-input").value;
-    if(!phrase)return;
-    const hash=await hashPhrase(phrase);
-    const stored=await getStoredHash(pendingUser);
-    if(hash===stored){
-      document.getElementById("recovery-error").style.display="none";
-      document.getElementById("recovery-input").value="";
-      if(webAuthnSupported())await registerBiometric(pendingUser);
-      proceedAfterAuth();
-    }else{document.getElementById("recovery-error").style.display="block";}
+  window.shareInviteLink = function(){
+    const link = document.getElementById('invite-link-display').textContent;
+    if(navigator.share){
+      navigator.share({title:'Join my Snug',text:'Join our private little corner together.',url:link});
+    } else {
+      navigator.clipboard.writeText(link).then(()=>{
+        const btn = document.querySelector('#screen-invite .auth-submit-btn');
+        if(btn){btn.textContent='✓ Copied!';setTimeout(()=>btn.textContent='Share invite link',2000);}
+      });
+    }
   };
 
-  async function getStoredHash(name){
-    if(!db||!fbOnValue)return null;
-    return new Promise(r=>{const t=setTimeout(()=>r(null),5000);fbOnValue(dbRef(db,`auth/${name}/recoveryHash`),s=>{clearTimeout(t);r(s.val());},{onlyOnce:true});});
+  // ── LOAD COUPLE DATA AND START ───────────────────────────
+  async function loadCoupleAndStart(cId, myUidVal, partnerUidVal, members){
+    try{
+      coupleId    = cId;
+      myUid       = myUidVal;
+      partnerUid  = partnerUidVal;
+      // Names
+      myName    = members[myUid]?.name || fbAuth.currentUser.email.split('@')[0];
+      otherName = members[partnerUid]?.name || 'Partner';
+      ME    = myName;
+      OTHER = otherName;
+      // Cities
+      myCity    = members[myUid]?.city || '';
+      otherCity = members[partnerUid]?.city || '';
+      // Load couple info (startDate, meetupDate)
+      await new Promise(res => fbOnValue(dbRef(db,`couples/${cId}`), snap=>{
+        const d = snap.val();
+        coupleStartDate  = d?.startDate||'';
+        coupleMeetupDate = d?.meetupDate||'';
+        if(d?.meetupDate) meetupDate = new Date(d.meetupDate.replace('T00:00:00','')+'T00:00:00');
+        res();
+      },{onlyOnce:true}));
+      // Hide auth, show locating
+      hideAuthWrap();
+      document.getElementById('locating').style.display='flex';
+      // Init location then start UI
+      await detectAndStart();
+    }catch(e){
+      console.error('loadCoupleAndStart failed:',e);
+      showAuthWrap();
+      showAuthScreen('screen-login');
+    }
   }
 
-  window.doSetup=async function(){
-    const p1=document.getElementById("setup-phrase").value;
-    const p2=document.getElementById("setup-phrase2").value;
-    if(!p1||p1!==p2){document.getElementById("setup-error").style.display="block";return;}
-    document.getElementById("setup-error").style.display="none";
-    const hash=await hashPhrase(p1);
-    if(db&&dbSet)await dbSet(dbRef(db,`auth/${pendingUser}/recoveryHash`),hash);
-    if(webAuthnSupported())await registerBiometric(pendingUser);
-    document.getElementById("setup-phrase").value="";
-    document.getElementById("setup-phrase2").value="";
-    proceedAfterAuth();
-  };
-
-  async function proceedAfterAuth(){
-    document.getElementById("auth-screen").style.display="none";
-    document.getElementById("locating").style.display="flex";
-    ME=pendingUser;
-    OTHER=pendingUser==="Freddy"?"Sarah":"Freddy";
-    await detectAndStart();
-  }
-
-  // Firebase
   async function tryInitFirebase(){
     try{
       const{initializeApp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
       const{getDatabase,ref,set,push,onValue,remove,serverTimestamp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
       const{getStorage,ref:storageRef,uploadBytes,getDownloadURL,deleteObject}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js");
+      const{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js");
       const app=initializeApp(FIREBASE_CONFIG);
       db=getDatabase(app);dbRef=ref;dbSet=set;dbPush=push;dbRemove=remove;fbOnValue=onValue;
+      // Auth setup
+      const auth=getAuth(app);
+      fbAuth={
+        currentUser: null,
+        createUserWithEmailAndPassword:(email,pw)=>createUserWithEmailAndPassword(auth,email,pw),
+        signInWithEmailAndPassword:(email,pw)=>signInWithEmailAndPassword(auth,email,pw),
+        signOut:()=>signOut(auth)
+      };
+      // Watch auth state
+      onAuthStateChanged(auth, async user=>{
+        fbAuth.currentUser = user;
+        if(!user){
+          // Not logged in — show login screen
+          showAuthWrap();
+          showAuthScreen('screen-login');
+          return;
+        }
+        // Logged in — check if they have a couple
+        fbOnValue(dbRef(db,`users/${user.uid}`), async snap=>{
+          const userData = snap.val();
+          if(!userData){
+            // New user — show onboarding
+            showAuthWrap();
+            showAuthScreen('screen-onboarding');
+            return;
+          }
+          if(!userData.coupleId){
+            // Has profile but no couple — show linking
+            showAuthWrap();
+            showAuthScreen('screen-linking');
+            // Pre-fill pending join code
+            const _p=(sessionStorage.getItem('pendingJoinCode')||localStorage.getItem('pendingJoinCode'));
+            if(_p){
+              const _ci=document.getElementById('invite-code-input');
+              if(_ci)_ci.value=_p;
+            }
+            // Apply correct hide state based on storage
+            if(window.onInviteCodeInput) window.onInviteCodeInput();
+            return;
+          }
+          // Has couple — derive partner uid from members (no partnerId stored on user)
+          const cId = userData.coupleId;
+          fbOnValue(dbRef(db,`couples/${cId}/members`), snap2=>{
+            const members = snap2.val();
+            const uids = members ? Object.keys(members) : [];
+            const pId = uids.find(u => u !== user.uid);
+            if(!pId){
+              // Only one member — still waiting for partner
+              showAuthWrap();
+              const code = userData.inviteCode||'';
+              const inviteUrl2=`${location.origin}/?join=${code}`;
+              document.getElementById('invite-link-display').textContent=inviteUrl2;
+              showAuthScreen('screen-invite');
+              watchForPartner(cId, user.uid);
+              return;
+            }
+            loadCoupleAndStart(cId, user.uid, pId, members);
+          },{onlyOnce:true});
+        },{onlyOnce:true});
+      });
       storage=getStorage(app);fbStorageRef=storageRef;fbUploadBytes=uploadBytes;fbGetDownloadURL=getDownloadURL;fbDeleteObject=deleteObject;
-      onValue(ref(db,"notes"),snap=>{const d=snap.val();const n=d?Object.entries(d).map(([k,v])=>({...v,_key:k})).reverse():[];renderNotes(n);renderNotesPreview(n);});
-      onValue(ref(db,"bucket"),snap=>{const d=snap.val();renderBucket(d?Object.entries(d).map(([k,v])=>({...v,_key:k})):[]);});
-      onValue(ref(db,"milestones"),snap=>{const d=snap.val();renderMilestones(d?Object.entries(d).map(([k,v])=>({...v,_key:k})):[]); });
-      onValue(ref(db,"meetupDate"),snap=>{const v=snap.val();if(v){meetupDate=new Date(v);document.getElementById("meetup-date-input").value=v.substring(0,10);updateCdCaption(meetupDate);startCountdown();}});
+      let _unsubWatchOther=null;
       window._watchOther=()=>{
-        onValue(ref(db,`presence/${OTHER}`),snap=>{
+        if(_unsubWatchOther){try{_unsubWatchOther();}catch(e){}_unsubWatchOther=null;}
+        _unsubWatchOther=onValue(ref(db,`couples/${coupleId}/presence/${partnerUid}`),snap=>{
           const d=snap.val();
-          otherTz=d?.timezone||DEFAULTS[OTHER];otherCity=d?.city||DEFAULT_CITIES[OTHER];
-          const nc=(d?.lat&&d?.lng)?[d.lat,d.lng]:DEFAULT_COORDS[OTHER];
+          otherTz=d?.timezone||"UTC";otherCity=d?.city||"—";
+          const nc=(d?.lat&&d?.lng)?[d.lat,d.lng]:[0,0];
           const changed=!otherCoords||Math.abs(nc[0]-otherCoords[0])>0.01||Math.abs(nc[1]-otherCoords[1])>0.01;
           otherCoords=nc;
           const label=`${OTHER} · ${otherCity}`;
@@ -1178,23 +1586,40 @@
           if(changed)fetchWeather(otherCoords[0],otherCoords[1],"other");
         });
       };
-      window._pushPresence=(tz,city,lat,lng)=>set(ref(db,`presence/${ME}`),{timezone:tz,city,lat,lng,updatedAt:serverTimestamp()});
+      window._pushPresence=(tz,city,lat,lng)=>dbSet(dbRef(db,`couples/${coupleId}/presence/${myUid}`),{timezone:tz,city,lat,lng,updatedAt:serverTimestamp()});
       return true;
-    }catch(e){console.warn("Firebase failed:",e);return false;}
+    }catch(e){
+      console.warn("Firebase failed:",e);
+      showAuthWrap();
+      if(!navigator.onLine){
+        showAuthScreen('screen-offline');
+      } else {
+        showAuthScreen('screen-login');
+      }
+      return false;
+    }
   }
 
   // Location
-  async function tzFromCoords(lat,lng){try{const r=await fetch(`https://timeapi.io/api/timezone/coordinate?latitude=${lat}&longitude=${lng}`);return(await r.json()).timeZone||null;}catch{return null;}}
-  async function cityFromCoords(lat,lng){try{const r=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);const j=await r.json();return j.address?.city||j.address?.town||j.address?.village||j.address?.county||null;}catch{return null;}}
+  async function tzFromCoords(lat,lng){try{const ac=new AbortController();const t=setTimeout(()=>ac.abort(),5000);const r=await fetch(`https://timeapi.io/api/timezone/coordinate?latitude=${lat}&longitude=${lng}`,{signal:ac.signal});clearTimeout(t);return(await r.json()).timeZone||null;}catch{return null;}}
+  async function cityFromCoords(lat,lng){try{const ac=new AbortController();const t=setTimeout(()=>ac.abort(),5000);const r=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,{signal:ac.signal});clearTimeout(t);const j=await r.json();return j.address?.city||j.address?.town||j.address?.village||j.address?.county||null;}catch{return null;}}
   async function detectMyLocation(){return new Promise(res=>{if(!navigator.geolocation){res({tz:null,city:null,lat:null,lng:null});return;}navigator.geolocation.getCurrentPosition(async({coords:{latitude:lat,longitude:lng}})=>{const[tz,city]=await Promise.all([tzFromCoords(lat,lng),cityFromCoords(lat,lng)]);res({tz,city,lat,lng});},()=>res({tz:null,city:null,lat:null,lng:null}),{timeout:8000});});}
   async function detectAndStart(){
-    const{tz,city,lat,lng}=await detectMyLocation();
-    myTz=tz||Intl.DateTimeFormat().resolvedOptions().timeZone||DEFAULTS[ME];
-    myCity=city||DEFAULT_CITIES[ME];
-    myCoords=(lat&&lng)?[lat,lng]:DEFAULT_COORDS[ME];
-    otherTz=DEFAULTS[OTHER];otherCity=DEFAULT_CITIES[OTHER];otherCoords=DEFAULT_COORDS[OTHER];
-    if(window._pushPresence)window._pushPresence(myTz,myCity,myCoords[0],myCoords[1]);
-    startUI();
+    try{
+      const{tz,city,lat,lng}=await detectMyLocation();
+      myTz=tz||Intl.DateTimeFormat().resolvedOptions().timeZone||"UTC";
+      myCity=city||"—";
+      myCoords=(lat&&lng)?[lat,lng]:[0,0];
+      otherTz="UTC";otherCity="—";otherCoords=[0,0];
+      if(window._pushPresence)window._pushPresence(myTz,myCity,myCoords[0],myCoords[1]);
+      startUI();
+    }catch(e){
+      console.error('detectAndStart failed:',e);
+      // Fallback: use UTC and skip location
+      myTz=myTz||"UTC";myCity=myCity||"—";myCoords=myCoords||[0,0];
+      otherTz="UTC";otherCity="—";otherCoords=[0,0];
+      startUI();
+    }
   }
 
   // Weather
@@ -1220,7 +1645,7 @@
   function noteCardHTML(note){
     const canDelete=note.author===ME;
     const reactions=note.reactions||{};
-    const myReaction=ME&&reactions[ME.toLowerCase()];
+    const myReaction=ME&&reactions[nameKey(ME)];
     const heartCount=Object.keys(reactions).length;
     const reactLabel=heartCount>0?`${heartCount}`:"";
     return`<div class="note-card">
@@ -1242,13 +1667,13 @@
   function renderNotesPreview(notes){const p=document.getElementById("home-notes-preview");const r=notes.slice(0,2);if(!r.length){p.innerHTML=`<p class="empty">No notes yet.</p>`;return;}p.innerHTML=r.map(noteCardHTML).join("");}
   window.deleteNote=function(key){
     if(!key)return;
-    if(db&&dbRemove)dbRemove(dbRef(db,`notes/${key}`));
+    if(db&&dbRemove)dbRemove(dbRef(db,`couples/${coupleId}/notes/${key}`));
     else{localNotes=localNotes.filter(n=>n._key!==key);renderNotes(localNotes);renderNotesPreview(localNotes);}
   };
 
   window.reactToNote=function(key){
     if(!key||!ME)return;
-    const reactionKey=`notes/${key}/reactions/${ME.toLowerCase()}`;
+    const reactionKey=`couples/${coupleId}/notes/${key}/reactions/${nameKey(ME)}`;
     if(db&&fbOnValue){
       fbOnValue(dbRef(db,reactionKey),snap=>{
         if(snap.val()){dbRemove(dbRef(db,reactionKey));}
@@ -1257,7 +1682,7 @@
     }
   };
 
-  window.submitNote=function(){const text=document.getElementById("note-input").value.trim();if(!text||!ME)return;const note={text,author:ME,time:Date.now()};if(db&&dbPush){dbPush(dbRef(db,"notes"),note);}else{localNotes.unshift(note);renderNotes(localNotes);renderNotesPreview(localNotes);}document.getElementById("note-input").value="";};
+  window.submitNote=function(){const text=document.getElementById("note-input").value.trim();if(!text||!ME)return;const note={text,author:ME,time:Date.now()};if(db&&dbPush){dbPush(dbRef(db,`couples/${coupleId}/notes`),note);}else{localNotes.unshift(note);renderNotes(localNotes);renderNotesPreview(localNotes);}document.getElementById("note-input").value="";};
 
   // Milestones
   const DOT_COLORS=["gold","b","a","b","a","gold"];
@@ -1336,9 +1761,8 @@
     function loadIntoForm(item){
       editingKey=key;
       editingOriginalAuthor=item.addedBy||null;
-      const cb=document.getElementById("m-cancel-btn");
-      if(cb)cb.textContent="Cancel edit";
-      const cancelBtn=document.getElementById("m-cancel-btn");if(cancelBtn)cancelBtn.textContent="Cancel";
+      const cancelBtn=document.getElementById("m-cancel-btn");
+      if(cancelBtn){cancelBtn.textContent="Cancel";cancelBtn.style.display="inline-block";}
       const f=document.getElementById("add-milestone-form");
       f.classList.add("open");
       document.getElementById("m-title-input").value=item.title||"";
@@ -1348,12 +1772,24 @@
       document.getElementById("m-tag-input").value=item.tag||"moment";
       if(window.selectMilestoneTag)window.selectMilestoneTag(item.tag||"moment");
       document.getElementById("m-location-input").value=item.location||"";
-      document.getElementById("m-save-btn").textContent="Update";document.getElementById("m-cancel-btn").style.display="inline-block";
+      document.getElementById("m-save-btn").textContent="Update";
+      // Reflect existing photo state in the photo button
+      const pbtn=document.getElementById("m-photo-btn");
+      const plbl=document.getElementById("m-photo-btn-label");
+      if(item.photoURL){
+        if(pbtn)pbtn.classList.add("has-photo");
+        if(plbl)plbl.textContent="Photo ✓";
+      } else {
+        if(pbtn)pbtn.classList.remove("has-photo");
+        if(plbl)plbl.textContent="Add photo";
+      }
+      pendingPhotoFile=null;
+      pendingPhotoPosition=item.photoPosition||"50% 50%";
       document.getElementById("m-title-input").focus();
       f.scrollIntoView({behavior:"smooth",block:"nearest"});
     }
     if(db&&fbOnValue){
-      fbOnValue(dbRef(db,`milestones/${key}`),snap=>{
+      fbOnValue(dbRef(db,`couples/${coupleId}/milestones/${key}`),snap=>{
         const item=snap.val();
         if(item)loadIntoForm(item);
       },{onlyOnce:true});
@@ -1405,7 +1841,7 @@
     if(editingKey){
       // If new photo selected, delete old photo from Storage first
       if(pendingPhotoFile && db && fbOnValue){
-        fbOnValue(dbRef(db,`milestones/${editingKey}/photoPath`), async snap=>{
+        fbOnValue(dbRef(db,`couples/${coupleId}/milestones/${editingKey}/photoPath`), async snap=>{
           const oldPath = snap.val();
           if(oldPath && storage && fbStorageRef && fbDeleteObject){
             try{ await fbDeleteObject(fbStorageRef(storage, oldPath)); }
@@ -1414,8 +1850,16 @@
         },{onlyOnce:true});
       }
       const currentEditKey = editingKey;
-      if(db&&dbSet)dbSet(dbRef(db,`milestones/${currentEditKey}`),m);
-      else{const idx=localMilestones.findIndex(x=>x._key===currentEditKey);if(idx>-1)localMilestones[idx]={...m,_key:currentEditKey};renderMilestones([...localMilestones]);}
+      // Preserve existing photo fields — only overwrite if a new photo is being uploaded
+      const existingMilestone = localMilestones.find(x=>x._key===currentEditKey)||{};
+      const mToSave = {...m};
+      if(!pendingPhotoFile){
+        if(existingMilestone.photoURL) mToSave.photoURL = existingMilestone.photoURL;
+        if(existingMilestone.photoPath) mToSave.photoPath = existingMilestone.photoPath;
+        if(existingMilestone.photoPosition) mToSave.photoPosition = existingMilestone.photoPosition;
+      }
+      if(db&&dbSet)dbSet(dbRef(db,`couples/${coupleId}/milestones/${currentEditKey}`),mToSave);
+      else{const idx=localMilestones.findIndex(x=>x._key===currentEditKey);if(idx>-1)localMilestones[idx]={...mToSave,_key:currentEditKey};renderMilestones([...localMilestones]);}
       // Upload new photo if selected
       if(pendingPhotoFile && currentEditKey && storage){
         await safeUploadPhotoForKey(currentEditKey, pendingPhotoFile, pendingPhotoPosition);
@@ -1429,7 +1873,7 @@
       editingKey=null;
     } else {
       let finalKey = null;
-      if(db&&dbPush){const newRef=await dbPush(dbRef(db,"milestones"),m);finalKey=newRef.key;}
+      if(db&&dbPush){const newRef=await dbPush(dbRef(db,`couples/${coupleId}/milestones`),m);finalKey=newRef.key;}
       else{finalKey=Date.now().toString();localMilestones.push({...m,_key:finalKey});renderMilestones([...localMilestones]);}
       // Upload pending photo if selected
       if(pendingPhotoFile && finalKey && storage){
@@ -1452,7 +1896,7 @@
   window.deleteMilestone=async function(key){
     // Delete photo from Storage first if exists
     if(db && fbOnValue){
-      fbOnValue(dbRef(db,`milestones/${key}/photoPath`), async snap=>{
+      fbOnValue(dbRef(db,`couples/${coupleId}/milestones/${key}/photoPath`), async snap=>{
         const path = snap.val();
         if(path && storage && fbStorageRef && fbDeleteObject){
           try{ await fbDeleteObject(fbStorageRef(storage, path)); }
@@ -1461,12 +1905,12 @@
       },{onlyOnce:true});
     }
     // Delete milestone from database
-    if(db&&dbRemove)dbRemove(dbRef(db,`milestones/${key}`));
+    if(db&&dbRemove)dbRemove(dbRef(db,`couples/${coupleId}/milestones/${key}`));
     else{localMilestones=localMilestones.filter(m=>m._key!==key);renderMilestones([...localMilestones]);}
   };
 
   // Meetup
-  function updateCdCaption(date){const s=date.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});document.getElementById("cd-caption").textContent=s;document.getElementById("scd-caption").textContent=s;}
+  function updateCdCaption(date){if(!date)return;const s=date.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});document.getElementById("cd-caption").textContent=s;document.getElementById("scd-caption").textContent=s;}
   window.updateMeetupDate=function(val){
     if(!val){meetupDate=null;startCountdown();return;}
     const newDate=new Date(val+"T00:00:00");
@@ -1498,20 +1942,22 @@
 
     meetupDate=newDate;
     startCountdown();
-    if(db&&dbSet)dbSet(dbRef(db,"meetupDate"),val+"T00:00:00");
+    if(db&&dbSet)dbSet(dbRef(db,`couples/${coupleId}/meetupDate`),val+"T00:00:00");
 
     // Fix 5: update unlockDate on unread letters to match new meetup date
     if(db&&fbOnValue&&dbSet){
-      fbOnValue(dbRef(db,"letters"),snap=>{
+      fbOnValue(dbRef(db,`couples/${coupleId}/letters`),snap=>{
         const data=snap.val();
         if(!data)return;
         Object.entries(data).forEach(([key,round])=>{
           // Only update if neither letter has been read yet
-          const freddy=round["freddy"]||{};
-          const sarah=round["sarah"]||{};
-          const neitherRead=!freddy.readAt&&!sarah.readAt;
+          const meKey=nameKey(ME);
+          const otherKey=nameKey(OTHER);
+          const meData=round[meKey]||{};
+          const otherData=round[otherKey]||{};
+          const neitherRead=!meData.readAt&&!otherData.readAt;
           if(neitherRead&&round.unlockDate){
-            dbSet(dbRef(db,`letters/${key}/unlockDate`),val+"T00:00:00");
+            dbSet(dbRef(db,`couples/${coupleId}/letters/${key}/unlockDate`),val+"T00:00:00");
           }
         });
       },{onlyOnce:true});
@@ -1530,6 +1976,10 @@
       input.value="";
       input.setAttribute("placeholder","Set next meetup");
       input.style.color="var(--muted)";
+    } else {
+      // Populate input with stored meetup date
+      input.value=meetupDate.toISOString().split("T")[0];
+      input.style.color="";
     }
   }
 
@@ -1537,6 +1987,12 @@
   function startCountdown(){
     if(countdownInterval)clearInterval(countdownInterval);
     function tick(){
+      if(!meetupDate){
+        ["cd-d","cd-h","cd-m","cd-s","scd-d","scd-h","scd-m","scd-s"].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent="—";});
+        const cc=document.getElementById("cd-caption");if(cc)cc.textContent="Set your next meetup date 🗓️";
+        const sc=document.getElementById("scd-caption");if(sc)sc.textContent="Pick a new date";
+        return;
+      }
       const diff=meetupDate-Date.now();
       const isPast=diff<=0;
       // Main countdown on home page
@@ -1554,7 +2010,9 @@
           const de=document.getElementById(`${p}-d`),he=document.getElementById(`${p}-h`),me=document.getElementById(`${p}-m`),se=document.getElementById(`${p}-s`);
           if(de)de.textContent=d;if(he)he.textContent=h;if(me)me.textContent=m;if(se)se.textContent=s;
         });
-        if(cdCaption)cdCaption.textContent=meetupDate.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+        if(cdCaption)cdCaption.textContent=meetupDate?meetupDate.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"}):"Set your next meetup date 🗓️";
+        const scdCaption=document.getElementById("scd-caption");
+        if(scdCaption)scdCaption.textContent=meetupDate?meetupDate.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"}):"Pick a new date";
       }
     }
     tick();
@@ -1562,9 +2020,9 @@
   }
 
   // Greeting
-  function greeting(name,tz){const h=parseInt(new Date().toLocaleTimeString("en-GB",{timeZone:tz,hour:"2-digit"}));const g=h<12?"Good morning":h<18?"Good afternoon":"Good evening";return`${g}, <em>${name}</em>`;}
-  function fmtTime(tz){return new Date().toLocaleTimeString("en-GB",{timeZone:tz,hour:"2-digit",minute:"2-digit",second:"2-digit"});}
-  function fmtDate(tz){return new Date().toLocaleDateString("en-GB",{timeZone:tz,weekday:"long",day:"numeric",month:"long"});}
+  function greeting(name,tz){try{const h=parseInt(new Date().toLocaleTimeString("en-GB",{timeZone:tz,hour:"2-digit"}));const g=h<12?"Good morning":h<18?"Good afternoon":"Good evening";return`${g}, <em>${name}</em>`;}catch(e){return`Good day, <em>${name}</em>`;}}
+  function fmtTime(tz){try{return new Date().toLocaleTimeString("en-GB",{timeZone:tz,hour:"2-digit",minute:"2-digit",second:"2-digit"});}catch(e){return new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit",second:"2-digit"});}}
+  function fmtDate(tz){try{return new Date().toLocaleDateString("en-GB",{timeZone:tz,weekday:"long",day:"numeric",month:"long"});}catch(e){return new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"});}}
 
   // Distance between two coords (Haversine)
   function calcDistance(lat1,lon1,lat2,lon2){
@@ -1597,12 +2055,19 @@
     const myEl=document.getElementById("sleep-my");
     const otherEl=document.getElementById("sleep-other");
     if(myEl)myEl.textContent=sleepStatus(ME,myTz);
-    if(otherEl)otherEl.textContent=sleepStatus(OTHER,otherTz||DEFAULTS[OTHER]);
+    if(otherEl)otherEl.textContent=sleepStatus(OTHER,otherTz||"UTC");
   }
 
   // Bucket list
   const BL_ICONS={travel:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M8 8V6a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>`,food:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12c0 4 3.58 7 8 7s8-3 8-7H4z"/><path d="M4 12h16"/><path d="M7 5l3 7M14 3l3 9"/></svg>`,adventure:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20l6-10 4 6 3-4 5 8H3z"/><path d="M17 8a2 2 0 100-4 2 2 0 000 4z"/></svg>`,together:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C12 21 3 15 3 9a5 5 0 0110 0 5 5 0 0110 0c0 6-9 12-9 12z"/></svg>`,others:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>`};
+  let localNotes=[];
+  let localMilestones=[];
   let localBucket=[];
+  let unsubNotes=null,unsubMilestones=null,unsubBucket=null,unsubPulse=null;
+  // Map and interval vars — must be declared at module level for strict mode
+  let mapInstance=null,myMarker=null,otherMarker=null,connectLine=null;
+  let countdownInterval=null,distanceInterval=null,clockInterval=null,pulseTimeInterval=null;
+  let placesMapInstance=null,meetupDate=null;
   let blFilter="all";
   let blEditKey=null;
 
@@ -1657,7 +2122,7 @@
     const el=document.getElementById(`bl-filter-${cat}`);
     if(el)el.classList.add("active");
     if(db&&fbOnValue){
-      fbOnValue(dbRef(db,"bucket"),snap=>{
+      fbOnValue(dbRef(db,`couples/${coupleId}/bucket`),snap=>{
         const d=snap.val();
         renderBucket(d?Object.entries(d).map(([k,v])=>({...v,_key:k})):[]);
       },{onlyOnce:true});
@@ -1681,13 +2146,15 @@
     const category=document.getElementById("bl-cat-input").value;
     if(!title)return;
     if(blEditKey){
-      const update={title,category};
-      if(db&&dbSet)dbSet(dbRef(db,`bucket/${blEditKey}`),{title,category,addedBy:ME,done:false,time:Date.now()});
+      const existingItem=localBucket.find(x=>x._key===blEditKey);
+      const preserveDone=existingItem?.done||false;
+      const preserveCompletedAt=existingItem?.completedAt||null;
+      if(db&&dbSet)dbSet(dbRef(db,`couples/${coupleId}/bucket/${blEditKey}`),{title,category,addedBy:existingItem?.addedBy||ME,done:preserveDone,completedAt:preserveCompletedAt,time:existingItem?.time||Date.now()});
       else{const idx=localBucket.findIndex(x=>x._key===blEditKey);if(idx>-1){localBucket[idx].title=title;localBucket[idx].category=category;}renderBucket([...localBucket]);}
       blEditKey=null;
     } else {
       const item={title,category,addedBy:ME,done:false,time:Date.now()};
-      if(db&&dbPush)dbPush(dbRef(db,"bucket"),item);
+      if(db&&dbPush)dbPush(dbRef(db,`couples/${coupleId}/bucket`),item);
       else{localBucket.push({...item,_key:Date.now().toString()});renderBucket([...localBucket]);}
     }
     document.getElementById("bl-title-input").value="";
@@ -1697,10 +2164,10 @@
 
   window.toggleBucketDone=function(key){
     if(db&&fbOnValue){
-      fbOnValue(dbRef(db,`bucket/${key}`),snap=>{
+      fbOnValue(dbRef(db,`couples/${coupleId}/bucket/${key}`),snap=>{
         const item=snap.val();if(!item)return;
         const newDone=!item.done;
-        dbSet(dbRef(db,`bucket/${key}`),{...item,done:newDone,completedAt:newDone?Date.now():null});
+        dbSet(dbRef(db,`couples/${coupleId}/bucket/${key}`),{...item,done:newDone,completedAt:newDone?Date.now():null});
       },{onlyOnce:true});
     } else {
       const item=localBucket.find(x=>x._key===key);
@@ -1711,7 +2178,7 @@
 
   window.editBucketItem=function(key){
     if(db&&fbOnValue){
-      fbOnValue(dbRef(db,`bucket/${key}`),snap=>{
+      fbOnValue(dbRef(db,`couples/${coupleId}/bucket/${key}`),snap=>{
         const item=snap.val();if(!item)return;
         blEditKey=key;
         const f=document.getElementById("bl-add-form");
@@ -1733,12 +2200,11 @@
   };
 
   window.deleteBucketItem=function(key){
-    if(db&&dbRemove)dbRemove(dbRef(db,`bucket/${key}`));
+    if(db&&dbRemove)dbRemove(dbRef(db,`couples/${coupleId}/bucket/${key}`));
     else{localBucket=localBucket.filter(x=>x._key!==key);renderBucket([...localBucket]);}
   };
 
   // Places we've been
-  let placesMapInstance = null;
   const TAG_ICONS_PLACES = {first:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e8622a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" fill="rgba(232,98,42,0.15)"/><path d="M9 12l-2 9 5-3 5 3-2-9"/></svg>`,moment:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e8622a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/><circle cx="12" cy="12" r="4"/></svg>`,memory:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e8622a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M7 6V5a1 1 0 011-1h2M14 5a1 1 0 011 1v1"/><circle cx="17" cy="9" r="1" fill="#e8622a"/></svg>`,milestone:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e8622a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>`,future:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e8622a" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16l-7-13-7 13"/><path d="M3 12h18"/><path d="M7 16l1 5h8l1-5"/></svg>`};
 
   function buildPlaces(milestones){
@@ -2005,9 +2471,12 @@
     if(btn){btn.classList.add("sent");setTimeout(()=>btn.classList.remove("sent"),300);}
     const pulse={from:ME,to:OTHER,time:Date.now()};
     if(db&&dbPush){
-      await dbPush(dbRef(db,"pulses"),pulse);
+      try{
+        await dbPush(dbRef(db,`couples/${coupleId}/pulses`),pulse);
+      }catch(e){
+        console.error('sendPulse failed:',e);
+      }
     } else {
-      // local fallback
       const el=document.getElementById("pulse-last-sent");
       if(el){el.style.display="block";el.textContent="Last · Just now";}
     }
@@ -2027,7 +2496,8 @@
     if(sub)sub.textContent=OTHER;
 
     if(!db||!fbOnValue)return;
-    fbOnValue(dbRef(db,"pulses"),snap=>{
+    if(unsubPulse)unsubPulse();
+    unsubPulse=fbOnValue(dbRef(db,`couples/${coupleId}/pulses`),snap=>{
       const data=snap.val();
       if(!data)return;
       const pulses=Object.values(data).sort((a,b)=>b.time-a.time);
@@ -2035,7 +2505,8 @@
       updateLastSent(pulses);
       renderPulseHistory(pulses);
       // Update received time every minute
-      setInterval(()=>{
+      if(pulseTimeInterval)clearInterval(pulseTimeInterval);
+      pulseTimeInterval=setInterval(()=>{
         const latest=pulses.find(p=>p.from===OTHER);
         if(latest){
           const time=document.getElementById("pulse-received-time");
@@ -2102,8 +2573,8 @@
         ? `<span class="letter-round-badge active">Active · Writing phase</span>`
         : `<span class="letter-round-badge read">Read · ${new Date(round.unlockDate).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})}</span>`;
 
-      const myLetter = round[ME.toLowerCase()] || {};
-      const otherLetter = round[OTHER.toLowerCase()] || {};
+      const myLetter = round[nameKey(ME)] || {};
+      const otherLetter = round[nameKey(OTHER)] || {};
 
       card.innerHTML = `
         <div class="letter-round-header">
@@ -2247,7 +2718,7 @@
     // Pre-fill if existing content
     ta.value = "";
     if(roundKey !== "new" && db && fbOnValue){
-      fbOnValue(dbRef(db,`letters/${roundKey}/${ME.toLowerCase()}/content`), snap=>{
+      fbOnValue(dbRef(db,`couples/${coupleId}/letters/${roundKey}/${nameKey(ME)}/content`), snap=>{
         if(snap.val()) ta.value = snap.val();
       },{onlyOnce:true});
     }
@@ -2287,18 +2758,25 @@
     let roundKey = currentLetterRoundId;
 
     if(db && dbSet && dbPush){
-      if(roundKey === "new"){
-        // Create new round
-        const newRound = {unlockDate, createdAt: Date.now()};
-        const ref_new = await dbPush(dbRef(db,"letters"), newRound);
-        roundKey = ref_new.key;
+      try{
+        if(roundKey === "new"){
+          // Create new round
+          const newRound = {unlockDate, createdAt: Date.now()};
+          const ref_new = await dbPush(dbRef(db,`couples/${coupleId}/letters`), newRound);
+          roundKey = ref_new.key;
+        }
+        // Save letter content
+        await dbSet(dbRef(db,`couples/${coupleId}/letters/${roundKey}/${nameKey(ME)}`),{
+          content: content_text,
+          writtenAt: Date.now(),
+          unlockDate
+        });
+      }catch(e){
+        console.error('saveLetterContent failed:',e);
+        const sub=document.getElementById('letter-modal-sub');
+        if(sub){const orig=sub.textContent;sub.textContent='Failed to save — check your connection.';sub.style.color='#e8622a';setTimeout(()=>{sub.textContent=orig;sub.style.color='';},3000);}
+        return;
       }
-      // Save letter content — only update unlockDate if round not yet read
-      await dbSet(dbRef(db,`letters/${roundKey}/${ME.toLowerCase()}`),{
-        content: content_text,
-        writtenAt: Date.now(),
-        unlockDate
-      });
     }
     closeLetterModal();
     initLetterPage();
@@ -2306,15 +2784,15 @@
 
   window.openLetterRead = function(roundKey){
     if(!roundKey || !db || !fbOnValue) return;
-    fbOnValue(dbRef(db,`letters/${roundKey}`), snap=>{
+    fbOnValue(dbRef(db,`couples/${coupleId}/letters/${roundKey}`), snap=>{
       const round = snap.val();
       if(!round) return;
-      const otherLetter = round[OTHER.toLowerCase()];
+      const otherLetter = round[nameKey(OTHER)];
       if(!otherLetter || !isUnlocked(otherLetter.unlockDate)) return;
 
       // Mark as read
       if(!otherLetter.readAt){
-        dbSet(dbRef(db,`letters/${roundKey}/${OTHER.toLowerCase()}/readAt`), Date.now());
+        dbSet(dbRef(db,`couples/${coupleId}/letters/${roundKey}/${nameKey(OTHER)}/readAt`), Date.now());
       }
 
       // Show read view in place of timeline
@@ -2336,7 +2814,7 @@
       renderCurrentRound([]);
       return;
     }
-    fbOnValue(dbRef(db,"letters"), snap=>{
+    fbOnValue(dbRef(db,`couples/${coupleId}/letters`), snap=>{
       const data = snap.val();
       const rounds = data ? Object.entries(data).map(([k,v])=>({...v,_key:k})) : [];
       renderLetterTimeline(rounds);
@@ -2438,9 +2916,9 @@
     const url = await fbGetDownloadURL(ref);
     // Save URL AND path to Firebase (path needed for proper deletion)
     if(db && dbSet){
-      await dbSet(dbRef(db,`milestones/${key}/photoURL`), url);
-      await dbSet(dbRef(db,`milestones/${key}/photoPath`), path);
-      if(position) await dbSet(dbRef(db,`milestones/${key}/photoPosition`), position);
+      await dbSet(dbRef(db,`couples/${coupleId}/milestones/${key}/photoURL`), url);
+      await dbSet(dbRef(db,`couples/${coupleId}/milestones/${key}/photoPath`), path);
+      if(position) await dbSet(dbRef(db,`couples/${coupleId}/milestones/${key}/photoPosition`), position);
     }
     // Immediately update card in DOM without waiting for Firebase listener
     const existingPlaceholder = document.querySelector(`.m-photo-placeholder[onclick*="${key}"]`);
@@ -2509,15 +2987,15 @@
     if(!key || !db) return;
     // Get path first, then delete from Storage and Firebase
     if(fbOnValue){
-      fbOnValue(dbRef(db,`milestones/${key}/photoPath`), async snap=>{
+      fbOnValue(dbRef(db,`couples/${coupleId}/milestones/${key}/photoPath`), async snap=>{
         const path = snap.val();
         if(path && storage && fbStorageRef && fbDeleteObject){
           try{ await fbDeleteObject(fbStorageRef(storage, path)); }
           catch(e){ console.warn("Storage delete failed:", e); }
         }
         if(dbSet){
-          await dbSet(dbRef(db,`milestones/${key}/photoURL`), null);
-          await dbSet(dbRef(db,`milestones/${key}/photoPath`), null);
+          await dbSet(dbRef(db,`couples/${coupleId}/milestones/${key}/photoURL`), null);
+          await dbSet(dbRef(db,`couples/${coupleId}/milestones/${key}/photoPath`), null);
         }
       },{onlyOnce:true});
     }
@@ -2634,7 +3112,7 @@
 
     // "existing" mode — just update position in Firebase
     if(!repositionKey) return;
-    if(db && dbSet) await dbSet(dbRef(db,`milestones/${repositionKey}/photoPosition`), posStr);
+    if(db && dbSet) await dbSet(dbRef(db,`couples/${coupleId}/milestones/${repositionKey}/photoPosition`), posStr);
     const cardImg = document.querySelector(`.m-photo-wrap[onclick*="${repositionKey}"] img`);
     if(cardImg) cardImg.style.objectPosition = posStr;
     closeRepositionModal();
@@ -2707,6 +3185,38 @@
   }
 
   // Nav
+  window.doSignOut = async function(){
+    if(fbAuth && fbAuth.signOut){
+      await fbAuth.signOut();
+      // Reset all couple/session state so a re-login starts clean
+      ME=null;OTHER=null;coupleId=null;myUid=null;partnerUid=null;
+      myName=null;otherName=null;
+      myCity=null;otherCity=null;myCoords=null;otherCoords=null;
+      myTz=null;otherTz=null;
+      coupleStartDate=null;coupleMeetupDate=null;meetupDate=null;
+      localNotes=[];localMilestones=[];localBucket=[];
+      blFilter="all";blEditKey=null;
+      currentLetterRoundId=null;letterRounds=[];
+      editingKey=null;editingOriginalAuthor=null;
+      pendingPhotoFile=null;pendingPhotoPosition="50% 50%";
+      if(countdownInterval){clearInterval(countdownInterval);countdownInterval=null;}
+      if(distanceInterval){clearInterval(distanceInterval);distanceInterval=null;}
+      if(clockInterval){clearInterval(clockInterval);clockInterval=null;}
+      if(pulseTimeInterval){clearInterval(pulseTimeInterval);pulseTimeInterval=null;}
+      if(unsubNotes){try{unsubNotes();}catch(e){}unsubNotes=null;}
+      if(unsubMilestones){try{unsubMilestones();}catch(e){}unsubMilestones=null;}
+      if(unsubBucket){try{unsubBucket();}catch(e){}unsubBucket=null;}
+      if(unsubPulse){try{unsubPulse();}catch(e){}unsubPulse=null;}
+      if(typeof _unsubWatchOther!=="undefined"&&_unsubWatchOther){try{_unsubWatchOther();}catch(e){}; _unsubWatchOther=null;}
+      if(_watchPartnerUnsub){try{_watchPartnerUnsub();}catch(e){}; _watchPartnerUnsub=null;}
+      if(mapInstance){try{mapInstance.remove();}catch(e){}mapInstance=null;}
+      // Hide main, show auth
+      document.getElementById('main').style.display='none';
+      showAuthWrap();
+      showAuthScreen('screen-login');
+    }
+  };
+
   window.showPage=function(name){
     document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
     document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
@@ -2719,7 +3229,7 @@
     if(name==="places"){
       setTimeout(()=>{
         if(db&&fbOnValue){
-          fbOnValue(dbRef(db,"milestones"),snap=>{
+          fbOnValue(dbRef(db,`couples/${coupleId}/milestones`),snap=>{
             const d=snap.val();
             const items=d?Object.entries(d).map(([k,v])=>({...v,_key:k})):[];
             window._initPlacesPage(items);
@@ -2739,12 +3249,20 @@
     document.getElementById("locating").style.display="none";
     document.getElementById("main").style.display="block";
     const myL=`${ME} · ${myCity}`,oL=`${OTHER} · ${otherCity}`;
-    document.getElementById("sidebar-user").textContent=`Logged in as ${ME}`;if(webAuthnSupported()&&!localStorage.getItem(`wc_${ME}`)){document.getElementById("register-bio-btn").style.display="block";}
+    const mhEl=document.getElementById('mobile-header-couple-name');
+    const sbEl=document.getElementById('sidebar-couple-name');
+    if(mhEl) mhEl.innerHTML=`${ME} <em>&</em> ${OTHER}`;
+    if(sbEl) sbEl.innerHTML=`${ME} <em>&</em> ${OTHER}`;
+    const ftEl=document.getElementById('app-footer');
+    if(ftEl) ftEl.textContent=`${ME} & ${OTHER}`;
+    document.getElementById("sidebar-user").textContent=ME||"";
     document.getElementById("my-city").textContent=myL;
     document.getElementById("other-city").textContent=oL;
     document.getElementById("my-weather-city").textContent=myL;
     document.getElementById("other-weather-city").textContent=oL;
     document.getElementById("note-author-name").textContent=ME;
+    const dna=document.getElementById("home-dist-name-a");if(dna)dna.textContent=ME;
+    const dnb=document.getElementById("home-dist-name-b");if(dnb)dnb.textContent=OTHER;
     document.getElementById("home-greeting").innerHTML=greeting(ME,myTz);
     document.getElementById("home-date").textContent=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
     setTimeout(()=>initMap(myCoords,otherCoords,myL,oL),50);
@@ -2752,20 +3270,76 @@
     fetchWeather(otherCoords[0],otherCoords[1],"other");
     if(window._watchOther)window._watchOther();
     updateDistanceAndSleep();
-    setInterval(updateDistanceAndSleep, 60000);
+    distanceInterval=setInterval(updateDistanceAndSleep, 60000);
     initPulse();
     checkMeetupDateInput();
-    function tickClocks(){document.getElementById("my-time").textContent=fmtTime(myTz);document.getElementById("my-date").textContent=fmtDate(myTz);document.getElementById("other-time").textContent=fmtTime(otherTz||DEFAULTS[OTHER]);document.getElementById("other-date").textContent=fmtDate(otherTz||DEFAULTS[OTHER]);}
-    tickClocks();setInterval(tickClocks,1000);
-    const start=new Date("2026-01-01");document.getElementById("days-together").textContent=Math.floor((Date.now()-start)/86400000)+1;
-    updateCdCaption(meetupDate);startCountdown();
+    // ── Persistent real-time listeners ─────────────────────
+    if(db&&fbOnValue){
+      // Notes — store unsubscribe so we can clean up on sign-out
+      if(unsubNotes)unsubNotes();
+      unsubNotes=fbOnValue(dbRef(db,`couples/${coupleId}/notes`),snap=>{
+        const d=snap.val();
+        const notes=d?Object.entries(d).map(([k,v])=>({...v,_key:k})).reverse():[];
+        localNotes=[...notes];
+        renderNotes(notes);
+        renderNotesPreview(notes);
+      });
+      // Milestones
+      if(unsubMilestones)unsubMilestones();
+      unsubMilestones=fbOnValue(dbRef(db,`couples/${coupleId}/milestones`),snap=>{
+        const d=snap.val();
+        const items=d?Object.entries(d).map(([k,v])=>({...v,_key:k})):[];
+        localMilestones=[...items];
+        renderMilestones(items);
+      });
+      // Bucket
+      if(unsubBucket)unsubBucket();
+      unsubBucket=fbOnValue(dbRef(db,`couples/${coupleId}/bucket`),snap=>{
+        const d=snap.val();
+        const items=d?Object.entries(d).map(([k,v])=>({...v,_key:k})):[];
+        localBucket=[...items];
+        renderBucket(items);
+      });
+    }
+    function tickClocks(){document.getElementById("my-time").textContent=fmtTime(myTz);document.getElementById("my-date").textContent=fmtDate(myTz);document.getElementById("other-time").textContent=fmtTime(otherTz||"UTC");document.getElementById("other-date").textContent=fmtDate(otherTz||"UTC");}
+    tickClocks();clockInterval=setInterval(tickClocks,1000);
+    if(coupleStartDate){
+      // Use T12:00:00 to avoid UTC midnight timezone-off-by-one-day issue
+      const start=new Date(coupleStartDate.substring(0,10)+'T12:00:00');
+      document.getElementById("days-together").textContent=Math.floor((Date.now()-start)/86400000)+1;
+      const sinceEl=document.getElementById("couple-since-date");
+      if(sinceEl){ const d=new Date(coupleStartDate.substring(0,10)+'T12:00:00'); sinceEl.textContent=`${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}`; }
+    }
+    if(meetupDate)updateCdCaption(meetupDate);startCountdown();
   }
+
+  // Read ?join=CODE from invite link URL on page load
+  (()=>{
+    try{
+      const _j = new URLSearchParams(window.location.search).get('join');
+      if(_j){
+        const _code = _j.toUpperCase();
+        sessionStorage.setItem('pendingJoinCode', _code);
+        localStorage.setItem('pendingJoinCode', _code);
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+    }catch(e){}
+  })();
+
+  // Bootstrap the app
+  tryInitFirebase();
+
+  // Auto-retry when connection restored
+  window.addEventListener('online', ()=>{
+    const el = document.getElementById('screen-offline');
+    if(el && el.style.display !== 'none') window.location.reload();
+  });
 </script>
   <script>
     // Register Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/socute/sw.js', { scope: '/socute/' })
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
           .then(reg => {
             console.log('[App] SW registered, scope:', reg.scope);
             // When a new SW is waiting, activate it immediately

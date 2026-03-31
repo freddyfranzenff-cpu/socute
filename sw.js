@@ -1,14 +1,14 @@
 // ── Your Little Corner — Service Worker ──────────────────
 // Version: bump this string to force all clients to update
-const CACHE_VERSION = 'ylc-v1';
+const CACHE_VERSION = 'ylc-v2';
 
 // App shell — these files are cached on first install
 // and served from cache on every subsequent load (cache-first)
 const APP_SHELL = [
-  '/socute/',
-  '/socute/index.html',
-  '/socute/icons/icon-192.png',
-  '/socute/icons/icon-512.png',
+  '/',
+  '/index.html',
+  '/icons/icon-192.png',
+  '/icons/icon-512.png',
 ];
 
 // External static assets — cache on first use (cache-first)
@@ -70,14 +70,15 @@ self.addEventListener('fetch', event => {
 
   // ── 2. Never intercept weather API ────────────────────
   if (url.hostname.includes('open-meteo.com') ||
-      url.hostname.includes('nominatim.openstreetmap.org')) {
+      url.hostname.includes('nominatim.openstreetmap.org') ||
+      url.hostname.includes('timeapi.io')) {
     return; // always fresh
   }
 
   // ── 3. App shell (index.html + icons) → cache-first ──
   // If cached, return immediately. If not, fetch and cache.
   if (
-    url.pathname.startsWith('/socute/') &&
+    url.pathname.startsWith('/') &&
     !url.pathname.includes('sw.js')
   ) {
     event.respondWith(
@@ -93,7 +94,7 @@ self.addEventListener('fetch', event => {
         }).catch(() => {
           // Offline fallback for navigation requests
           if (event.request.mode === 'navigate') {
-            return caches.match('/socute/index.html');
+            return caches.match('/index.html');
           }
         });
       })
