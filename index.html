@@ -543,27 +543,22 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   .home-dist-bar-wrap,.home-dist-bar,.home-dist-fill{display:none}
 
 
-  /* Pulse received pill (replaces pulse-banner) */
-  .pulse-recv-pill{display:inline-flex;align-items:center;gap:.45rem;
-    padding:.28rem .65rem;background:rgba(232,98,42,0.07);
-    border:1px solid rgba(232,98,42,0.2);border-radius:20px;
-    font-size:.6rem;color:var(--k);max-width:100%}
-  .pulse-recv-dot{width:6px;height:6px;border-radius:50%;background:var(--k);flex-shrink:0;animation:hb 1.8s ease infinite}
-  .pulse-recv-sep{opacity:.4;flex-shrink:0}
-  .pulse-banner-title{font-size:.6rem;font-weight:500;color:var(--k);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .pulse-banner-time{font-size:.56rem;color:var(--k);opacity:.75;white-space:nowrap;flex-shrink:0}
-
-  /* Send pulse pill (replaces pulse-row) */
-  .pulse-send-pill{display:inline-flex;align-items:center;gap:.6rem;
-    padding:.35rem .75rem .35rem .35rem;
-    background:var(--surface);border:1px solid var(--border);border-radius:30px;
-    box-shadow:0 2px 10px rgba(232,98,42,0.08);cursor:pointer;
-    transition:box-shadow .2s,transform .15s;max-width:100%}
-  .pulse-send-pill:hover{box-shadow:0 4px 16px rgba(232,98,42,0.15);transform:translateY(-1px)}
-  .pulse-send-pill:active{transform:scale(.97)}
-  .pulse-send-pill-btn{position:relative;width:28px;height:28px;flex-shrink:0}
-  .pulse-send-pill-btn .pulse-ring-sm{inset:0}
-  .pulse-send-pill-btn .pulse-heart-sm{inset:3px}
+  /* ── Pulse card ─────────────────────────────────────────── */
+  .pulse-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:.85rem;}
+  .pulse-recv-strip{background:rgba(232,98,42,0.06);border-bottom:1px solid rgba(232,98,42,0.12);padding:.48rem .9rem;display:flex;align-items:center;gap:.55rem;}
+  .pulse-recv-dot{width:7px;height:7px;border-radius:50%;background:var(--k);flex-shrink:0;animation:hb 1.8s ease infinite;}
+  .pulse-recv-text{font-size:.68rem;color:var(--k);font-weight:500;flex:1;}
+  .pulse-recv-ago{font-size:.6rem;color:var(--muted);}
+  .pulse-send-row{padding:.7rem .9rem;display:flex;align-items:center;gap:.8rem;cursor:pointer;}
+  .pulse-heart-wrap{position:relative;width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .pulse-history-footer{padding:.38rem .9rem;border-top:1px solid var(--border);font-size:.58rem;color:var(--muted);display:flex;justify-content:space-between;cursor:pointer;transition:color .15s;}
+  .pulse-history-footer:hover{color:var(--k);}
+  .pulse-banner-title{display:none;}
+  .pulse-banner-time{display:none;}
+  .pulse-recv-sep{display:none;}
+  /* keep send-pill for backward compat but hide — now inside card */
+  .pulse-send-pill{display:none;}
+  .pulse-send-pill-btn{position:relative;width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 
   
   /* ── SESSION 6 AUTH SCREENS ── */
@@ -710,19 +705,25 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   .status-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:.85rem;}
   .status-card-header{display:flex;align-items:center;justify-content:space-between;padding:.6rem .9rem;border-bottom:1px solid var(--border);}
   .status-card-label{font-size:.48rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
-  .status-update-btn{font-size:.6rem;color:var(--k);background:none;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;}
-  .status-person-row{display:flex;align-items:center;gap:.7rem;padding:.6rem .9rem;border-bottom:1px solid var(--border);}
+  .status-update-btn{font-size:.62rem;color:var(--k);background:none;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;}
+  .status-person-row{display:flex;align-items:center;gap:.75rem;padding:.65rem .9rem;border-bottom:1px solid var(--border);}
   .status-person-row:last-child{border-bottom:none;}
-  .status-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:600;flex-shrink:0;}
-  .status-avatar-me{background:rgba(232,98,42,0.15);color:var(--k);}
-  .status-avatar-other{background:rgba(139,92,246,0.12);color:#7c3aed;}
+  .status-accent{width:3px;align-self:stretch;border-radius:2px;flex-shrink:0;}
+  .status-accent-me{background:var(--k);}
+  .status-accent-other{background:#7c3aed;}
+  .status-emoji{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;}
+  .status-emoji-me{background:rgba(232,98,42,0.08);}
+  .status-emoji-other{background:rgba(124,58,237,0.08);}
   .status-info{flex:1;min-width:0;}
-  .status-name{font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
-  .status-text{font-size:.72rem;color:var(--text);margin-top:.1rem;display:flex;align-items:center;gap:.35rem;}
-  .status-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;background:var(--k);}
-  .status-dot-other{background:#7c3aed;}
-  .status-time{font-size:.55rem;color:var(--muted);margin-top:.1rem;}
-  .status-empty{font-size:.68rem;color:var(--muted);font-style:italic;}
+  .status-name{font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.15rem;}
+  .status-activity{font-size:.8rem;font-weight:600;color:var(--text);}
+  .status-mood{font-size:.62rem;color:var(--muted);margin-top:.1rem;}
+  .status-time{font-size:.55rem;color:var(--muted);align-self:flex-start;margin-top:.1rem;flex-shrink:0;}
+  .status-empty{font-size:.72rem;color:var(--muted);font-style:italic;font-weight:400;}
+  /* keep old classes for compat */
+  .status-avatar{display:none;}
+  .status-dot{display:none;}
+  .status-text{display:none;}
   /* Bottom sheet */
   .status-sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:800;display:none;align-items:flex-end;justify-content:center;}
   .status-sheet-overlay.open{display:flex;}
@@ -939,23 +940,32 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <!-- ══ NOW TAB ══ -->
     <div class="home-tab-panel active" id="panel-now">
 
-      <!-- Pulse -->
-      <div id="pulse-received-now" style="display:none;margin-bottom:.65rem;"></div>
-      <div class="pulse-send-pill" onclick="sendPulse()" style="margin-bottom:.65rem;">
-        <div class="pulse-send-pill-btn">
-          <div class="pulse-ring-sm"></div><div class="pulse-ring-sm r2"></div>
-          <div class="pulse-heart-sm" id="pulse-heart-btn-now">
-            <svg width="10" height="9" viewBox="0 0 32 30" fill="white"><path d="M16 28C14 26 2 19 2 10.5A7.5 7.5 0 0116 15a7.5 7.5 0 0114-4.5C30 19 18 26 16 28z"/></svg>
+      <!-- Pulse card -->
+      <div class="pulse-card" id="pulse-card">
+        <div class="pulse-recv-strip" id="pulse-received-now" style="display:none;">
+          <div class="pulse-recv-dot"></div>
+          <div class="pulse-recv-text" id="pulse-received-title">— was thinking of you</div>
+          <div class="pulse-recv-ago" id="pulse-received-time"></div>
+        </div>
+        <div class="pulse-send-row" onclick="sendPulse()">
+          <div class="pulse-heart-wrap pulse-send-pill-btn">
+            <div class="pulse-ring-sm"></div>
+            <div class="pulse-ring-sm r2"></div>
+            <div class="pulse-heart-sm" id="pulse-heart-btn-now">
+              <svg width="10" height="9" viewBox="0 0 32 30" fill="white"><path d="M16 28C14 26 2 19 2 10.5A7.5 7.5 0 0116 15a7.5 7.5 0 0114-4.5C30 19 18 26 16 28z"/></svg>
+            </div>
           </div>
+          <div style="flex:1;min-width:0;">
+            <p class="pulse-row-title">Send a pulse</p>
+            <p class="pulse-row-sub">Let <span id="pulse-other-name">—</span> know you're thinking of them</p>
+          </div>
+          <span class="pulse-row-last" id="pulse-last-sent" style="display:none;"></span>
         </div>
-        <div style="flex:1;min-width:0;">
-          <p class="pulse-row-title">Send a pulse</p>
-          <p class="pulse-row-sub">Let <span id="pulse-other-name">—</span> know you're thinking of them</p>
+        <div class="pulse-history-footer" id="pulse-history-toggle" onclick="togglePulseHistory()" style="display:none;">
+          <span>Show recent pulses</span><span>↓</span>
         </div>
-        <span class="pulse-row-last" id="pulse-last-sent" style="display:none;"></span>
+        <div class="pulse-history" id="pulse-history-list"></div>
       </div>
-      <button class="pulse-history-toggle" id="pulse-history-toggle" onclick="togglePulseHistory()" style="display:none;margin-bottom:.5rem;">Show recent pulses ↓</button>
-      <div class="pulse-history" id="pulse-history-list"></div>
 
       <!-- Status + Mood card -->
       <div class="status-card" id="status-card">
@@ -964,30 +974,29 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
           <button class="status-update-btn" onclick="openStatusSheet()">Update yours →</button>
         </div>
         <div class="status-person-row">
-          <div class="status-avatar status-avatar-me" id="status-my-avatar">F</div>
+          <div class="status-accent status-accent-me"></div>
+          <div class="status-emoji status-emoji-me" id="status-my-emoji">—</div>
           <div class="status-info">
             <div class="status-name" id="status-my-name">—</div>
-            <div class="status-text" id="status-my-text">
-              <span class="status-dot"></span>
-              <span id="status-my-value" class="status-empty">No status set</span>
-            </div>
-            <div class="status-time" id="status-my-time"></div>
+            <div class="status-activity" id="status-my-activity"><span class="status-empty">No status set</span></div>
+            <div class="status-mood" id="status-my-mood"></div>
           </div>
+          <div class="status-time" id="status-my-time"></div>
         </div>
         <div class="status-person-row">
-          <div class="status-avatar status-avatar-other" id="status-other-avatar">S</div>
+          <div class="status-accent status-accent-other"></div>
+          <div class="status-emoji status-emoji-other" id="status-other-emoji">—</div>
           <div class="status-info">
             <div class="status-name" id="status-other-name">—</div>
-            <div class="status-text" id="status-other-text">
-              <span class="status-dot status-dot-other"></span>
-              <span id="status-other-value" class="status-empty">No status set</span>
-            </div>
-            <div class="status-time" id="status-other-time"></div>
+            <div class="status-activity" id="status-other-activity"><span class="status-empty">No status set</span></div>
+            <div class="status-mood" id="status-other-mood"></div>
           </div>
+          <div class="status-time" id="status-other-time"></div>
         </div>
       </div>
 
       <!-- Map + Weather -->
+      <p class="section-heading" style="margin-top:.1rem;">Where you are</p>
       <div class="map-card home-map-card">
         <div id="map"></div>
         <div class="weather-row">
@@ -1005,7 +1014,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       </div>
 
       <!-- Clocks -->
-      <p class="section-heading" style="margin-top:.1rem;">Right now</p>
+      <p class="section-heading" style="margin-top:1.1rem;">Right now</p>
       <div class="grid-2">
         <div class="card mine"><p class="card-label"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg><span id="my-city">—</span></p><p class="clock-time" id="my-time">--:--:--</p><p class="clock-date" id="my-date">--</p><p id="sleep-my" class="sleep-indicator"></p></div>
         <div class="card"><p class="card-label"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg><span id="other-city">—</span></p><p class="clock-time" id="other-time">--:--:--</p><p class="clock-date" id="other-date">--</p><p id="sleep-other" class="sleep-indicator"></p></div>
@@ -1448,7 +1457,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   const FIREBASE_CONFIG={apiKey:"AIzaSyCDwgIJS9_q-rxFI0iQ8TNqMU6bSOPVizQ",authDomain:"ldrcounter.firebaseapp.com",databaseURL:"https://ldrcounter-default-rtdb.europe-west1.firebasedatabase.app",projectId:"ldrcounter",storageBucket:"ldrcounter.firebasestorage.app",messagingSenderId:"856435037901",appId:"1:856435037901:web:9f4a9b2c3d8e7f6a1b2c3d"};
 
   // ── Global state ────────────────────────────────────────
-  let db=null,dbRef=null,dbSet=null,dbPush=null,dbRemove=null,fbOnValue=null;
+  let db=null,dbRef=null,dbSet=null,dbPush=null,dbRemove=null,fbOnValue=null,dbUpdate=null;
   let storage=null,fbStorageRef=null,fbUploadBytes=null,fbGetDownloadURL=null,fbDeleteObject=null;
   let fbAuth=null,fbCurrentUser=null;
   // Couple data (loaded after auth)
@@ -1806,11 +1815,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   async function tryInitFirebase(){
     try{
       const{initializeApp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
-      const{getDatabase,ref,set,push,onValue,remove,serverTimestamp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+      const{getDatabase,ref,set,push,onValue,remove,serverTimestamp,update}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
       const{getStorage,ref:storageRef,uploadBytes,getDownloadURL,deleteObject}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js");
       const{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut,sendPasswordResetEmail,updatePassword,updateEmail,reauthenticateWithCredential,EmailAuthProvider}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js");
       const app=initializeApp(FIREBASE_CONFIG);
-      db=getDatabase(app);dbRef=ref;dbSet=set;dbPush=push;dbRemove=remove;fbOnValue=onValue;
+      db=getDatabase(app);dbRef=ref;dbSet=set;dbPush=push;dbRemove=remove;fbOnValue=onValue;dbUpdate=update;
       // Auth setup
       const auth=getAuth(app);
       fbAuth={
@@ -1921,7 +1930,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
           renderStatusCard&&renderStatusCard();
         });
       };
-      window._pushPresence=(tz,city,lat,lng)=>dbSet(dbRef(db,`couples/${coupleId}/presence/${myUid}`),{timezone:tz,city,lat,lng,updatedAt:serverTimestamp()});
+      window._pushPresence=(tz,city,lat,lng)=>dbUpdate(dbRef(db,`couples/${coupleId}/presence/${myUid}`),{timezone:tz,city,lat,lng,updatedAt:serverTimestamp()});
       return true;
     }catch(e){
       console.warn("Firebase failed:",e);
@@ -2783,9 +2792,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     const latest=pulses.find(p=>p.from===partnerUid||p.from===OTHER);
     if(!latest)return;
     const banner=document.getElementById("pulse-received-now");
+    const titleEl=document.getElementById("pulse-received-title");
+    const timeEl=document.getElementById("pulse-received-time");
     if(banner){
-      banner.innerHTML=`<div class="pulse-recv-pill"><span class="pulse-recv-dot"></span><span class="pulse-banner-title">${OTHER} was thinking of you</span><span class="pulse-recv-sep">·</span><span class="pulse-banner-time">${fmtPulseTime(latest.time)}</span></div>`;
-      banner.style.display="block";
+      if(titleEl) titleEl.textContent=`${OTHER} was thinking of you`;
+      if(timeEl) timeEl.textContent=fmtPulseTime(latest.time);
+      banner.style.display="flex";
     }
   }
 
@@ -2851,10 +2863,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       pulseTimeInterval=setInterval(()=>{
         const latest=pulses.find(p=>p.from===partnerUid||p.from===OTHER);
         if(latest){
-          const nowBanner=document.getElementById("pulse-received-now");
-          if(nowBanner&&nowBanner.querySelector(".pulse-banner-time")){
-            nowBanner.querySelector(".pulse-banner-time").textContent=fmtPulseTime(latest.time);
-          }
+          const timeEl2=document.getElementById("pulse-received-time");
+          if(timeEl2) timeEl2.textContent=fmtPulseTime(latest.time);
         }
       },60000);
     });
@@ -3791,56 +3801,53 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     return `${hrs}h ago`;
   }
 
+  const ACTIVITY_EMOJI = {
+    'Working':'💼','Reading':'📖','Music':'🎵','Eating':'🍽️',
+    'Gaming':'🎮','Sports':'⚽','Resting':'😴','Traveling':'✈️','Cooking':'🍳'
+  };
+
   function renderStatusCard(){
-    // My status
-    const myName = document.getElementById('status-my-name');
-    const myVal = document.getElementById('status-my-value');
-    const myTime = document.getElementById('status-my-time');
-    const myAvatar = document.getElementById('status-my-avatar');
-    if(myName) myName.textContent = ME||'—';
-    if(myAvatar) myAvatar.textContent = (ME||'?')[0].toUpperCase();
-
-    // Partner status
-    const otherName = document.getElementById('status-other-name');
-    const otherVal = document.getElementById('status-other-value');
-    const otherTime = document.getElementById('status-other-time');
-    const otherAvatar = document.getElementById('status-other-avatar');
-    if(otherName) otherName.textContent = OTHER||'—';
-    if(otherAvatar) otherAvatar.textContent = (OTHER||'?')[0].toUpperCase();
-
-    // Read status from presence data
-    // My status comes from myStatus module var
-    // Partner status comes from otherStatus module var
     const now = Date.now();
+    // Set names
+    const myNameEl = document.getElementById('status-my-name');
+    const otherNameEl = document.getElementById('status-other-name');
+    if(myNameEl) myNameEl.textContent = ME||'—';
+    if(otherNameEl) otherNameEl.textContent = OTHER||'—';
 
     // My status
-    if(myVal){
-      const expired = !myStatus || !myStatus.updatedAt || (now - myStatus.updatedAt > STATUS_EXPIRY_MS);
-      if(expired){
-        myVal.textContent = 'No status set';
-        myVal.className = 'status-empty';
-        if(myTime) myTime.textContent = '';
-      } else {
-        const parts = [myStatus.activity, myStatus.mood ? `feeling ${myStatus.mood}` : ''].filter(Boolean);
-        myVal.textContent = parts.join(' · ');
-        myVal.className = '';
-        if(myTime) myTime.textContent = fmtStatusTime(myStatus.updatedAt);
-      }
+    const myEmoji = document.getElementById('status-my-emoji');
+    const myActivity = document.getElementById('status-my-activity');
+    const myMood = document.getElementById('status-my-mood');
+    const myTime = document.getElementById('status-my-time');
+    const myExpired = !myStatus || !myStatus.updatedAt || (now - myStatus.updatedAt > STATUS_EXPIRY_MS);
+    if(myExpired){
+      if(myEmoji) myEmoji.textContent = '—';
+      if(myActivity) myActivity.innerHTML = '<span class="status-empty">No status set</span>';
+      if(myMood) myMood.textContent = '';
+      if(myTime) myTime.textContent = '';
+    } else {
+      if(myEmoji) myEmoji.textContent = ACTIVITY_EMOJI[myStatus.activity]||'—';
+      if(myActivity) myActivity.textContent = myStatus.activity||'';
+      if(myMood) myMood.textContent = myStatus.mood ? `feeling ${myStatus.mood}` : '';
+      if(myTime) myTime.textContent = fmtStatusTime(myStatus.updatedAt);
     }
 
     // Partner status
-    if(otherVal){
-      const expired = !otherStatus || !otherStatus.updatedAt || (now - otherStatus.updatedAt > STATUS_EXPIRY_MS);
-      if(expired){
-        otherVal.textContent = 'No status set';
-        otherVal.className = 'status-empty';
-        if(otherTime) otherTime.textContent = '';
-      } else {
-        const parts = [otherStatus.activity, otherStatus.mood ? `feeling ${otherStatus.mood}` : ''].filter(Boolean);
-        otherVal.textContent = parts.join(' · ');
-        otherVal.className = '';
-        if(otherTime) otherTime.textContent = fmtStatusTime(otherStatus.updatedAt);
-      }
+    const otherEmoji = document.getElementById('status-other-emoji');
+    const otherActivity = document.getElementById('status-other-activity');
+    const otherMood = document.getElementById('status-other-mood');
+    const otherTime = document.getElementById('status-other-time');
+    const otherExpired = !otherStatus || !otherStatus.updatedAt || (now - otherStatus.updatedAt > STATUS_EXPIRY_MS);
+    if(otherExpired){
+      if(otherEmoji) otherEmoji.textContent = '—';
+      if(otherActivity) otherActivity.innerHTML = '<span class="status-empty">No status set</span>';
+      if(otherMood) otherMood.textContent = '';
+      if(otherTime) otherTime.textContent = '';
+    } else {
+      if(otherEmoji) otherEmoji.textContent = ACTIVITY_EMOJI[otherStatus.activity]||'—';
+      if(otherActivity) otherActivity.textContent = otherStatus.activity||'';
+      if(otherMood) otherMood.textContent = otherStatus.mood ? `feeling ${otherStatus.mood}` : '';
+      if(otherTime) otherTime.textContent = fmtStatusTime(otherStatus.updatedAt);
     }
   }
 
@@ -3917,6 +3924,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       if(distanceInterval){clearInterval(distanceInterval);distanceInterval=null;}
       if(clockInterval){clearInterval(clockInterval);clockInterval=null;}
       if(pulseTimeInterval){clearInterval(pulseTimeInterval);pulseTimeInterval=null;}
+      if(mapInstance){try{mapInstance.remove();}catch(e){}mapInstance=null;myMarker=null;otherMarker=null;connectLine=null;}
       if(unsubNotes){try{unsubNotes();}catch(e){}unsubNotes=null;}
       if(unsubMilestones){try{unsubMilestones();}catch(e){}unsubMilestones=null;}
       if(unsubBucket){try{unsubBucket();}catch(e){}unsubBucket=null;}
@@ -4032,6 +4040,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         const items=d?Object.entries(d).map(([k,v])=>({...v,_key:k})):[];
         localBucket=[...items];
         renderBucket(items);
+        updateHomeBucketProgress();
+        updateMomentsSubtitles();
       });
     }
     function tickClocks(){document.getElementById("my-time").textContent=fmtTime(myTz);document.getElementById("my-date").textContent=fmtDate(myTz);document.getElementById("other-time").textContent=fmtTime(otherTz||"UTC");document.getElementById("other-date").textContent=fmtDate(otherTz||"UTC");}
