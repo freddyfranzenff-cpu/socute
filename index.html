@@ -667,6 +667,15 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   .timeline-end{position:relative;padding-left:1.5rem;margin-top:.35rem;font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);opacity:.55;display:flex;align-items:center;gap:.5rem}
   .timeline-end::before{content:'';position:absolute;left:3px;top:50%;transform:translateY(-50%);width:2px;height:10px;background:linear-gradient(180deg,rgba(232,98,42,0.2),transparent);border-radius:2px}
   2),transparent);border-radius:2px}
+  /* ── Settings ───────────────────────────────────────────── */
+  .settings-card{background:var(--surface);border-radius:16px;border:1px solid var(--border);padding:1rem 1.1rem;margin-bottom:.75rem;}
+  .settings-row{margin-bottom:.75rem;}
+  .settings-label{display:block;font-size:.48rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem;}
+  .settings-input{width:100%;padding:.6rem .85rem;border:1.5px solid var(--border);border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.78rem;color:var(--text);background:var(--bg);outline:none;box-sizing:border-box;transition:border-color .2s;}
+  .settings-input:focus{border-color:var(--k);}
+  .settings-btn{width:100%;padding:.65rem;background:linear-gradient(135deg,var(--k),var(--pk));color:white;border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;margin-top:.5rem;transition:opacity .2s;}
+  .settings-btn:hover{opacity:.9;}
+  .settings-btn:disabled{opacity:.5;cursor:not-allowed;}
   </style>
 </head>
 <body>
@@ -700,7 +709,20 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <input type="password" class="auth-field" id="login-password" placeholder="Password" autocomplete="current-password"/>
     <p class="auth-field-error" id="login-error"></p>
     <button class="auth-submit-btn" onclick="doLogin()">Sign in</button>
+    <button class="auth-switch-btn" onclick="showAuthScreen('screen-forgot')" style="font-size:.6rem;opacity:.7;margin-top:-.25rem;">Forgot password?</button>
     <button class="auth-switch-btn" onclick="showAuthScreen('screen-signup')">No account yet? <strong>Sign up</strong></button>
+  </div>
+
+  <!-- SCREEN: Forgot password -->
+  <div class="auth-screen-card" id="screen-forgot" style="display:none;">
+    <p class="login-eyebrow">reset password</p>
+    <h1 class="login-title">Forgot your <em>password?</em></h1>
+    <p style="font-size:.62rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6;">Enter your email and we'll send you a reset link.</p>
+    <input type="email" class="auth-field" id="forgot-email" placeholder="Email address" autocomplete="email"/>
+    <p class="auth-field-error" id="forgot-error"></p>
+    <p id="forgot-success" style="display:none;font-size:.65rem;color:var(--green);background:rgba(0,180,100,0.08);border-radius:10px;padding:.6rem .8rem;line-height:1.6;margin-bottom:.5rem;"></p>
+    <button class="auth-submit-btn" onclick="doForgotPassword()" id="forgot-btn">Send reset link</button>
+    <button class="auth-switch-btn" onclick="showAuthScreen('screen-login')">Back to <strong>Sign in</strong></button>
   </div>
 
   <!-- SCREEN 2: Sign up -->
@@ -804,6 +826,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <button class="nav-item" id="nav-bucket" onclick="showPage('bucket')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2.5 6h4z"/></svg>Bucket list</button>
     <button class="nav-item" id="nav-places" onclick="showPage('places')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 1a5 5 0 015 5c0 3.5-5 9-5 9S3 9.5 3 6a5 5 0 015-5z"/><circle cx="8" cy="6" r="1.8"/></svg>Places</button>
     <button class="nav-item" id="nav-letter" onclick="showPage('letter')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M2 6l6 4 6-4"/></svg>Letter</button>
+    <button class="nav-item" id="nav-settings" onclick="showPage('settings')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="8" cy="8" r="2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.1 3.1l1.4 1.4M11.5 11.5l1.4 1.4M3.1 12.9l1.4-1.4M11.5 4.5l1.4-1.4"/></svg>Settings</button>
   </nav>
   <div class="sidebar-footer">
     <button onclick="window.doSignOut()" style="display:block;width:100%;text-align:left;background:none;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);cursor:pointer;padding:.5rem 0;margin-bottom:.75rem;opacity:.6;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.6">Sign out</button>
@@ -964,7 +987,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     </div>
     <p class="section-heading">Write something</p>
     <div class="notes-compose">
-      <textarea id="note-input" rows="3" placeholder="Write something…"></textarea>
+      <textarea id="note-input" rows="3" placeholder="Write something…" maxlength="2000"></textarea>
       <div class="compose-footer"><span class="author-tag" id="note-author-name">—</span><button class="send-btn" onclick="submitNote()">Send</button></div>
     </div>
     <p class="section-heading">All notes</p>
@@ -1161,6 +1184,62 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     </div>
   </div>
 
+  <!-- SETTINGS PAGE -->
+  <div class="page" id="page-settings">
+    <div class="page-header">
+      <h1 class="page-title">Your <em>settings</em></h1>
+    </div>
+
+    <!-- Profile section -->
+    <div class="section-heading">Profile</div>
+    <div class="settings-card">
+      <div class="settings-row">
+        <label class="settings-label">Your name</label>
+        <input type="text" class="settings-input" id="settings-name" placeholder="Your first name" autocomplete="given-name"/>
+      </div>
+      <p class="auth-field-error" id="settings-profile-error"></p>
+      <p id="settings-profile-success" style="display:none;font-size:.65rem;color:var(--green);margin:.25rem 0;"></p>
+      <button class="settings-btn" id="btn-save-profile" onclick="saveProfileSettings()">Save profile</button>
+    </div>
+
+    <!-- Change password section -->
+    <div class="section-heading" style="margin-top:1.25rem;">Change password</div>
+    <div class="settings-card">
+      <div class="settings-row">
+        <label class="settings-label">Current password</label>
+        <input type="password" class="settings-input" id="settings-current-pw" placeholder="Current password" autocomplete="current-password"/>
+      </div>
+      <div class="settings-row">
+        <label class="settings-label">New password</label>
+        <input type="password" class="settings-input" id="settings-new-pw" placeholder="New password" autocomplete="new-password"/>
+      </div>
+      <div class="settings-row">
+        <label class="settings-label">Confirm new password</label>
+        <input type="password" class="settings-input" id="settings-confirm-pw" placeholder="Confirm new password" autocomplete="new-password"/>
+      </div>
+      <p class="auth-field-error" id="settings-pw-error"></p>
+      <p id="settings-pw-success" style="display:none;font-size:.65rem;color:var(--green);margin:.25rem 0;"></p>
+      <button class="settings-btn" id="btn-save-password" onclick="savePasswordSettings()">Change password</button>
+    </div>
+
+    <!-- Change email section -->
+    <div class="section-heading" style="margin-top:1.25rem;">Change email</div>
+    <div class="settings-card">
+      <div class="settings-row">
+        <label class="settings-label">New email address</label>
+        <input type="email" class="settings-input" id="settings-new-email" placeholder="New email address" autocomplete="email"/>
+      </div>
+      <div class="settings-row">
+        <label class="settings-label">Current password</label>
+        <input type="password" class="settings-input" id="settings-email-pw" placeholder="Confirm with your password" autocomplete="current-password"/>
+      </div>
+      <p class="auth-field-error" id="settings-email-error"></p>
+      <p id="settings-email-success" style="display:none;font-size:.65rem;color:var(--green);margin:.25rem 0;"></p>
+      <button class="settings-btn" id="btn-save-email" onclick="saveEmailSettings()">Change email</button>
+    </div>
+
+  </div>
+
   <footer id="app-footer">Snug</footer>
 </main>
 
@@ -1174,13 +1253,13 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   // Couple data (loaded after auth)
   let ME=null,OTHER=null,myUid=null,partnerUid=null,coupleId=null;
   let myTz=null,otherTz=null,myCity=null,otherCity=null,myCoords=null,otherCoords=null;
-  let myName=null,otherName=null;
+  let myName=null,otherName=null,myRole=null;
   // Couple info
   let coupleStartDate=null,coupleMeetupDate=null;
 
   // ── Auth UI helpers ──────────────────────────────────────
   window.showAuthScreen = function(id){
-    ['screen-login','screen-signup','screen-onboarding','screen-linking','screen-invite']
+    ['screen-login','screen-signup','screen-onboarding','screen-linking','screen-invite','screen-forgot']
       .forEach(s=>{ const el=document.getElementById(s); if(el) el.style.display='none'; });
     // Reset linking screen sections to visible when navigating to it
     if(id==='screen-linking'){
@@ -1491,6 +1570,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       otherName = members[partnerUid]?.name || 'Partner';
       ME    = myName;
       OTHER = otherName;
+      myRole = members[myUid]?.role || 'owner';
       // Cities
       myCity    = members[myUid]?.city || '';
       otherCity = members[partnerUid]?.city || '';
@@ -1519,7 +1599,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       const{initializeApp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
       const{getDatabase,ref,set,push,onValue,remove,serverTimestamp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
       const{getStorage,ref:storageRef,uploadBytes,getDownloadURL,deleteObject}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js");
-      const{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js");
+      const{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut,sendPasswordResetEmail,updatePassword,updateEmail,reauthenticateWithCredential,EmailAuthProvider}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js");
       const app=initializeApp(FIREBASE_CONFIG);
       db=getDatabase(app);dbRef=ref;dbSet=set;dbPush=push;dbRemove=remove;fbOnValue=onValue;
       // Auth setup
@@ -1534,7 +1614,19 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       onAuthStateChanged(auth, async user=>{
         fbAuth.currentUser = user;
         if(!user){
-          // Not logged in — show login screen
+          // Not logged in — clear all state and show login screen
+          ME=null;OTHER=null;myUid=null;partnerUid=null;coupleId=null;myRole=null;
+          myTz=null;otherTz=null;myCity=null;otherCity=null;myCoords=null;otherCoords=null;
+          meetupDate=null;localNotes=[];localMilestones=[];localBucket=[];letterRounds=[];
+          if(clockInterval){clearInterval(clockInterval);clockInterval=null;}
+          if(distanceInterval){clearInterval(distanceInterval);distanceInterval=null;}
+          if(countdownInterval){clearInterval(countdownInterval);countdownInterval=null;}
+          if(pulseTimeInterval){clearInterval(pulseTimeInterval);pulseTimeInterval=null;}
+          if(unsubNotes){try{unsubNotes();}catch(e){}unsubNotes=null;}
+          if(unsubPulse){try{unsubPulse();}catch(e){}unsubPulse=null;}
+          if(_watchPartnerUnsub){try{_watchPartnerUnsub();}catch(e){}_watchPartnerUnsub=null;}
+          if(_unsubWatchOther){try{_unsubWatchOther();}catch(e){}_unsubWatchOther=null;}
+          if(mapInstance){try{mapInstance.remove();}catch(e){}mapInstance=null;}
           showAuthWrap();
           showAuthScreen('screen-login');
           return;
@@ -1668,7 +1760,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   function noteCardHTML(note){
     const canDelete=note.author===ME;
     const reactions=note.reactions||{};
-    const myReaction=ME&&reactions[nameKey(ME)];
+    const myReaction=myUid&&reactions[myUid];
     const heartCount=Object.keys(reactions).length;
     const reactLabel=heartCount>0?`${heartCount}`:"";
     return`<div class="note-card">
@@ -1696,7 +1788,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
   window.reactToNote=function(key){
     if(!key||!ME)return;
-    const reactionKey=`couples/${coupleId}/notes/${key}/reactions/${nameKey(ME)}`;
+    const reactionKey=`couples/${coupleId}/notes/${key}/reactions/${myUid}`;
     if(db&&fbOnValue){
       fbOnValue(dbRef(db,reactionKey),snap=>{
         if(snap.val()){dbRemove(dbRef(db,reactionKey));}
@@ -1974,8 +2066,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         if(!data)return;
         Object.entries(data).forEach(([key,round])=>{
           // Only update if neither letter has been read yet
-          const meKey=nameKey(ME);
-          const otherKey=nameKey(OTHER);
+          const meKey=myUid;
+          const otherKey=partnerUid;
           const meData=round[meKey]||{};
           const otherData=round[otherKey]||{};
           const neitherRead=!meData.readAt&&!otherData.readAt;
@@ -2449,11 +2541,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     if(toggle)toggle.style.display="block";
     const recent=pulses.slice(0,6);
     list.innerHTML=recent.map(p=>{
-      const isMe=p.from===ME;
+      const isMe=p.from===myUid||p.from===ME;  // support both UID (new) and name (legacy)
       const dotClass=isMe?"":"other";
+      const senderName=p.fromName||(isMe?ME:OTHER);
       const text=isMe
         ?`You were thinking of <strong>${OTHER}</strong>`
-        :`<strong>${OTHER}</strong> was thinking of you`;
+        :`<strong>${senderName}</strong> was thinking of you`;
       return`<div class="pulse-history-item">
         <div class="pulse-history-dot ${dotClass}"></div>
         <span class="pulse-history-text">${text}</span>
@@ -2465,11 +2558,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   function updateReceivedBanner(pulses){
     if(!pulses||!pulses.length)return;
     // Find latest pulse FROM the other person
-    const latest=pulses.find(p=>p.from===OTHER);
+    const latest=pulses.find(p=>p.from===partnerUid||p.from===OTHER);
     if(!latest)return;
-    const diff=Date.now()-latest.time;
-    // Only show if within last 24 hours
-    if(diff>86400000)return;
     const banner=document.getElementById("pulse-received");
     const title=document.getElementById("pulse-received-title");
     const time=document.getElementById("pulse-received-time");
@@ -2482,7 +2572,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
   function updateLastSent(pulses){
     if(!pulses||!pulses.length)return;
-    const latest=pulses.find(p=>p.from===ME);
+    const latest=pulses.find(p=>p.from===myUid||p.from===ME);
     if(!latest)return;
     const el=document.getElementById("pulse-last-sent");
     if(el){
@@ -2491,11 +2581,18 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     }
   }
 
+  let _lastPulseSent = 0;
   window.sendPulse=async function(){
+    const now = Date.now();
+    if(now - _lastPulseSent < 60000){
+      const secs = Math.ceil((60000-(now-_lastPulseSent))/1000);
+      return;
+    }
+    _lastPulseSent = now;
     if(!ME)return;
     const btn=document.getElementById("pulse-heart-btn");
     if(btn){btn.classList.add("sent");setTimeout(()=>btn.classList.remove("sent"),300);}
-    const pulse={from:ME,to:OTHER,time:Date.now()};
+    const pulse={from:myUid,to:partnerUid,fromName:ME,time:Date.now()};
     if(db&&dbPush){
       try{
         await dbPush(dbRef(db,`couples/${coupleId}/pulses`),pulse);
@@ -2533,7 +2630,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       // Update received time every minute
       if(pulseTimeInterval)clearInterval(pulseTimeInterval);
       pulseTimeInterval=setInterval(()=>{
-        const latest=pulses.find(p=>p.from===OTHER);
+        const latest=pulses.find(p=>p.from===partnerUid||p.from===OTHER);
         if(latest){
           const time=document.getElementById("pulse-received-time");
           if(time)time.textContent=fmtPulseTime(latest.time);
@@ -2599,8 +2696,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         ? `<span class="letter-round-badge active">Active · Writing phase</span>`
         : `<span class="letter-round-badge read">Read · ${new Date(round.unlockDate).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})}</span>`;
 
-      const myLetter = round[nameKey(ME)] || {};
-      const otherLetter = round[nameKey(OTHER)] || {};
+      const myLetter = round[myUid] || {};
+      const otherLetter = round[partnerUid] || {};
 
       card.innerHTML = `
         <div class="letter-round-header">
@@ -2744,7 +2841,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     // Pre-fill if existing content
     ta.value = "";
     if(roundKey !== "new" && db && fbOnValue){
-      fbOnValue(dbRef(db,`couples/${coupleId}/letters/${roundKey}/${nameKey(ME)}/content`), snap=>{
+      fbOnValue(dbRef(db,`couples/${coupleId}/letters/${roundKey}/${myUid}/content`), snap=>{
         if(snap.val()) ta.value = snap.val();
       },{onlyOnce:true});
     }
@@ -2792,7 +2889,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
           roundKey = ref_new.key;
         }
         // Save letter content
-        await dbSet(dbRef(db,`couples/${coupleId}/letters/${roundKey}/${nameKey(ME)}`),{
+        await dbSet(dbRef(db,`couples/${coupleId}/letters/${roundKey}/${myUid}`),{
           content: content_text,
           writtenAt: Date.now(),
           unlockDate
@@ -2813,12 +2910,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     fbOnValue(dbRef(db,`couples/${coupleId}/letters/${roundKey}`), snap=>{
       const round = snap.val();
       if(!round) return;
-      const otherLetter = round[nameKey(OTHER)];
+      const otherLetter = round[partnerUid];
       if(!otherLetter || !isUnlocked(otherLetter.unlockDate)) return;
 
       // Mark as read
       if(!otherLetter.readAt){
-        dbSet(dbRef(db,`couples/${coupleId}/letters/${roundKey}/${nameKey(OTHER)}/readAt`), Date.now());
+        dbSet(dbRef(db,`couples/${coupleId}/letters/${roundKey}/${partnerUid}/readAt`), Date.now());
       }
 
       // Show read view in place of timeline
@@ -3211,11 +3308,186 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   }
 
   // Nav
+  // ── FORGOT PASSWORD ─────────────────────────────────────
+  window.doForgotPassword = async function(){
+    const email = document.getElementById('forgot-email').value.trim();
+    const err = document.getElementById('forgot-error');
+    const success = document.getElementById('forgot-success');
+    const btn = document.getElementById('forgot-btn');
+    err.textContent = '';
+    success.style.display = 'none';
+    if(!fbAuth){ err.textContent = 'Connection error. Please refresh.'; return; }
+    if(!email){ err.textContent = 'Please enter your email address.'; return; }
+    btn.textContent = 'Sending…'; btn.disabled = true;
+    try{
+      await sendPasswordResetEmail(fbAuth, email);
+      success.textContent = 'Reset link sent! Check your inbox (and spam folder).';
+      success.style.display = 'block';
+      btn.textContent = 'Send reset link'; btn.disabled = false;
+      document.getElementById('forgot-email').value = '';
+    }catch(e){
+      console.error('doForgotPassword failed:', e);
+      if(e.code === 'auth/user-not-found'){
+        err.textContent = 'No account found with this email.';
+      } else {
+        err.textContent = 'Something went wrong. Please try again.';
+      }
+      btn.textContent = 'Send reset link'; btn.disabled = false;
+    }
+  };
+
+  // ── SETTINGS — populate fields when page opens ──────────
+  window.openSettingsPage = function(){
+    const nameEl = document.getElementById('settings-name');
+    if(nameEl) nameEl.value = ME || '';
+    // Clear all status messages
+    ['settings-profile-error','settings-pw-error','settings-email-error'].forEach(id=>{
+      const el = document.getElementById(id); if(el) el.textContent = '';
+    });
+    ['settings-profile-success','settings-pw-success','settings-email-success'].forEach(id=>{
+      const el = document.getElementById(id); if(el) el.style.display = 'none';
+    });
+    // Clear password/email fields
+    ['settings-current-pw','settings-new-pw','settings-confirm-pw',
+     'settings-new-email','settings-email-pw'].forEach(id=>{
+      const el = document.getElementById(id); if(el) el.value = '';
+    });
+  };
+
+  // ── SETTINGS — save profile (name + city) ───────────────
+  window.saveProfileSettings = async function(){
+    const name = document.getElementById('settings-name').value.trim();
+    const err = document.getElementById('settings-profile-error');
+    const success = document.getElementById('settings-profile-success');
+    const btn = document.getElementById('btn-save-profile');
+    err.textContent = ''; success.style.display = 'none';
+    if(!name){ err.textContent = 'Name cannot be empty.'; return; }
+    btn.textContent = 'Saving…'; btn.disabled = true;
+    try{
+      // Update users record — preserve existing city (auto-detected)
+      await dbSet(dbRef(db, `users/${myUid}`), {
+        name, city: myCity||'', email: fbAuth.currentUser.email, createdAt: Date.now()
+      });
+      // Update couple member record — preserve existing role
+      await dbSet(dbRef(db, `couples/${coupleId}/members/${myUid}`), {
+        name, city: myCity||'', role: myRole||'owner'
+      });
+      // Update local state
+      ME = name;
+      myName = name;
+      // Update UI — all places that display ME
+      const mhEl = document.getElementById('mobile-header-couple-name');
+      const sbEl = document.getElementById('sidebar-couple-name');
+      if(mhEl) mhEl.innerHTML = `${ME} <em>&</em> ${OTHER}`;
+      if(sbEl) sbEl.innerHTML = `${ME} <em>&</em> ${OTHER}`;
+      document.getElementById('sidebar-user').textContent = ME;
+      document.getElementById('home-greeting').innerHTML = greeting(ME, myTz);
+      const myL = `${ME} · ${myCity}`;
+      document.getElementById('my-city').textContent = myL;
+      document.getElementById('my-weather-city').textContent = myL;
+      // Note author name
+      const noteAuthor = document.getElementById('note-author-name');
+      if(noteAuthor) noteAuthor.textContent = ME;
+      // Distance strip name
+      const dna = document.getElementById('home-dist-name-a');
+      if(dna) dna.textContent = ME;
+      // App footer
+      const ftEl = document.getElementById('app-footer');
+      if(ftEl) ftEl.textContent = `${ME} & ${OTHER}`;
+      success.textContent = 'Profile updated ✓';
+      success.style.display = 'block';
+      btn.textContent = 'Save profile'; btn.disabled = false;
+    }catch(e){
+      console.error('saveProfileSettings failed:', e);
+      err.textContent = 'Failed to save. Please try again.';
+      btn.textContent = 'Save profile'; btn.disabled = false;
+    }
+  };
+
+  // ── SETTINGS — change password ───────────────────────────
+  window.savePasswordSettings = async function(){
+    const currentPw = document.getElementById('settings-current-pw').value;
+    const newPw = document.getElementById('settings-new-pw').value;
+    const confirmPw = document.getElementById('settings-confirm-pw').value;
+    const err = document.getElementById('settings-pw-error');
+    const success = document.getElementById('settings-pw-success');
+    const btn = document.getElementById('btn-save-password');
+    err.textContent = ''; success.style.display = 'none';
+    if(!currentPw || !newPw || !confirmPw){ err.textContent = 'Please fill in all fields.'; return; }
+    if(newPw.length < 6){ err.textContent = 'New password must be at least 6 characters.'; return; }
+    if(newPw !== confirmPw){ err.textContent = 'New passwords do not match.'; return; }
+    btn.textContent = 'Changing…'; btn.disabled = true;
+    try{
+      // Re-authenticate first
+      const credential = EmailAuthProvider.credential(fbAuth.currentUser.email, currentPw);
+      await reauthenticateWithCredential(fbAuth.currentUser, credential);
+      // Update password
+      await updatePassword(fbAuth.currentUser, newPw);
+      success.textContent = 'Password changed successfully ✓';
+      success.style.display = 'block';
+      // Clear fields
+      ['settings-current-pw','settings-new-pw','settings-confirm-pw'].forEach(id=>{
+        const el = document.getElementById(id); if(el) el.value = '';
+      });
+      btn.textContent = 'Change password'; btn.disabled = false;
+    }catch(e){
+      console.error('savePasswordSettings failed:', e);
+      if(e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential'){
+        err.textContent = 'Current password is incorrect.';
+      } else if(e.code === 'auth/weak-password'){
+        err.textContent = 'New password is too weak.';
+      } else {
+        err.textContent = 'Failed to change password. Please try again.';
+      }
+      btn.textContent = 'Change password'; btn.disabled = false;
+    }
+  };
+
+  // ── SETTINGS — change email ──────────────────────────────
+  window.saveEmailSettings = async function(){
+    const newEmail = document.getElementById('settings-new-email').value.trim();
+    const pw = document.getElementById('settings-email-pw').value;
+    const err = document.getElementById('settings-email-error');
+    const success = document.getElementById('settings-email-success');
+    const btn = document.getElementById('btn-save-email');
+    err.textContent = ''; success.style.display = 'none';
+    if(!newEmail || !pw){ err.textContent = 'Please fill in all fields.'; return; }
+    if(newEmail === fbAuth.currentUser.email){ err.textContent = 'This is already your email address.'; return; }
+    btn.textContent = 'Changing…'; btn.disabled = true;
+    try{
+      // Re-authenticate first
+      const credential = EmailAuthProvider.credential(fbAuth.currentUser.email, pw);
+      await reauthenticateWithCredential(fbAuth.currentUser, credential);
+      // Update email in Firebase Auth
+      await updateEmail(fbAuth.currentUser, newEmail);
+      // Update email in DB
+      await dbSet(dbRef(db, `users/${myUid}/email`), newEmail);
+      success.textContent = 'Done! Check your new inbox for a verification link — your email won't update until you verify it. ✓';
+      success.style.display = 'block';
+      ['settings-new-email','settings-email-pw'].forEach(id=>{
+        const el = document.getElementById(id); if(el) el.value = '';
+      });
+      btn.textContent = 'Change email'; btn.disabled = false;
+    }catch(e){
+      console.error('saveEmailSettings failed:', e);
+      if(e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential'){
+        err.textContent = 'Password is incorrect.';
+      } else if(e.code === 'auth/email-already-in-use'){
+        err.textContent = 'This email is already in use by another account.';
+      } else if(e.code === 'auth/invalid-email'){
+        err.textContent = 'Please enter a valid email address.';
+      } else {
+        err.textContent = 'Failed to change email. Please try again.';
+      }
+      btn.textContent = 'Change email'; btn.disabled = false;
+    }
+  };
+
   window.doSignOut = async function(){
     if(fbAuth && fbAuth.signOut){
       await fbAuth.signOut();
       // Reset all couple/session state so a re-login starts clean
-      ME=null;OTHER=null;coupleId=null;myUid=null;partnerUid=null;
+      ME=null;OTHER=null;coupleId=null;myUid=null;partnerUid=null;myRole=null;
       myName=null;otherName=null;
       myCity=null;otherCity=null;myCoords=null;otherCoords=null;
       myTz=null;otherTz=null;
@@ -3249,6 +3521,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     document.getElementById(`page-${name}`).classList.add("active");
     document.getElementById(`nav-${name}`).classList.add("active");
     closeSidebar();
+    if(name==="settings"){
+      window.openSettingsPage();
+    }
     if(name==="letter"){
       setTimeout(()=>initLetterPage(),50);
     }
@@ -3342,10 +3617,15 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     tickClocks();clockInterval=setInterval(tickClocks,1000);
     if(coupleStartDate){
       // Use T12:00:00 to avoid UTC midnight timezone-off-by-one-day issue
-      const start=new Date(coupleStartDate.substring(0,10)+'T12:00:00');
-      document.getElementById("days-together").textContent=Math.floor((Date.now()-start)/86400000)+1;
+      // Use local midnight for day counter so it flips at midnight not noon
+      const _sd = coupleStartDate.substring(0,10);
+      const startMidnight = new Date(_sd+'T00:00:00');
+      const todayMidnight = new Date(new Date().toLocaleDateString('en-CA')+'T00:00:00');
+      const daysTogether = Math.max(1, Math.floor((todayMidnight-startMidnight)/86400000)+1);
+      document.getElementById("days-together").textContent=daysTogether;
       const sinceEl=document.getElementById("couple-since-date");
-      if(sinceEl){ const d=new Date(coupleStartDate.substring(0,10)+'T12:00:00'); sinceEl.textContent=`${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}`; }
+      // Use T12:00:00 for display only to avoid timezone date shift
+      if(sinceEl){ const d=new Date(_sd+'T12:00:00'); sinceEl.textContent=`${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}`; }
     }
     if(meetupDate)updateCdCaption(meetupDate);startCountdown();
   }
