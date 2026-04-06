@@ -515,7 +515,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 
   /* ── HOME REDESIGN ── */
-  .home-greeting-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);gap:1rem}
+  .home-greeting-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem;padding-bottom:.85rem;border-bottom:1px solid var(--border);gap:1rem}
   .home-greeting-left{flex:1;min-width:0}
   .home-days-badge{flex-shrink:0;text-align:right}
   .home-days-num{font-size:2.6rem;font-weight:700;letter-spacing:-.04em;line-height:1;
@@ -680,7 +680,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   .settings-success{font-size:.62rem;color:var(--green,#2a9d5c);margin:.3rem 0 0;display:none;}
   .settings-error{font-size:.62rem;color:var(--error,#d63031);margin:.3rem 0 0;}
   /* ── Home tabs ─────────────────────────────────────────── */
-  .home-tabs{display:flex;background:var(--surface);border-radius:12px;border:1px solid var(--border);overflow:hidden;margin-bottom:1.1rem;}
+  .home-tabs{display:flex;background:var(--surface);border-radius:12px;border:1px solid var(--border);overflow:hidden;margin-top:.4rem;margin-bottom:1.1rem;}
   .home-tab{flex:1;padding:.42rem .5rem;font-size:.6rem;font-family:'Plus Jakarta Sans',sans-serif;text-align:center;color:var(--muted);border:none;background:none;cursor:pointer;transition:all .2s;letter-spacing:.04em;border-right:1px solid var(--border);}
   .home-tab:last-child{border-right:none;}
   .home-tab.active{background:linear-gradient(135deg,rgba(232,98,42,0.12),rgba(212,83,126,0.08));color:var(--k);font-weight:600;}
@@ -706,6 +706,42 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   .moments-link-title{font-size:.78rem;font-weight:600;color:var(--text);}
   .moments-link-sub{font-size:.58rem;color:var(--muted);margin-top:.1rem;}
   .moments-link-arrow{font-size:1rem;color:var(--muted);}
+  /* ── Status + Mood ──────────────────────────────────────── */
+  .status-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:.85rem;}
+  .status-card-header{display:flex;align-items:center;justify-content:space-between;padding:.6rem .9rem;border-bottom:1px solid var(--border);}
+  .status-card-label{font-size:.48rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+  .status-update-btn{font-size:.6rem;color:var(--k);background:none;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;}
+  .status-person-row{display:flex;align-items:center;gap:.7rem;padding:.6rem .9rem;border-bottom:1px solid var(--border);}
+  .status-person-row:last-child{border-bottom:none;}
+  .status-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:600;flex-shrink:0;}
+  .status-avatar-me{background:rgba(232,98,42,0.15);color:var(--k);}
+  .status-avatar-other{background:rgba(139,92,246,0.12);color:#7c3aed;}
+  .status-info{flex:1;min-width:0;}
+  .status-name{font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .status-text{font-size:.72rem;color:var(--text);margin-top:.1rem;display:flex;align-items:center;gap:.35rem;}
+  .status-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;background:var(--k);}
+  .status-dot-other{background:#7c3aed;}
+  .status-time{font-size:.55rem;color:var(--muted);margin-top:.1rem;}
+  .status-empty{font-size:.68rem;color:var(--muted);font-style:italic;}
+  /* Bottom sheet */
+  .status-sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:800;display:none;align-items:flex-end;justify-content:center;}
+  .status-sheet-overlay.open{display:flex;}
+  .status-sheet{background:var(--bg);border-radius:20px 20px 0 0;width:100%;max-width:600px;padding:0 0 env(safe-area-inset-bottom,12px);max-height:85vh;overflow-y:auto;}
+  .status-sheet-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 8px;}
+  .status-sheet-title{font-size:.85rem;font-weight:600;color:var(--text);padding:.5rem 1.1rem .75rem;border-bottom:1px solid var(--border);}
+  .status-sheet-section{font-size:.48rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:.75rem 1.1rem .4rem;}
+  .status-activity-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem;padding:0 1.1rem .5rem;}
+  .status-act-opt{background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:.55rem .4rem;text-align:center;cursor:pointer;transition:all .15s;}
+  .status-act-opt:hover{border-color:var(--k);background:rgba(232,98,42,0.06);}
+  .status-act-opt.selected{background:rgba(232,98,42,0.1);border-color:var(--k);}
+  .status-act-icon{font-size:1.1rem;display:block;margin-bottom:.2rem;}
+  .status-act-label{font-size:.6rem;color:var(--text);}
+  .status-act-opt.selected .status-act-label{color:var(--k);font-weight:600;}
+  .status-mood-pills{display:flex;flex-wrap:wrap;gap:.4rem;padding:0 1.1rem .75rem;}
+  .status-mood-pill{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:.3rem .75rem;font-size:.65rem;color:var(--text);cursor:pointer;transition:all .15s;font-family:'Plus Jakarta Sans',sans-serif;}
+  .status-mood-pill:hover{border-color:var(--k);}
+  .status-mood-pill.selected{background:rgba(232,98,42,0.1);border-color:var(--k);color:var(--k);}
+  .status-save-btn{margin:.25rem 1.1rem .75rem;width:calc(100% - 2.2rem);padding:.6rem;background:linear-gradient(135deg,var(--k),var(--pk));color:white;border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;}
   </style>
 </head>
 <body>
@@ -897,7 +933,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <div class="home-tabs">
       <button class="home-tab active" id="tab-now" onclick="switchHomeTab('now')">Now</button>
       <button class="home-tab" id="tab-us" onclick="switchHomeTab('us')">Us</button>
-      <button class="home-tab" id="tab-moments" onclick="switchHomeTab('moments')">Moments</button>
+      <button class="home-tab" id="tab-moments" onclick="switchHomeTab('moments')">Story</button>
     </div>
 
     <!-- ══ NOW TAB ══ -->
@@ -920,6 +956,36 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       </div>
       <button class="pulse-history-toggle" id="pulse-history-toggle" onclick="togglePulseHistory()" style="display:none;margin-bottom:.5rem;">Show recent pulses ↓</button>
       <div class="pulse-history" id="pulse-history-list"></div>
+
+      <!-- Status + Mood card -->
+      <div class="status-card" id="status-card">
+        <div class="status-card-header">
+          <span class="status-card-label">What you're up to</span>
+          <button class="status-update-btn" onclick="openStatusSheet()">Update yours →</button>
+        </div>
+        <div class="status-person-row">
+          <div class="status-avatar status-avatar-me" id="status-my-avatar">F</div>
+          <div class="status-info">
+            <div class="status-name" id="status-my-name">—</div>
+            <div class="status-text" id="status-my-text">
+              <span class="status-dot"></span>
+              <span id="status-my-value" class="status-empty">No status set</span>
+            </div>
+            <div class="status-time" id="status-my-time"></div>
+          </div>
+        </div>
+        <div class="status-person-row">
+          <div class="status-avatar status-avatar-other" id="status-other-avatar">S</div>
+          <div class="status-info">
+            <div class="status-name" id="status-other-name">—</div>
+            <div class="status-text" id="status-other-text">
+              <span class="status-dot status-dot-other"></span>
+              <span id="status-other-value" class="status-empty">No status set</span>
+            </div>
+            <div class="status-time" id="status-other-time"></div>
+          </div>
+        </div>
+      </div>
 
       <!-- Map + Weather -->
       <div class="map-card home-map-card">
@@ -1002,7 +1068,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <!-- ══ MOMENTS TAB ══ -->
     <div class="home-tab-panel" id="panel-moments">
 
-      <p class="section-heading">Your story</p>
+      <p class="section-heading">Our story</p>
 
       <div class="moments-link" onclick="showPage('milestones')">
         <div class="moments-link-left">
@@ -1031,7 +1097,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
           <div class="moments-link-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--k)" stroke-width="1.3"><path d="M8 1a5 5 0 015 5c0 3.5-5 9-5 9S3 9.5 3 6a5 5 0 015-5z"/><circle cx="8" cy="6" r="1.8"/></svg></div>
           <div>
             <p class="moments-link-title">Places</p>
-            <p class="moments-link-sub" id="moments-places-sub">Places you want to visit</p>
+            <p class="moments-link-sub" id="moments-places-sub">Places we've been to</p>
           </div>
         </div>
         <span class="moments-link-arrow">›</span>
@@ -1343,6 +1409,38 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
   </div>
 
+  <!-- Status bottom sheet -->
+  <div class="status-sheet-overlay" id="status-sheet-overlay" onclick="if(event.target===this)closeStatusSheet()">
+    <div class="status-sheet">
+      <div class="status-sheet-handle"></div>
+      <div class="status-sheet-title">What are you up to?</div>
+      <div class="status-sheet-section">Activity</div>
+      <div class="status-activity-grid" id="status-activity-grid">
+        <div class="status-act-opt" data-activity="Working" onclick="selectActivity(this)"><span class="status-act-icon">💼</span><div class="status-act-label">Working</div></div>
+        <div class="status-act-opt" data-activity="Reading" onclick="selectActivity(this)"><span class="status-act-icon">📖</span><div class="status-act-label">Reading</div></div>
+        <div class="status-act-opt" data-activity="Music" onclick="selectActivity(this)"><span class="status-act-icon">🎵</span><div class="status-act-label">Music</div></div>
+        <div class="status-act-opt" data-activity="Eating" onclick="selectActivity(this)"><span class="status-act-icon">🍽️</span><div class="status-act-label">Eating</div></div>
+        <div class="status-act-opt" data-activity="Gaming" onclick="selectActivity(this)"><span class="status-act-icon">🎮</span><div class="status-act-label">Gaming</div></div>
+        <div class="status-act-opt" data-activity="Sports" onclick="selectActivity(this)"><span class="status-act-icon">⚽</span><div class="status-act-label">Sports</div></div>
+        <div class="status-act-opt" data-activity="Resting" onclick="selectActivity(this)"><span class="status-act-icon">😴</span><div class="status-act-label">Resting</div></div>
+        <div class="status-act-opt" data-activity="Traveling" onclick="selectActivity(this)"><span class="status-act-icon">✈️</span><div class="status-act-label">Traveling</div></div>
+        <div class="status-act-opt" data-activity="Cooking" onclick="selectActivity(this)"><span class="status-act-icon">🍳</span><div class="status-act-label">Cooking</div></div>
+      </div>
+      <div class="status-sheet-section">How are you feeling?</div>
+      <div class="status-mood-pills" id="status-mood-pills">
+        <div class="status-mood-pill" data-mood="focused" onclick="selectMood(this)">focused</div>
+        <div class="status-mood-pill" data-mood="happy" onclick="selectMood(this)">happy</div>
+        <div class="status-mood-pill" data-mood="tired" onclick="selectMood(this)">tired</div>
+        <div class="status-mood-pill" data-mood="cozy" onclick="selectMood(this)">cozy</div>
+        <div class="status-mood-pill" data-mood="excited" onclick="selectMood(this)">excited</div>
+        <div class="status-mood-pill" data-mood="stressed" onclick="selectMood(this)">stressed</div>
+        <div class="status-mood-pill" data-mood="grateful" onclick="selectMood(this)">grateful</div>
+        <div class="status-mood-pill" data-mood="meh" onclick="selectMood(this)">meh</div>
+      </div>
+      <button class="status-save-btn" onclick="saveStatus()">Save status</button>
+    </div>
+  </div>
+
   <footer id="app-footer">Snug</footer>
 </main>
 
@@ -1357,6 +1455,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   let ME=null,OTHER=null,myUid=null,partnerUid=null,coupleId=null;
   let myTz=null,otherTz=null,myCity=null,otherCity=null,myCoords=null,otherCoords=null;
   let myName=null,otherName=null,myRole=null;
+  let myStatus=null,otherStatus=null;
+  let statusRefreshInterval=null;
   // Couple info
   let coupleStartDate=null,coupleMeetupDate=null;
 
@@ -1677,7 +1777,13 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       // Cities
       myCity    = members[myUid]?.city || '';
       otherCity = members[partnerUid]?.city || '';
-      // Load couple info (startDate, meetupDate)
+      // Load my current status
+    try{
+      await new Promise(res=>fbOnValue(dbRef(db,`couples/${cId}/presence/${myUidVal}/status`),snap=>{
+        myStatus=snap.val()||null; res();
+      },{onlyOnce:true}));
+    }catch(e){}
+    // Load couple info (startDate, meetupDate)
       await new Promise(res => fbOnValue(dbRef(db,`couples/${cId}`), snap=>{
         const d = snap.val();
         coupleStartDate  = d?.startDate||'';
@@ -1724,6 +1830,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         if(!user){
           // Not logged in — clear all state and show login screen
           ME=null;OTHER=null;myUid=null;partnerUid=null;coupleId=null;myRole=null;
+          myStatus=null;otherStatus=null;
+          if(statusRefreshInterval){clearInterval(statusRefreshInterval);statusRefreshInterval=null;}
+      myStatus=null;otherStatus=null;
+      if(statusRefreshInterval){clearInterval(statusRefreshInterval);statusRefreshInterval=null;}
           myTz=null;otherTz=null;myCity=null;otherCity=null;myCoords=null;otherCoords=null;
           meetupDate=null;localNotes=[];localMilestones=[];localBucket=[];letterRounds=[];
           if(clockInterval){clearInterval(clockInterval);clockInterval=null;}
@@ -1805,6 +1915,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
           if(changed&&otherCoords)fetchWeather(otherCoords[0],otherCoords[1],"other");
           // Update distance and sleep status whenever partner data changes
           updateDistanceAndSleep();
+          // Read partner status
+          if(d?.status) otherStatus = d.status;
+          else otherStatus = null;
+          renderStatusCard&&renderStatusCard();
         });
       };
       window._pushPresence=(tz,city,lat,lng)=>dbSet(dbRef(db,`couples/${coupleId}/presence/${myUid}`),{timezone:tz,city,lat,lng,updatedAt:serverTimestamp()});
@@ -3662,12 +3776,135 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     if(barEl) barEl.style.width = `${pct}%`;
   }
 
+  // ── STATUS + MOOD ────────────────────────────────────────
+  let _selectedActivity = null;
+  let _selectedMood = null;
+  const STATUS_EXPIRY_MS = 8 * 60 * 60 * 1000; // 8 hours
+
+  function fmtStatusTime(ts){
+    if(!ts) return '';
+    const diff = Date.now() - ts;
+    const mins = Math.floor(diff/60000);
+    const hrs = Math.floor(diff/3600000);
+    if(mins < 1) return 'Just now';
+    if(mins < 60) return `${mins}m ago`;
+    return `${hrs}h ago`;
+  }
+
+  function renderStatusCard(){
+    // My status
+    const myName = document.getElementById('status-my-name');
+    const myVal = document.getElementById('status-my-value');
+    const myTime = document.getElementById('status-my-time');
+    const myAvatar = document.getElementById('status-my-avatar');
+    if(myName) myName.textContent = ME||'—';
+    if(myAvatar) myAvatar.textContent = (ME||'?')[0].toUpperCase();
+
+    // Partner status
+    const otherName = document.getElementById('status-other-name');
+    const otherVal = document.getElementById('status-other-value');
+    const otherTime = document.getElementById('status-other-time');
+    const otherAvatar = document.getElementById('status-other-avatar');
+    if(otherName) otherName.textContent = OTHER||'—';
+    if(otherAvatar) otherAvatar.textContent = (OTHER||'?')[0].toUpperCase();
+
+    // Read status from presence data
+    // My status comes from myStatus module var
+    // Partner status comes from otherStatus module var
+    const now = Date.now();
+
+    // My status
+    if(myVal){
+      const expired = !myStatus || !myStatus.updatedAt || (now - myStatus.updatedAt > STATUS_EXPIRY_MS);
+      if(expired){
+        myVal.textContent = 'No status set';
+        myVal.className = 'status-empty';
+        if(myTime) myTime.textContent = '';
+      } else {
+        const parts = [myStatus.activity, myStatus.mood ? `feeling ${myStatus.mood}` : ''].filter(Boolean);
+        myVal.textContent = parts.join(' · ');
+        myVal.className = '';
+        if(myTime) myTime.textContent = fmtStatusTime(myStatus.updatedAt);
+      }
+    }
+
+    // Partner status
+    if(otherVal){
+      const expired = !otherStatus || !otherStatus.updatedAt || (now - otherStatus.updatedAt > STATUS_EXPIRY_MS);
+      if(expired){
+        otherVal.textContent = 'No status set';
+        otherVal.className = 'status-empty';
+        if(otherTime) otherTime.textContent = '';
+      } else {
+        const parts = [otherStatus.activity, otherStatus.mood ? `feeling ${otherStatus.mood}` : ''].filter(Boolean);
+        otherVal.textContent = parts.join(' · ');
+        otherVal.className = '';
+        if(otherTime) otherTime.textContent = fmtStatusTime(otherStatus.updatedAt);
+      }
+    }
+  }
+
+  window.openStatusSheet = function(){
+    // Pre-select current values
+    document.querySelectorAll('.status-act-opt').forEach(el=>{
+      el.classList.toggle('selected', el.dataset.activity === (myStatus?.activity||null));
+    });
+    document.querySelectorAll('.status-mood-pill').forEach(el=>{
+      el.classList.toggle('selected', el.dataset.mood === (myStatus?.mood||null));
+    });
+    _selectedActivity = myStatus?.activity||null;
+    _selectedMood = myStatus?.mood||null;
+    document.getElementById('status-sheet-overlay').classList.add('open');
+  };
+
+  window.closeStatusSheet = function(){
+    document.getElementById('status-sheet-overlay').classList.remove('open');
+  };
+
+  window.selectActivity = function(el){
+    document.querySelectorAll('.status-act-opt').forEach(o=>o.classList.remove('selected'));
+    el.classList.add('selected');
+    _selectedActivity = el.dataset.activity;
+  };
+
+  window.selectMood = function(el){
+    document.querySelectorAll('.status-mood-pill').forEach(o=>o.classList.remove('selected'));
+    el.classList.add('selected');
+    _selectedMood = el.dataset.mood;
+  };
+
+  window.saveStatus = async function(){
+    if(!_selectedActivity && !_selectedMood) return;
+    if(!db||!coupleId||!myUid) return;
+    const status = {
+      activity: _selectedActivity||null,
+      mood: _selectedMood||null,
+      updatedAt: Date.now()
+    };
+    try{
+      await dbSet(dbRef(db,`couples/${coupleId}/presence/${myUid}/status`), status);
+      myStatus = status;
+      renderStatusCard();
+      closeStatusSheet();
+    }catch(e){
+      console.error('saveStatus failed:', e);
+    }
+  };
+
+  // Start a 1-minute interval to refresh status time labels and check expiry
+  function startStatusRefresh(){
+    if(statusRefreshInterval) clearInterval(statusRefreshInterval);
+    statusRefreshInterval = setInterval(()=>{ renderStatusCard(); }, 60000);
+  }
+
   window.doSignOut = async function(){
     if(fbAuth && fbAuth.signOut){
       await fbAuth.signOut();
       // Reset all couple/session state so a re-login starts clean
       ME=null;OTHER=null;coupleId=null;myUid=null;partnerUid=null;myRole=null;
       myName=null;otherName=null;
+      myStatus=null;otherStatus=null;
+      if(statusRefreshInterval){clearInterval(statusRefreshInterval);statusRefreshInterval=null;}
       myCity=null;otherCity=null;myCoords=null;otherCoords=null;
       myTz=null;otherTz=null;
       coupleStartDate=null;coupleMeetupDate=null;meetupDate=null;
@@ -3684,6 +3921,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       if(unsubMilestones){try{unsubMilestones();}catch(e){}unsubMilestones=null;}
       if(unsubBucket){try{unsubBucket();}catch(e){}unsubBucket=null;}
       if(unsubPulse){try{unsubPulse();}catch(e){}unsubPulse=null;}
+      if(_watchPartnerUnsub){try{_watchPartnerUnsub();}catch(e){}_watchPartnerUnsub=null;}
       if(typeof _unsubWatchOther!=="undefined"&&_unsubWatchOther){try{_unsubWatchOther();}catch(e){}; _unsubWatchOther=null;}
       if(_watchPartnerUnsub){try{_watchPartnerUnsub();}catch(e){}; _watchPartnerUnsub=null;}
       if(mapInstance){try{mapInstance.remove();}catch(e){}mapInstance=null;}
@@ -3775,6 +4013,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         renderNotes(notes);
         renderNotesPreview(notes);
         updateMomentsSubtitles();
+        renderStatusCard&&renderStatusCard();
+        startStatusRefresh&&startStatusRefresh();
       });
       // Milestones
       if(unsubMilestones)unsubMilestones();
