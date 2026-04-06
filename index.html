@@ -743,6 +743,35 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   .status-mood-pill:hover{border-color:var(--k);}
   .status-mood-pill.selected{background:rgba(232,98,42,0.1);border-color:var(--k);color:var(--k);}
   .status-save-btn{margin:.25rem 1.1rem .75rem;width:calc(100% - 2.2rem);padding:.6rem;background:linear-gradient(135deg,var(--k),var(--pk));color:white;border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;}
+  /* ── Memory Jar ─────────────────────────────────────────── */
+  .mj-preview-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:.85rem;}
+  .mj-preview-header{display:flex;align-items:center;justify-content:space-between;padding:.6rem .9rem;border-bottom:1px solid var(--border);}
+  .mj-preview-label{font-size:.48rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+  .mj-streak{font-size:.62rem;font-weight:600;color:var(--k);}
+  .mj-entry-row{display:flex;gap:.65rem;padding:.6rem .9rem;border-bottom:1px solid var(--border);align-items:flex-start;}
+  .mj-entry-row:last-of-type{border-bottom:none;}
+  .mj-avatar{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:600;flex-shrink:0;margin-top:.1rem;}
+  .mj-avatar-me{background:rgba(232,98,42,0.15);color:var(--k);}
+  .mj-avatar-other{background:rgba(124,58,237,0.12);color:#7c3aed;}
+  .mj-entry-text{font-size:.72rem;color:var(--text);line-height:1.45;flex:1;}
+  .mj-entry-meta{font-size:.55rem;color:var(--muted);margin-top:.18rem;}
+  .mj-empty-entry{font-size:.68rem;color:var(--muted);font-style:italic;}
+  .mj-input-row{padding:.55rem .9rem;border-top:1px solid var(--border);display:flex;gap:.55rem;align-items:center;}
+  .mj-input{flex:1;border:none;background:rgba(0,0,0,0.03);border-radius:8px;padding:.45rem .7rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.72rem;color:var(--text);outline:none;resize:none;}
+  .mj-input::placeholder{color:var(--muted);}
+  .mj-send-btn{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--k),var(--pk));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .2s;}
+  .mj-send-btn:hover{opacity:.85;}
+  .mj-send-btn:disabled{opacity:.4;cursor:not-allowed;}
+  .mj-written-note{font-size:.62rem;color:var(--muted);font-style:italic;padding:.45rem .7rem;background:rgba(0,0,0,0.03);border-radius:8px;flex:1;}
+  /* Full memory jar page */
+  .mj-page-streak{display:inline-flex;align-items:center;gap:.4rem;background:rgba(232,98,42,0.08);border-radius:20px;padding:.25rem .75rem;margin-bottom:.85rem;}
+  .mj-page-streak-num{font-size:.9rem;font-weight:700;color:var(--k);}
+  .mj-page-streak-lbl{font-size:.6rem;color:var(--muted);}
+  .mj-day-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:.75rem;}
+  .mj-day-header{display:flex;justify-content:space-between;align-items:center;padding:.55rem .9rem;border-bottom:1px solid var(--border);}
+  .mj-day-date{font-size:.72rem;font-weight:600;color:var(--text);}
+  .mj-day-badge{font-size:.52rem;color:var(--muted);}
+  .mj-day-badge.both{color:var(--k);}
   </style>
 </head>
 <body>
@@ -890,6 +919,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <button class="nav-item active" id="nav-home" onclick="showPage('home')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M2 6.5L8 2l6 4.5V14H2V6.5z"/></svg>Home</button>
     <button class="nav-item" id="nav-milestones" onclick="showPage('milestones')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="8" cy="8" r="2"/><path d="M8 1v3M8 12v3M1 8h3M12 8h3"/><path d="M3.5 3.5l2 2M10.5 10.5l2 2M3.5 12.5l2-2M10.5 5.5l2-2"/></svg>Milestones</button>
     <button class="nav-item" id="nav-notes" onclick="showPage('notes')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 2h10v9l-3 3H3V2z"/><path d="M10 11v3M10 11h3"/><line x1="5" y1="6" x2="11" y2="6"/><line x1="5" y1="9" x2="9" y2="9"/></svg>Notes</button>
+    <button class="nav-item" id="nav-memory" onclick="showPage('memory')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 2C5 2 3 4 3 7c0 3.5 5 7 5 7s5-3.5 5-7c0-3-2-5-5-5z"/><path d="M6 7h4M8 5v4"/></svg>Memory jar</button>
     <button class="nav-item" id="nav-bucket" onclick="showPage('bucket')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2.5 6h4z"/></svg>Bucket list</button>
     <button class="nav-item" id="nav-places" onclick="showPage('places')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 1a5 5 0 015 5c0 3.5-5 9-5 9S3 9.5 3 6a5 5 0 015-5z"/><circle cx="8" cy="6" r="1.8"/></svg>Places</button>
     <button class="nav-item" id="nav-letter" onclick="showPage('letter')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M2 6l6 4 6-4"/></svg>Letter</button>
@@ -1061,6 +1091,34 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       <p class="section-heading">Recent notes</p>
       <div id="home-notes-preview" style="margin-bottom:.85rem;"><p class="empty">No notes yet.</p></div>
       <button class="home-see-all" onclick="showPage('notes')">See all notes →</button>
+
+      <!-- Memory Jar preview -->
+      <p class="section-heading" style="margin-top:.85rem;">Memory jar</p>
+      <div class="mj-preview-card" id="mj-preview-card">
+        <div class="mj-preview-header">
+          <span class="mj-preview-label">Today's moments</span>
+          <span class="mj-streak" id="mj-preview-streak"></span>
+        </div>
+        <div class="mj-entry-row" id="mj-preview-my-row">
+          <div class="mj-avatar mj-avatar-me" id="mj-preview-my-avatar">F</div>
+          <div style="flex:1;">
+            <div class="mj-entry-text mj-empty-entry" id="mj-preview-my-text">Nothing yet today</div>
+          </div>
+        </div>
+        <div class="mj-entry-row" id="mj-preview-other-row">
+          <div class="mj-avatar mj-avatar-other" id="mj-preview-other-avatar">S</div>
+          <div style="flex:1;">
+            <div class="mj-entry-text mj-empty-entry" id="mj-preview-other-text">Nothing yet today</div>
+          </div>
+        </div>
+        <div class="mj-input-row" id="mj-preview-input-row">
+          <input class="mj-input" id="mj-preview-input" placeholder="Your moment for today…" maxlength="200" type="text" onkeydown="if(event.key==='Enter')submitMemoryJar('preview')"/>
+          <button class="mj-send-btn" id="mj-preview-send" onclick="submitMemoryJar('preview')">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.8"><path d="M2 8h12M10 4l4 4-4 4"/></svg>
+          </button>
+        </div>
+      </div>
+      <button class="home-see-all" onclick="showPage('memory')" style="margin-bottom:.85rem;">See all memories →</button>
 
       <!-- Bucket list progress -->
       <p class="section-heading" style="margin-top:.85rem;">Bucket list</p>
@@ -1239,6 +1297,53 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         <button class="bl-save-btn" id="bl-save-btn" onclick="saveBucketItem()">Add</button>
       </div>
     </div>
+  </div>
+
+  <!-- MEMORY JAR -->
+  <div class="page" id="page-memory">
+    <div class="page-header">
+      <div>
+        <p class="page-eyebrow">Little moments</p>
+        <h1 class="page-title">Memory <em>jar</em></h1>
+      </div>
+    </div>
+    <div class="mj-page-streak" id="mj-page-streak-wrap" style="display:none;">
+      <span class="mj-page-streak-num" id="mj-page-streak-num">0</span>
+      <span class="mj-page-streak-lbl">day streak · keep it going!</span>
+    </div>
+
+    <!-- Today's entry + input -->
+    <p class="section-heading">Today</p>
+    <div class="mj-day-card" id="mj-today-card">
+      <div class="mj-day-header">
+        <span class="mj-day-date" id="mj-today-date">—</span>
+        <span class="mj-day-badge" id="mj-today-badge"></span>
+      </div>
+      <div class="mj-entry-row" id="mj-today-my-row">
+        <div class="mj-avatar mj-avatar-me" id="mj-today-my-avatar">F</div>
+        <div style="flex:1;">
+          <div class="mj-entry-text mj-empty-entry" id="mj-today-my-text">You haven't written yet today</div>
+          <div class="mj-entry-meta" id="mj-today-my-time"></div>
+        </div>
+      </div>
+      <div class="mj-entry-row" id="mj-today-other-row">
+        <div class="mj-avatar mj-avatar-other" id="mj-today-other-avatar">S</div>
+        <div style="flex:1;">
+          <div class="mj-entry-text mj-empty-entry" id="mj-today-other-text">Waiting for their moment…</div>
+          <div class="mj-entry-meta" id="mj-today-other-time"></div>
+        </div>
+      </div>
+      <div class="mj-input-row" id="mj-today-input-row">
+        <input class="mj-input" id="mj-today-input" placeholder="Something that made you smile today…" maxlength="200" type="text" onkeydown="if(event.key==='Enter')submitMemoryJar('today')"/>
+        <button class="mj-send-btn" id="mj-today-send" onclick="submitMemoryJar('today')">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.8"><path d="M2 8h12M10 4l4 4-4 4"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- History -->
+    <p class="section-heading" style="margin-top:.85rem;">Earlier</p>
+    <div id="mj-history-list"><p class="empty">No earlier memories yet — start writing!</p></div>
   </div>
 
   <!-- PLACES -->
@@ -1434,6 +1539,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         <div class="status-act-opt" data-activity="Resting" onclick="selectActivity(this)"><span class="status-act-icon">😴</span><div class="status-act-label">Resting</div></div>
         <div class="status-act-opt" data-activity="Traveling" onclick="selectActivity(this)"><span class="status-act-icon">✈️</span><div class="status-act-label">Traveling</div></div>
         <div class="status-act-opt" data-activity="Cooking" onclick="selectActivity(this)"><span class="status-act-icon">🍳</span><div class="status-act-label">Cooking</div></div>
+        <div class="status-act-opt" data-activity="Outside" onclick="selectActivity(this)"><span class="status-act-icon">☀️</span><div class="status-act-label">Outside</div></div>
+        <div class="status-act-opt" data-activity="Shopping" onclick="selectActivity(this)"><span class="status-act-icon">🛍️</span><div class="status-act-label">Shopping</div></div>
+        <div class="status-act-opt" data-activity="Studying" onclick="selectActivity(this)"><span class="status-act-icon">📚</span><div class="status-act-label">Studying</div></div>
       </div>
       <div class="status-sheet-section">How are you feeling?</div>
       <div class="status-mood-pills" id="status-mood-pills">
@@ -1447,6 +1555,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         <div class="status-mood-pill" data-mood="meh" onclick="selectMood(this)">meh</div>
       </div>
       <button class="status-save-btn" onclick="saveStatus()">Save status</button>
+      <button onclick="closeStatusSheet()" style="display:block;width:calc(100% - 2.2rem);margin:.2rem 1.1rem .25rem;padding:.45rem;background:none;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.68rem;color:var(--muted);cursor:pointer;text-align:center;">Cancel</button>
     </div>
   </div>
 
@@ -1841,8 +1950,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
           ME=null;OTHER=null;myUid=null;partnerUid=null;coupleId=null;myRole=null;
           myStatus=null;otherStatus=null;
           if(statusRefreshInterval){clearInterval(statusRefreshInterval);statusRefreshInterval=null;}
+          if(_mjUnsub){try{_mjUnsub();}catch(e){}_mjUnsub=null;}
+          _mjMyEntry=null;_mjOtherEntry=null;_mjStreakCount=0;
       myStatus=null;otherStatus=null;
       if(statusRefreshInterval){clearInterval(statusRefreshInterval);statusRefreshInterval=null;}
+      if(_mjUnsub){try{_mjUnsub();}catch(e){}_mjUnsub=null;}
+      _mjMyEntry=null;_mjOtherEntry=null;_mjStreakCount=0;
           myTz=null;otherTz=null;myCity=null;otherCity=null;myCoords=null;otherCoords=null;
           meetupDate=null;localNotes=[];localMilestones=[];localBucket=[];letterRounds=[];
           if(clockInterval){clearInterval(clockInterval);clockInterval=null;}
@@ -3741,6 +3854,272 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     }
   };
 
+  // ── MEMORY JAR ────────────────────────────────────────────
+  let _mjUnsub = null;
+  let _mjMyEntry = null;   // today's entry by me
+  let _mjOtherEntry = null; // today's entry by partner
+  let _mjStreakCount = 0;
+
+  function _mjTodayKey(){
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,'0');
+    const day = String(d.getDate()).padStart(2,'0');
+    return `${y}-${m}-${day}`;
+  }
+
+  function _mjFmtTime(ts){
+    if(!ts) return '';
+    const d = new Date(ts);
+    return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  }
+
+  function _mjFmtDate(dateKey){
+    // dateKey = 'YYYY-MM-DD'
+    const d = new Date(dateKey+'T12:00:00');
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]}`;
+  }
+
+  function _mjSetInputDisabled(disabled, context){
+    const inputId = context==='today' ? 'mj-today-input' : 'mj-preview-input';
+    const sendId = context==='today' ? 'mj-today-send' : 'mj-preview-send';
+    const rowId = context==='today' ? 'mj-today-input-row' : 'mj-preview-input-row';
+    const input = document.getElementById(inputId);
+    const send = document.getElementById(sendId);
+    const row = document.getElementById(rowId);
+    if(input) input.disabled = disabled;
+    if(send) send.disabled = disabled;
+    if(row && disabled){
+      row.innerHTML = `<span class="mj-written-note">You've written today ✓</span>`;
+    }
+  }
+
+  function renderMemoryJarPreview(){
+    if(!ME || !OTHER) return;
+    // Avatars
+    const myAvEl = document.getElementById('mj-preview-my-avatar');
+    const otherAvEl = document.getElementById('mj-preview-other-avatar');
+    if(myAvEl) myAvEl.textContent = (ME||'?')[0].toUpperCase();
+    if(otherAvEl) otherAvEl.textContent = (OTHER||'?')[0].toUpperCase();
+
+    // My entry
+    const myTextEl = document.getElementById('mj-preview-my-text');
+    if(myTextEl){
+      if(_mjMyEntry?.text){
+        myTextEl.textContent = _mjMyEntry.text;
+        myTextEl.className = 'mj-entry-text';
+      } else {
+        myTextEl.textContent = 'Nothing yet today';
+        myTextEl.className = 'mj-entry-text mj-empty-entry';
+      }
+    }
+
+    // Other entry
+    const otherTextEl = document.getElementById('mj-preview-other-text');
+    if(otherTextEl){
+      if(_mjOtherEntry?.text){
+        otherTextEl.textContent = _mjOtherEntry.text;
+        otherTextEl.className = 'mj-entry-text';
+      } else {
+        otherTextEl.textContent = 'Nothing yet today';
+        otherTextEl.className = 'mj-entry-text mj-empty-entry';
+      }
+    }
+
+    // Disable input if already written
+    if(_mjMyEntry?.text) _mjSetInputDisabled(true, 'preview');
+
+    // Streak
+    const streakEl = document.getElementById('mj-preview-streak');
+    if(streakEl && _mjStreakCount > 0){
+      streakEl.textContent = `${_mjStreakCount} day streak 🔥`;
+    }
+  }
+
+  function renderMemoryJarPage(){
+    if(!ME || !OTHER) return;
+
+    // Avatars
+    const myAvEl = document.getElementById('mj-today-my-avatar');
+    const otherAvEl = document.getElementById('mj-today-other-avatar');
+    if(myAvEl) myAvEl.textContent = (ME||'?')[0].toUpperCase();
+    if(otherAvEl) otherAvEl.textContent = (OTHER||'?')[0].toUpperCase();
+
+    // Today date
+    const dateEl = document.getElementById('mj-today-date');
+    if(dateEl) dateEl.textContent = _mjFmtDate(_mjTodayKey());
+
+    // My entry
+    const myTextEl = document.getElementById('mj-today-my-text');
+    const myTimeEl = document.getElementById('mj-today-my-time');
+    if(myTextEl){
+      if(_mjMyEntry?.text){
+        myTextEl.textContent = _mjMyEntry.text;
+        myTextEl.className = 'mj-entry-text';
+        if(myTimeEl) myTimeEl.textContent = `You · ${_mjFmtTime(_mjMyEntry.createdAt)}`;
+      } else {
+        myTextEl.textContent = "You haven't written yet today";
+        myTextEl.className = 'mj-entry-text mj-empty-entry';
+        if(myTimeEl) myTimeEl.textContent = '';
+      }
+    }
+
+    // Other entry
+    const otherTextEl = document.getElementById('mj-today-other-text');
+    const otherTimeEl = document.getElementById('mj-today-other-time');
+    if(otherTextEl){
+      if(_mjOtherEntry?.text){
+        otherTextEl.textContent = _mjOtherEntry.text;
+        otherTextEl.className = 'mj-entry-text';
+        if(otherTimeEl) otherTimeEl.textContent = `${OTHER} · ${_mjFmtTime(_mjOtherEntry.createdAt)}`;
+      } else {
+        otherTextEl.textContent = 'Waiting for their moment…';
+        otherTextEl.className = 'mj-entry-text mj-empty-entry';
+        if(otherTimeEl) otherTimeEl.textContent = '';
+      }
+    }
+
+    // Badge
+    const badgeEl = document.getElementById('mj-today-badge');
+    if(badgeEl){
+      const count = (_mjMyEntry?.text?1:0) + (_mjOtherEntry?.text?1:0);
+      badgeEl.textContent = count===2 ? 'both wrote ✓' : count===1 ? '1 of 2' : '';
+      badgeEl.className = 'mj-day-badge' + (count===2?' both':'');
+    }
+
+    // Disable input if written
+    if(_mjMyEntry?.text) _mjSetInputDisabled(true, 'today');
+
+    // Streak
+    const swEl = document.getElementById('mj-page-streak-wrap');
+    const snEl = document.getElementById('mj-page-streak-num');
+    if(swEl && snEl){
+      swEl.style.display = _mjStreakCount>0 ? 'inline-flex' : 'none';
+      snEl.textContent = _mjStreakCount;
+    }
+  }
+
+  async function _mjLoadAndRender(){
+    if(!db || !coupleId || !myUid || !partnerUid) return;
+    const today = _mjTodayKey();
+
+    // Listen to today's entries in real time
+    if(_mjUnsub){ try{_mjUnsub();}catch(e){} _mjUnsub=null; }
+    _mjUnsub = fbOnValue(dbRef(db,`couples/${coupleId}/memoryJar/${today}`), snap=>{
+      const d = snap.val()||{};
+      _mjMyEntry = d[myUid]||null;
+      _mjOtherEntry = d[partnerUid]||null;
+      renderMemoryJarPreview();
+      renderMemoryJarPage();
+    });
+
+    // Calculate streak — read last 30 days and count consecutive days both wrote
+    try{
+      await new Promise(res=>fbOnValue(dbRef(db,`couples/${coupleId}/memoryJar`), snap=>{
+        const all = snap.val()||{};
+        const keys = Object.keys(all).sort().reverse(); // newest first
+        let streak = 0;
+        const todayKey = _mjTodayKey();
+        // Check each of last 30 days
+        for(let i=0; i<30; i++){
+          const d = new Date();
+          d.setDate(d.getDate()-i);
+          const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+          const dayData = all[key]||{};
+          const bothWrote = dayData[myUid]?.text && dayData[partnerUid]?.text;
+          if(key===todayKey){
+            // Today counts only if both wrote
+            if(bothWrote) streak++;
+            else if(i===0) continue; // today not done yet, check yesterday
+          } else {
+            if(bothWrote) streak++;
+            else break; // streak broken
+          }
+        }
+        _mjStreakCount = streak;
+        res();
+      },{onlyOnce:true}));
+    }catch(e){}
+
+    renderMemoryJarPreview();
+    renderMemoryJarPage();
+    _mjRenderHistory();
+  }
+
+  function _mjRenderHistory(){
+    if(!db || !coupleId) return;
+    const histEl = document.getElementById('mj-history-list');
+    if(!histEl) return;
+    const today = _mjTodayKey();
+
+    fbOnValue(dbRef(db,`couples/${coupleId}/memoryJar`), snap=>{
+      const all = snap.val()||{};
+      const pastKeys = Object.keys(all)
+        .filter(k=>k!==today)
+        .sort().reverse(); // newest first
+
+      if(!pastKeys.length){
+        histEl.innerHTML = '<p class="empty">No earlier memories yet — start writing!</p>';
+        return;
+      }
+
+      histEl.innerHTML = pastKeys.slice(0,60).map(dateKey=>{
+        const dayData = all[dateKey]||{};
+        const myEntry = dayData[myUid];
+        const otherEntry = dayData[partnerUid];
+        const count = (myEntry?.text?1:0)+(otherEntry?.text?1:0);
+        const badge = count===2?'both wrote':count===1?'1 of 2':'';
+        const badgeClass = count===2?'mj-day-badge both':'mj-day-badge';
+
+        const meRow = myEntry?.text
+          ? `<div class="mj-entry-row">
+              <div class="mj-avatar mj-avatar-me">${(ME||'?')[0].toUpperCase()}</div>
+              <div style="flex:1;"><div class="mj-entry-text">${_mjEscape(myEntry.text)}</div>
+              <div class="mj-entry-meta">${ME} · ${_mjFmtTime(myEntry.createdAt)}</div></div>
+             </div>`
+          : '';
+        const otherRow = otherEntry?.text
+          ? `<div class="mj-entry-row">
+              <div class="mj-avatar mj-avatar-other">${(OTHER||'?')[0].toUpperCase()}</div>
+              <div style="flex:1;"><div class="mj-entry-text">${_mjEscape(otherEntry.text)}</div>
+              <div class="mj-entry-meta">${OTHER} · ${_mjFmtTime(otherEntry.createdAt)}</div></div>
+             </div>`
+          : '';
+
+        return `<div class="mj-day-card">
+          <div class="mj-day-header">
+            <span class="mj-day-date">${_mjFmtDate(dateKey)}</span>
+            <span class="${badgeClass}">${badge}</span>
+          </div>
+          ${meRow}${otherRow}
+        </div>`;
+      }).join('');
+    },{onlyOnce:true});
+  }
+
+  function _mjEscape(str){
+    return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  window.submitMemoryJar = async function(context){
+    const inputId = context==='today' ? 'mj-today-input' : 'mj-preview-input';
+    const input = document.getElementById(inputId);
+    if(!input) return;
+    const text = input.value.trim();
+    if(!text || !db || !coupleId || !myUid) return;
+    if(_mjMyEntry?.text) return; // already written today
+    const today = _mjTodayKey();
+    const entry = { text, createdAt: Date.now() };
+    try{
+      await dbSet(dbRef(db,`couples/${coupleId}/memoryJar/${today}/${myUid}`), entry);
+      input.value = '';
+    }catch(e){
+      console.error('submitMemoryJar failed:', e);
+    }
+  };
+
   // ── HOME TABS ──────────────────────────────────────────
   window.switchHomeTab = function(tab){
     ['now','us','moments'].forEach(t=>{
@@ -3803,7 +4182,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
   const ACTIVITY_EMOJI = {
     'Working':'💼','Reading':'📖','Music':'🎵','Eating':'🍽️',
-    'Gaming':'🎮','Sports':'⚽','Resting':'😴','Traveling':'✈️','Cooking':'🍳'
+    'Gaming':'🎮','Sports':'⚽','Resting':'😴','Traveling':'✈️','Cooking':'🍳',
+    'Outside':'☀️','Shopping':'🛍️','Studying':'📚'
   };
 
   function renderStatusCard(){
@@ -3821,10 +4201,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     const myTime = document.getElementById('status-my-time');
     const myExpired = !myStatus || !myStatus.updatedAt || (now - myStatus.updatedAt > STATUS_EXPIRY_MS);
     if(myExpired){
-      if(myEmoji) myEmoji.textContent = '—';
+      if(myEmoji){ myEmoji.textContent = '💤'; myEmoji.style.opacity='.35'; }
       if(myActivity) myActivity.innerHTML = '<span class="status-empty">No status set</span>';
       if(myMood) myMood.textContent = '';
       if(myTime) myTime.textContent = '';
+    } else {
+      if(myEmoji) myEmoji.style.opacity='1';
     } else {
       if(myEmoji) myEmoji.textContent = ACTIVITY_EMOJI[myStatus.activity]||'—';
       if(myActivity) myActivity.textContent = myStatus.activity||'';
@@ -3839,10 +4221,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     const otherTime = document.getElementById('status-other-time');
     const otherExpired = !otherStatus || !otherStatus.updatedAt || (now - otherStatus.updatedAt > STATUS_EXPIRY_MS);
     if(otherExpired){
-      if(otherEmoji) otherEmoji.textContent = '—';
+      if(otherEmoji){ otherEmoji.textContent = '💤'; otherEmoji.style.opacity='.35'; }
       if(otherActivity) otherActivity.innerHTML = '<span class="status-empty">No status set</span>';
       if(otherMood) otherMood.textContent = '';
       if(otherTime) otherTime.textContent = '';
+    } else {
+      if(otherEmoji) otherEmoji.style.opacity='1';
     } else {
       if(otherEmoji) otherEmoji.textContent = ACTIVITY_EMOJI[otherStatus.activity]||'—';
       if(otherActivity) otherActivity.textContent = otherStatus.activity||'';
@@ -3912,6 +4296,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       myName=null;otherName=null;
       myStatus=null;otherStatus=null;
       if(statusRefreshInterval){clearInterval(statusRefreshInterval);statusRefreshInterval=null;}
+      if(_mjUnsub){try{_mjUnsub();}catch(e){}_mjUnsub=null;}
+      _mjMyEntry=null;_mjOtherEntry=null;_mjStreakCount=0;
       myCity=null;otherCity=null;myCoords=null;otherCoords=null;
       myTz=null;otherTz=null;
       coupleStartDate=null;coupleMeetupDate=null;meetupDate=null;
@@ -3951,6 +4337,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     }
     if(name==="letter"){
       setTimeout(()=>initLetterPage(),50);
+    }
+    if(name==="memory"){
+      renderMemoryJarPage&&renderMemoryJarPage();
+      _mjRenderHistory&&_mjRenderHistory();
     }
     if(name==="places"){
       setTimeout(()=>{
@@ -4023,6 +4413,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         updateMomentsSubtitles();
         renderStatusCard&&renderStatusCard();
         startStatusRefresh&&startStatusRefresh();
+        _mjLoadAndRender&&_mjLoadAndRender();
       });
       // Milestones
       if(unsubMilestones)unsubMilestones();
