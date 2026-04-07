@@ -1,43 +1,28 @@
-export const config = { runtime: 'edge' };
-
-export default async function handler(req) {
-  try {
-    const { searchParams } = new URL(req.url);
-    const lat = searchParams.get('lat');
-    const lng = searchParams.get('lng');
-
-    if (!lat || !lng) {
-      return new Response(JSON.stringify({ error: 'lat and lng required' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-      });
-    }
-
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,weathercode,windspeed_10m&daily=temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=1`;
-    
-    const response = await fetch(url);
-    
-    if (!response.ok) {
-      return new Response(JSON.stringify({ error: `open-meteo ${response.status}` }), {
-        status: 502,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-      });
-    }
-    
-    const data = await response.json();
-
-    return new Response(JSON.stringify(data), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Cache-Control': 's-maxage=600'
+const https = require('https');
+ 
+module.exports = function handler(req, res) {
+  const { lat, lng } = req.query;
+ 
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Cache-Control', 's-maxage=600');
+ 
+  if (!lat || !lng) {
+    return res.status(400).json({ error: 'lat and lng required' });
+  }
+ 
+  const path = `/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,weathercode,windspeed_10m&daily=temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=1`;
+ 
+  https.get(`https://api.open-meteo.com${path}`, (r) => {
+    let body = '';
+    r.on('data', chunk => body += chunk);
+    r.on('end', () => {
+      try {
+        res.status(200).json(JSON.parse(body));
+      } catch(e) {
+        res.status(500).json({ error: 'Parse error', detail: e.message });
       }
     });
-  } catch (e) {
-    return new Response(JSON.stringify({ error: e.message, stack: e.stack }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-    });
-  }
-}
+  }).on('error', (e) => {
+    res.status(500).json({ error: e.message });
+  });
+};
