@@ -2234,8 +2234,33 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   }
 
   // Weather
-  function wIcon(c){if(c===0)return"☀️";if(c<=2)return"⛅";if(c<=3)return"☁️";if(c<=48)return"🌫️";if(c<=57)return"🌦️";if(c<=67)return"🌧️";if(c<=77)return"❄️";if(c<=82)return"🌧️";if(c<=86)return"🌨️";if(c<=99)return"⛈️";return"🌡️";}
-  function wDesc(c){if(c===0)return"Clear sky";if(c===1)return"Mainly clear";if(c===2)return"Partly cloudy";if(c===3)return"Overcast";if(c<=48)return"Foggy";if(c<=57)return"Drizzle";if(c<=67)return"Rain";if(c<=77)return"Snow";if(c<=82)return"Rain showers";if(c<=86)return"Snow showers";if(c<=99)return"Thunderstorm";return"—";}
+  function wIcon(c){
+    // wttr.in codes
+    if(c===113)return"☀️";if(c===116)return"⛅";if(c===119||c===122)return"☁️";
+    if(c===143||c===248||c===260)return"🌫️";
+    if(c===176||c===263||c===266||c===293||c===296)return"🌦️";
+    if(c===299||c===302||c===305||c===308||c===353||c===356||c===359)return"🌧️";
+    if(c===179||c===227||c===230||c===320||c===323||c===326||c===329||c===332||c===335||c===338||c===368||c===371)return"❄️";
+    if(c===182||c===185||c===281||c===284||c===311||c===314||c===317||c===362||c===365)return"🌨️";
+    if(c===200||c===386||c===389||c===392||c===395)return"⛈️";
+    if(c===350||c===374||c===377)return"🧊";
+    return"🌡️";
+  }
+  function wDesc(c){
+    if(c===113)return"Clear sky";if(c===116)return"Partly cloudy";if(c===119)return"Cloudy";if(c===122)return"Overcast";
+    if(c===143||c===248||c===260)return"Foggy";
+    if(c===176||c===263||c===266||c===293||c===296)return"Light rain";
+    if(c===299||c===302||c===305||c===308)return"Rain";
+    if(c===353||c===356||c===359)return"Rain showers";
+    if(c===179||c===323||c===326)return"Light snow";
+    if(c===227||c===230||c===329||c===332||c===335||c===338)return"Snow";
+    if(c===368||c===371)return"Snow showers";
+    if(c===182||c===185||c===281||c===284||c===311||c===314||c===317)return"Sleet";
+    if(c===200||c===386||c===389)return"Thunderstorm";
+    if(c===392||c===395)return"Thundery snow";
+    if(c===350||c===374||c===377)return"Ice pellets";
+    return"—";
+  }
   async function fetchWeather(lat,lng,prefix){try{// Use Vercel proxy in production to avoid CORS; direct on localhost
     const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
     const weatherUrl = isLocal
