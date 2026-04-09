@@ -2826,7 +2826,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     const locationStr=document.getElementById("m-location-input").value.trim();
     if(!title||!date)return;
     const btn=document.getElementById("m-save-btn");
+    if(btn.disabled) return; // prevent double-tap
     btn.textContent="Saving…";
+    btn.disabled=true;
     const m={title,note,date,tag,addedBy:editingKey?(editingOriginalAuthor||ME):ME,time:Date.now()};
     if(endDate&&endDate!==date)m.endDate=endDate;
     if(locationStr){
@@ -2857,33 +2859,99 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         if(existingMilestone.photoPath) mToSave.photoPath = existingMilestone.photoPath;
         if(existingMilestone.photoPosition) mToSave.photoPosition = existingMilestone.photoPosition;
       }
-      if(db&&dbSet)dbSet(dbRef(db,`couples/${coupleId}/milestones/${currentEditKey}`),mToSave);
-      else{const idx=localMilestones.findIndex(x=>x._key===currentEditKey);if(idx>-1)localMilestones[idx]={...mToSave,_key:currentEditKey};renderMilestones([...localMilestones]);}
-      // Upload new photo if selected
+      // If a new photo is selected, upload it first so the milestone write includes photoURL
       if(pendingPhotoFile && currentEditKey && storage){
-        await safeUploadPhotoForKey(currentEditKey, pendingPhotoFile, pendingPhotoPosition);
+        try{
+          const file = pendingPhotoFile;
+          const pos = pendingPhotoPosition;
+          const baseName = file.name.replace(/\.[^.]+$/, "").replace(/[^a-z0-9]/gi,"_").substring(0,40) || "photo";
+          const path = `milestones/${currentEditKey}/${Date.now()}_${baseName}.jpg`;
+          btn.textContent = "Uploading…";
+          const compressed = await compressImage(file, 1200);
+          const uploadData = (compressed instanceof Blob) ? compressed : new Blob([compressed], {type:"image/jpeg"});
+          const editStorageRef = fbStorageRef(storage, path);
+          await Promise.race([
+            fbUploadBytes(editStorageRef, uploadData, {contentType:"image/jpeg"}),
+            new Promise((_,rej)=>setTimeout(()=>rej(new Error("Upload timeout")),30000))
+          ]);
+          const editUrl = await fbGetDownloadURL(editStorageRef);
+          mToSave.photoURL = editUrl;
+          mToSave.photoPath = path;
+          if(pos && pos !== "50% 50%") mToSave.photoPosition = pos;
+          // Update registry immediately
+          const regItem = _msRegistry.get(currentEditKey)||{};
+          _msRegistry.set(currentEditKey, {...regItem, _key:currentEditKey, photoURL:editUrl, photoPath:path, photoPosition:pos||'center center'});
+        }catch(editUploadErr){
+          console.error("Photo upload failed during edit:", editUploadErr);
+          // Keep existing photo fields — don't overwrite with nothing
+          if(existingMilestone.photoURL) mToSave.photoURL = existingMilestone.photoURL;
+          if(existingMilestone.photoPath) mToSave.photoPath = existingMilestone.photoPath;
+          if(existingMilestone.photoPosition) mToSave.photoPosition = existingMilestone.photoPosition;
+        }
+        btn.textContent = "Saving…";
         pendingPhotoFile=null;
-    pendingPhotoPosition="50% 50%";
+        pendingPhotoPosition="50% 50%";
         const pbtn=document.getElementById("m-photo-btn");
         const plbl=document.getElementById("m-photo-btn-label");
         if(pbtn)pbtn.classList.remove("has-photo");
         if(plbl)plbl.textContent="Add photo";
       }
+      // Single awaited write — milestone saved with photo already included
+      if(db&&dbSet) await dbSet(dbRef(db,`couples/${coupleId}/milestones/${currentEditKey}`),mToSave);
+      else{const idx=localMilestones.findIndex(x=>x._key===currentEditKey);if(idx>-1)localMilestones[idx]={...mToSave,_key:currentEditKey};renderMilestones([...localMilestones]);}
       editingKey=null;
     } else {
       let finalKey = null;
+      // If a photo is selected, upload it FIRST so photoURL is included in the push.
+      // This avoids the two-step race where the card renders without a photo
+      // and then has to re-render after the upload completes.
+      let uploadedPhotoURL = null;
+      let uploadedPhotoPath = null;
+      if(pendingPhotoFile && storage){
+        try{
+          const file = pendingPhotoFile;
+          const pos = pendingPhotoPosition;
+          const baseName = file.name.replace(/\.[^.]+$/, "").replace(/[^a-z0-9]/gi,"_").substring(0,40) || "photo";
+          const safeName = `${baseName}.jpg`;
+          // We need a key for the path but don't have it yet — use a temp ID
+          // We'll use the Firebase push key pattern: generate a temp path key now
+          const tempKey = Date.now().toString(36) + Math.random().toString(36).substring(2,7);
+          const path = `milestones/${tempKey}/${Date.now()}_${safeName}`;
+          btn.textContent = "Uploading…";
+          const compressed = await compressImage(file, 1200);
+          const uploadData = (compressed instanceof Blob) ? compressed : new Blob([compressed], {type:"image/jpeg"});
+          const storageRef2 = fbStorageRef(storage, path);
+          await Promise.race([
+            fbUploadBytes(storageRef2, uploadData, {contentType:"image/jpeg"}),
+            new Promise((_,rej)=>setTimeout(()=>rej(new Error("Upload timeout")),30000))
+          ]);
+          uploadedPhotoURL = await fbGetDownloadURL(storageRef2);
+          uploadedPhotoPath = path;
+          m.photoURL = uploadedPhotoURL;
+          m.photoPath = uploadedPhotoPath;
+          if(pos && pos !== "50% 50%") m.photoPosition = pos;
+        }catch(uploadErr){
+          console.error("Photo upload failed before push:", uploadErr);
+          // Continue saving WITHOUT photo — user can add it later from the card
+          uploadedPhotoURL = null;
+          uploadedPhotoPath = null;
+          delete m.photoURL; delete m.photoPath; delete m.photoPosition;
+        }
+        btn.textContent = "Saving…";
+      }
       if(db&&dbPush){const newRef=await dbPush(dbRef(db,`couples/${coupleId}/milestones`),m);finalKey=newRef.key;}
       else{finalKey=Date.now().toString();localMilestones.push({...m,_key:finalKey});renderMilestones([...localMilestones]);}
-      // Upload pending photo if selected
-      if(pendingPhotoFile && finalKey && storage){
-        await safeUploadPhotoForKey(finalKey, pendingPhotoFile, pendingPhotoPosition, true);
-        pendingPhotoFile=null;
-    pendingPhotoPosition="50% 50%";
-        const pbtn=document.getElementById("m-photo-btn");
-        const plbl=document.getElementById("m-photo-btn-label");
-        if(pbtn)pbtn.classList.remove("has-photo");
-        if(plbl)plbl.textContent="Add photo";
+      // Update registry if photo was uploaded
+      if(finalKey && uploadedPhotoURL){
+        const regItem = _msRegistry.get(finalKey)||{};
+        _msRegistry.set(finalKey, {...regItem, _key:finalKey, photoURL:uploadedPhotoURL, photoPath:uploadedPhotoPath, photoPosition:m.photoPosition||'center center'});
       }
+      pendingPhotoFile=null;
+      pendingPhotoPosition="50% 50%";
+      const pbtn=document.getElementById("m-photo-btn");
+      const plbl=document.getElementById("m-photo-btn-label");
+      if(pbtn)pbtn.classList.remove("has-photo");
+      if(plbl)plbl.textContent="Add photo";
     }
     document.getElementById("m-title-input").value="";
     document.getElementById("m-note-input").value="";
@@ -2891,6 +2959,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     document.getElementById("m-location-input").value="";
     document.getElementById("add-milestone-form").classList.remove("open");
     btn.textContent="Save";
+    btn.disabled=false;
   };
   window.deleteMilestone=async function(key){
     // Read photoPath from local cache — avoids race between async Firebase read and immediate RTDB delete
