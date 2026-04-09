@@ -2876,7 +2876,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       else{finalKey=Date.now().toString();localMilestones.push({...m,_key:finalKey});renderMilestones([...localMilestones]);}
       // Upload pending photo if selected
       if(pendingPhotoFile && finalKey && storage){
-        await safeUploadPhotoForKey(finalKey, pendingPhotoFile, pendingPhotoPosition);
+        await safeUploadPhotoForKey(finalKey, pendingPhotoFile, pendingPhotoPosition, true);
         pendingPhotoFile=null;
     pendingPhotoPosition="50% 50%";
         const pbtn=document.getElementById("m-photo-btn");
@@ -3939,7 +3939,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     input.click();
   };
 
-  async function uploadPhotoForKey(key, file, position){
+  async function uploadPhotoForKey(key, file, position, isNewMilestone=false){
     if(!storage || !fbStorageRef || !fbUploadBytes || !fbGetDownloadURL){
       console.error("Storage not ready");
       const label = document.getElementById("m-photo-btn-label");
@@ -3983,25 +3983,28 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       if(position) await dbSet(dbRef(db,`couples/${coupleId}/milestones/${key}/photoPosition`), position);
     }
     // Immediately update card in DOM without waiting for Firebase listener
+    // Only for EDITS — for new milestones, the Firebase listener re-renders with photoURL automatically
     // Update registry so _msViewPhoto/_msReposition work on the new card
     const regItem = _msRegistry.get(key)||{};
     _msRegistry.set(key, {...regItem, _key:key, photoURL:url, photoPath:path, photoPosition:position||'center center'});
-    const existingPlaceholder = document.querySelector(`.m-photo-placeholder[onclick*="${key}"]`);
-    if(existingPlaceholder){
-      const wrap = document.createElement("div");
-      wrap.className = "m-photo-wrap";
-      wrap.setAttribute("onclick", `_msViewPhoto('${key}')`);
-      wrap.innerHTML = `<img src="${url}" alt="" style="object-position:${position||'center center'}"/><div class="m-photo-actions"><button class="m-photo-action-btn" onclick="event.stopPropagation();_msReposition('${key}')">Reposition</button><button class="m-photo-action-btn" onclick="event.stopPropagation();removeMilestonePhoto('${key}')">Remove</button></div>`;
-      existingPlaceholder.replaceWith(wrap);
+    if(!isNewMilestone){
+      const existingPlaceholder = document.querySelector(`.m-photo-placeholder[onclick*="${key}"]`);
+      if(existingPlaceholder){
+        const wrap = document.createElement("div");
+        wrap.className = "m-photo-wrap";
+        wrap.setAttribute("onclick", `_msViewPhoto('${key}')`);
+        wrap.innerHTML = `<img src="${url}" alt="" style="object-position:${position||'center center'}"/><div class="m-photo-actions"><button class="m-photo-action-btn" onclick="event.stopPropagation();_msReposition('${key}')">Reposition</button><button class="m-photo-action-btn" onclick="event.stopPropagation();removeMilestonePhoto('${key}')">Remove</button></div>`;
+        existingPlaceholder.replaceWith(wrap);
+      }
     }
     // Reset save btn
     const saveBtn2 = document.getElementById("m-save-btn");
     if(saveBtn2 && saveBtn2.textContent === "Uploading…") saveBtn2.textContent = "Save";
   }
 
-  async function safeUploadPhotoForKey(key, file, position){
+  async function safeUploadPhotoForKey(key, file, position, isNewMilestone=false){
     try{
-      await uploadPhotoForKey(key, file, position);
+      await uploadPhotoForKey(key, file, position, isNewMilestone);
     } catch(e){
       console.error("Photo upload failed:", e);
       const saveBtn = document.getElementById("m-save-btn");
