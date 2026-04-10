@@ -20,9 +20,9 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
+    // ── App height — runs before CSS so --app-height is set at first paint ──
+    (function(){ document.documentElement.style.setProperty('--app-height', window.innerHeight+'px'); })();
     // ── Prevent iOS PWA pinch-to-zoom ───────────────────────
-    // iOS ignores user-scalable=no since iOS 10, so we block
-    // gesture and multi-touch events at the JS level instead.
     document.addEventListener('gesturestart', function(e){ e.preventDefault(); }, {passive: false});
     document.addEventListener('gesturechange', function(e){ e.preventDefault(); }, {passive: false});
     document.addEventListener('gestureend', function(e){ e.preventDefault(); }, {passive: false});
@@ -32,26 +32,26 @@
   </script>
   <style>
   :root{
-    --k:#e8622a;--kl:#f0956a;--kll:#fef0e8;--pk:#d4607a;
-    --bg:#fdf7f3;--surface:#ffffff;--text:#2a1208;--text2:#5c2e18;--muted:#a0624a;
-    --border:rgba(232,98,42,0.12);--bdm:rgba(232,98,42,0.22);--green:#22c55e;
-    --sidebar-w:220px;
+    --k:#c8553a;--kl:#e07a5f;--kll:#fdf0ec;--pk:#d4607a;--pll:#fce8f0;
+    --bg:#faf6f2;--surface:#ffffff;--text:#1e120a;--text2:#4a2415;--muted:#9a6752;
+    --border:rgba(200,85,58,0.11);--bdm:rgba(200,85,58,0.2);--green:#22c55e;
+    --card-bg:#ffffff;--label-color:#b07060;
     /* legacy aliases */
-    --sidebar-bg:rgba(255,255,255,0.5);--cream:var(--bg);--warm:#fef0e8;
+    --sidebar-bg:rgba(255,255,255,0.5);--cream:var(--bg);--warm:#fdf0ec;
     --accent:var(--k);--accent2:var(--kl);--gold:var(--kl);
   }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  html{overflow:hidden;height:100%}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;overflow:hidden;height:100%;}
+  html{overflow:hidden;height:100svh;height:var(--app-height,100svh);}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);height:100svh;height:var(--app-height,100svh);display:flex;flex-direction:column;overflow:hidden;max-width:480px;margin:0 auto;position:relative;}
 
   /* ── MESH BACKGROUND ── */
   body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
     background:
-      radial-gradient(ellipse 70% 55% at 0% 0%,rgba(247,197,168,0.35) 0%,transparent 60%),
-      radial-gradient(ellipse 55% 60% at 100% 5%,rgba(232,98,42,0.10) 0%,transparent 55%),
-      radial-gradient(ellipse 45% 45% at 100% 90%,rgba(212,96,122,0.13) 0%,transparent 55%),
-      radial-gradient(ellipse 50% 40% at 10% 90%,rgba(232,98,42,0.07) 0%,transparent 50%),
-      linear-gradient(160deg,#fff4ee 0%,#fdf7f3 45%,#fff0f4 100%);}
+      radial-gradient(ellipse 65% 45% at 5% 0%,rgba(240,180,160,0.28) 0%,transparent 60%),
+      radial-gradient(ellipse 50% 55% at 95% 8%,rgba(212,130,110,0.12) 0%,transparent 55%),
+      radial-gradient(ellipse 40% 40% at 90% 92%,rgba(212,96,122,0.10) 0%,transparent 55%),
+      radial-gradient(ellipse 45% 35% at 8% 88%,rgba(200,85,58,0.06) 0%,transparent 50%),
+      linear-gradient(160deg,#fff3ee 0%,#faf6f2 50%,#fef2f5 100%);}
 
   /* corner brackets hidden in new design */
   .corner-bracket{display:none}
@@ -68,8 +68,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   .login-card::before{content:'';position:absolute;top:0;left:2rem;right:2rem;height:1px;
     background:linear-gradient(90deg,transparent,rgba(247,197,168,0.7),transparent);}
   .login-orn-row{display:none}
-  .login-eyebrow{font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem}
-  .login-title{font-size:2rem;font-weight:700;letter-spacing:-.025em;color:var(--text);line-height:1.3;margin-bottom:1.5rem;overflow:visible}
+  .login-eyebrow{font-size:.44rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.55rem;}
+  .login-title{font-size:1.6rem;font-weight:700;letter-spacing:-.025em;color:var(--text);line-height:1.25;margin-bottom:1.25rem;overflow:visible}
   .login-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;display:inline-block;padding-bottom:.35em;margin-bottom:-.35em;overflow:visible;padding-right:.1em}
   .login-sub-row{display:flex;align-items:center;gap:.65rem;margin:0 0 1.5rem}
   .login-sub-line{flex:1;height:1px;background:var(--border)}
@@ -114,67 +114,94 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   .locating-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;display:inline-block;padding-bottom:.35em;margin-bottom:-.35em;overflow:visible;padding-right:.1em}
   .locating-sub{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 
-  /* ── SIDEBAR ── */
-  .sidebar{width:var(--sidebar-w);min-height:100vh;
-    background:rgba(255,255,255,0.45);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
-    border-right:1px solid rgba(232,98,42,0.1);
-    display:flex;flex-direction:column;padding:0;
-    position:fixed;top:0;left:0;bottom:0;z-index:200;
-    transition:transform .3s ease;
-    box-shadow:4px 0 24px rgba(232,98,42,0.06);}
-  .sidebar-logo{padding:1.5rem 1.4rem 1.25rem;border-bottom:1px solid rgba(232,98,42,0.08)}
-  .sidebar-eyebrow{font-size:.48rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
-  .sidebar-title{font-size:1rem;font-weight:700;color:var(--text);line-height:1.3;letter-spacing:-.01em;overflow:visible}
-  .sidebar-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;display:inline-block;padding-bottom:.35em;margin-bottom:-.35em;overflow:visible;padding-right:.1em}
-  .sidebar-ornament{display:none}
-  .user-badge{margin:.7rem 1.4rem 0;display:inline-flex;align-items:center;gap:.3rem;
-    background:rgba(232,98,42,0.08);border:1px solid rgba(232,98,42,0.2);
-    border-radius:20px;padding:.17rem .55rem;}
-  .user-dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green);flex-shrink:0}
-  .user-name{font-size:.5rem;letter-spacing:.06em;text-transform:uppercase;color:var(--k);font-weight:500}
-  .sidebar-nav{flex:1;padding:.65rem 0;display:flex;flex-direction:column}
-  .nav-section-label{font-size:.44rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);padding:.65rem 1.4rem .3rem;opacity:.7}
-  .nav-item{display:flex;align-items:center;gap:.6rem;padding:.52rem 1.4rem;
-    font-size:.67rem;font-weight:400;letter-spacing:.02em;
-    color:rgba(90,40,20,0.42);cursor:pointer;border-left:2px solid transparent;
-    transition:all .18s;text-decoration:none;background:none;
-    border-top:none;border-right:none;border-bottom:none;
-    width:100%;text-align:left;font-family:'Plus Jakarta Sans',sans-serif}
-  .nav-item:hover{color:rgba(232,98,42,0.7);background:rgba(232,98,42,0.06);border-left-color:rgba(232,98,42,0.3)}
-  .nav-item.active{color:var(--k);border-left-color:var(--k);background:linear-gradient(90deg,rgba(232,98,42,0.09),transparent);font-weight:600}
-  .nav-icon{width:13px;height:13px;flex-shrink:0;opacity:.55}
-  .nav-item.active .nav-icon{opacity:1}
-  .nav-spacer{height:1px;background:rgba(232,98,42,0.06);margin:.5rem 1.4rem}
-  .sidebar-footer{padding:.9rem 1.4rem 1.1rem;border-top:1px solid rgba(232,98,42,0.08)}
-  .sidebar-cd-label{font-size:.44rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem}
-  .sidebar-cd-row{display:flex;gap:.45rem;align-items:baseline}
-  .sidebar-cd-num{font-size:1.15rem;font-weight:300;color:var(--k);display:block;line-height:1}
-  .sidebar-cd-lbl{font-size:.38rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
-  .sidebar-cd-caption{font-size:.44rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:.25rem;opacity:.7}
+  /* ── BOTTOM NAV ── */
+  .bottom-nav{
+    display:flex;position:fixed;bottom:0;z-index:200;
+    width:100%;max-width:480px;left:50%;transform:translateX(-50%);
+    background:rgba(255,255,255,0.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+    border-top:1px solid rgba(200,85,58,0.1);
+    border-left:1px solid rgba(200,85,58,0.07);
+    border-right:1px solid rgba(200,85,58,0.07);
+    padding:0 0 env(safe-area-inset-bottom,0px);
+    box-shadow:0 -2px 12px rgba(200,85,58,0.05);
+  }
+  .bn-item{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:3px;padding:.5rem .15rem .45rem;
+    background:none;border:none;cursor:pointer;
+    font-family:'Plus Jakarta Sans',sans-serif;
+    font-size:.5rem;letter-spacing:.03em;
+    color:rgba(90,40,20,0.38);transition:color .18s;
+    -webkit-tap-highlight-color:transparent;
+    min-width:0;overflow:hidden;
+  }
+  .bn-item:active{transform:scale(0.93)}
+  .bn-item.active{color:var(--k);}
+  .bn-icon{width:20px;height:20px;flex-shrink:0;opacity:.45;transition:opacity .18s;display:block;}
+  .bn-item.active .bn-icon{opacity:1;stroke:var(--k);}
+  .bn-label{font-size:.48rem;font-weight:500;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
 
-  /* mobile */
-  .mobile-header{display:none;position:fixed;top:0;left:0;right:0;z-index:300;
-    background:rgba(255,255,255,0.55);backdrop-filter:blur(20px);
-    height:calc(52px + env(safe-area-inset-top));padding:env(safe-area-inset-top) 1.25rem 0;
-    align-items:center;
-    border-bottom:1px solid rgba(232,98,42,0.1);}
-  .mobile-header-title{font-size:1rem;font-weight:700;color:var(--text);flex:1;text-align:center;letter-spacing:-.01em;line-height:1.3;overflow:visible}
-  .mobile-header-title em{font-style:italic;font-weight:300;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;display:inline-block;padding-bottom:.35em;margin-bottom:-.35em;overflow:visible;padding-right:.1em}
-  .hamburger{background:none;border:none;cursor:pointer;padding:.25rem;display:flex;flex-direction:column;gap:4px;flex-shrink:0}
-  .hamburger span{display:block;width:18px;height:1.5px;background:var(--text);border-radius:2px;opacity:.6}
-  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(42,18,8,.4);z-index:350;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+  /* page top strip (always visible on Home) */
+  /* .home-top-strip defined below */
+  /* .home-top-date defined below */
+  /* .home-top-greeting defined below */
+  /* .home-top-greeting em — defined below at correct position */
+  .home-top-pill{display:inline-flex;align-items:center;gap:.28rem;background:var(--pll);border:1px solid rgba(212,96,122,0.2);border-radius:20px;padding:.18rem .65rem;font-size:.48rem;color:var(--pk);font-weight:600;letter-spacing:.01em}
+  .home-top-pill-heart{font-size:.55rem;color:var(--pk);flex-shrink:0;}
+
+  /* home avatar strip */
+  .home-avatar-strip{display:flex;align-items:center;justify-content:center;gap:1.2rem;margin-top:.65rem;padding-bottom:.15rem}
+  .home-avatar-block{display:flex;flex-direction:column;align-items:center;gap:.3rem}
+  .home-avatar{
+    width:52px;height:52px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.15rem;font-weight:700;position:relative;overflow:hidden;
+    flex-shrink:0;transition:transform .2s;
+  }
+  .home-avatar:active{transform:scale(.94)}
+  .home-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+  .home-avatar-me{
+    background:var(--kll);
+    border:2px solid rgba(200,85,58,0.25);
+    color:var(--k);
+    box-shadow:0 0 0 3px rgba(200,85,58,0.08);
+  }
+  .home-avatar-other{
+    background:#fce8f0;
+    border:2px solid rgba(212,96,122,0.25);
+    color:#d4607a;
+    box-shadow:0 0 0 3px rgba(212,96,122,0.08);
+  }
+  .home-avatar-initial{font-size:1.2rem;font-weight:700;line-height:1}
+  .home-avatar-name{font-size:.5rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .home-avatar-heart{display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:.55;}
+
+  /* section sub-tabs (reusable across all pages) */
+  /* .page-tab and .page-tab.active defined below in Phase 2 section */
+  /* page-tab-panel rules defined below in Phase 2 section */
 
   /* ── MAIN ── */
-  .main{margin-left:var(--sidebar-w);flex:1;padding:2.5rem 2.5rem 5rem;min-width:0;position:relative;z-index:1;scroll-behavior:smooth;overflow-y:auto;height:100%;-webkit-overflow-scrolling:touch;}
-  .page{display:none;animation:fadeUp .35s ease both}
-  .page.active{display:block}
+  /* body has definite height (px from --app-height JS). flex:1 + min-height:0 is all main needs. */
+  /* overflow:hidden removed — body's overflow:hidden clips everything; main's was blocking child scroll. */
+  .main{flex:1;min-height:0;padding:0;min-width:0;position:relative;z-index:1;display:flex;flex-direction:column;}
+  .page{display:none;animation:fadeUp .35s ease both;}
+  /* height:100% removed — conflicts with flex:1 in column direction, causing double-height */
+  .page.active{display:flex;flex-direction:column;flex:1;min-height:0;}
+  /* #page-home uses .page.active rules */
   .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);position:relative}
   .page-eyebrow{font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .page-title{font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:700;letter-spacing:-.025em;color:var(--text);line-height:1.3;overflow:visible}
   .page-title em{font-style:normal;background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;display:inline-block;padding-bottom:.35em;margin-bottom:-.35em;overflow:visible;padding-right:.1em}
   .page-corner-orn{display:none}
-  .section-heading{font-size:.48rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem;margin-top:.85rem;display:flex;align-items:center;gap:.5rem}
-  .section-heading::after{content:'';flex:1;height:1px;background:var(--border)}
+  .section-heading{font-size:.42rem;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--label-color);font-weight:700;
+    margin-bottom:.55rem;margin-top:1.1rem;
+    display:flex;align-items:center;justify-content:space-between;}
+  .section-heading:first-child{margin-top:.25rem;}
+  .section-heading::after{display:none}
+  .section-heading-line{display:flex;align-items:center;gap:.5rem;}
+  /* card section headings — inside card */
+  /* .card-section-label defined below */
   .orn-divider{display:none}
 
   /* ── CARDS ── */
@@ -510,7 +537,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   .form-save-btn{margin-left:auto;background:linear-gradient(135deg,var(--k),var(--pk));color:white;border:none;border-radius:9px;padding:.36rem 1.05rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;transition:opacity .2s}
   .form-save-btn:hover{opacity:.88}
   .empty{color:var(--muted);font-size:.85rem;padding:.9rem 0;font-style:italic}
-  footer{margin-top:3.5rem;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(232,98,42,0.2);text-align:center}
+  footer{font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(232,98,42,0.15);text-align:center;padding:.4rem 0 .2rem;margin-top:.35rem;}
   .year-marker{font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;color:var(--kl);opacity:.7;margin-bottom:.65rem}
 
 
@@ -528,7 +555,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   .home-map-card{margin-bottom:0!important}
   .home-cd-card{padding:1.1rem 1.2rem;display:flex;flex-direction:column;justify-content:space-between}
 
-  .home-dist-strip{display:flex;align-items:center;gap:.75rem;padding:.9rem 1.2rem}
+  .home-dist-strip{display:flex;align-items:center;gap:.6rem;padding:.55rem .9rem}
   .home-dist-city{flex-shrink:0;min-width:44px;max-width:90px;overflow:hidden}
   .home-dist-city-name{font-size:.8rem;font-weight:600;color:var(--text);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .home-dist-city-sub{font-size:.46rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:.1rem}
@@ -544,12 +571,13 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 
   /* ── Pulse card ─────────────────────────────────────────── */
-  .pulse-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:.85rem;}
+  .pulse-card{background:var(--surface);border-radius:16px;border:1px solid var(--border);overflow:hidden;margin-bottom:.65rem;}
+  /* .pulse-card-header — label now outside card */
   .pulse-recv-strip{background:rgba(232,98,42,0.06);border-bottom:1px solid rgba(232,98,42,0.12);padding:.48rem .9rem;display:flex;align-items:center;gap:.55rem;}
   .pulse-recv-dot{width:7px;height:7px;border-radius:50%;background:var(--k);flex-shrink:0;animation:hb 1.8s ease infinite;}
   .pulse-recv-text{font-size:.68rem;color:var(--k);font-weight:500;flex:1;}
   .pulse-recv-ago{font-size:.6rem;color:var(--muted);}
-  .pulse-send-row{padding:.7rem .9rem;display:flex;align-items:center;gap:.8rem;cursor:pointer;}
+  /* .pulse-send-row defined below */
   .pulse-heart-wrap{position:relative;width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
   .pulse-history-footer{padding:.38rem .9rem;border-top:1px solid var(--border);font-size:.58rem;color:var(--muted);display:flex;justify-content:space-between;cursor:pointer;transition:color .15s;}
   .pulse-history-footer:hover{color:var(--k);}
@@ -561,30 +589,48 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   .pulse-send-pill-btn{position:relative;width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 
   
-  /* ── SESSION 6 AUTH SCREENS ── */
-  .auth-screen-card{position:relative;width:100%;max-width:400px;background:rgba(255,255,255,0.6);
-    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-    border:1px solid rgba(255,255,255,0.85);border-radius:24px;
-    padding:2.25rem 2rem;box-shadow:0 12px 50px rgba(232,98,42,0.12);
-    animation:fadeUp .5s ease both;}
-  .auth-field{width:100%;border:1px solid var(--border);border-radius:12px;
+  /* ── AUTH SCREENS ── */
+  .auth-screen-card{
+    position:relative;width:100%;max-width:400px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:2rem 1.75rem 1.75rem;
+    box-shadow:0 2px 24px rgba(200,85,58,0.08);
+    animation:fadeUp .5s ease both;
+  }
+  /* Warm top line like cards in the app */
+  .auth-screen-card::before{
+    content:'';position:absolute;top:0;left:1.5rem;right:1.5rem;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(247,197,168,0.6),transparent);
+    border-radius:1px;
+  }
+  .auth-field{
+    width:100%;border:1px solid var(--border);border-radius:10px;
     padding:.72rem 1rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;
-    color:var(--text);background:rgba(255,255,255,0.7);outline:none;
-    transition:border-color .2s;margin-bottom:.65rem;display:block;box-sizing:border-box;}
-  .auth-field:focus{border-color:var(--k)}
-  .auth-label{font-size:.48rem;letter-spacing:.18em;text-transform:uppercase;
-    color:var(--muted);display:block;margin-bottom:.3rem;}
-  .auth-submit-btn{width:100%;background:linear-gradient(135deg,var(--k),var(--pk));
-    color:white;border:none;border-radius:13px;padding:.85rem 1.5rem;
+    color:var(--text);background:var(--bg);outline:none;
+    transition:border-color .2s;margin-bottom:.6rem;display:block;box-sizing:border-box;
+  }
+  .auth-field:focus{border-color:var(--k);background:var(--surface);}
+  .auth-label{
+    font-size:.44rem;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--muted);display:block;margin-bottom:.3rem;
+  }
+  .auth-submit-btn{
+    width:100%;background:linear-gradient(135deg,var(--k),var(--pk));
+    color:white;border:none;border-radius:12px;padding:.82rem 1.5rem;
     font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;font-weight:600;
-    cursor:pointer;transition:opacity .2s;margin-bottom:.5rem;display:block;}
+    cursor:pointer;transition:opacity .2s;margin-bottom:.5rem;display:block;
+    box-shadow:0 4px 16px rgba(200,85,58,0.25);
+  }
   .auth-submit-btn:hover{opacity:.88}
-  .auth-switch-btn{background:none;border:none;font-family:'Plus Jakarta Sans',sans-serif;
+  .auth-switch-btn{
+    background:none;border:none;font-family:'Plus Jakarta Sans',sans-serif;
     font-size:.65rem;color:var(--muted);cursor:pointer;text-align:center;width:100%;
-    padding:.35rem 0;}
+    padding:.35rem 0;
+  }
   .auth-switch-btn strong{color:var(--k)}
-  .auth-field-error{font-size:.62rem;color:#b04040;margin-bottom:.5rem;
-    min-height:.9rem;display:block;}
+  .auth-field-error{font-size:.62rem;color:#b04040;margin-bottom:.5rem;min-height:.9rem;display:block;}
   .invite-code-box{font-size:2.4rem;font-weight:700;letter-spacing:.35em;
     text-align:center;padding:1rem;background:var(--kll);border-radius:16px;
     color:var(--k);font-family:'Plus Jakarta Sans',sans-serif;margin-bottom:.5rem;}
@@ -601,11 +647,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   @keyframes spin{to{transform:rotate(360deg)}}
 
   @media(max-width:680px){
-    .sidebar{transform:translateX(-100%);padding-top:env(safe-area-inset-top)}
-    .sidebar.open{transform:translateX(0);box-shadow:4px 0 30px rgba(232,98,42,.15);z-index:400;background:rgba(255,255,255,0.78);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);}
-    .sidebar-overlay.open{display:block}
-    .mobile-header{display:flex}
-    .main{margin-left:0;padding:calc(4rem + env(safe-area-inset-top)) 1.1rem calc(4rem + env(safe-area-inset-bottom));overflow-y:auto;height:100%;}
+
     #map{height:160px;}
     .grid-2{grid-template-columns:1fr}
     .home-stats-row{grid-template-columns:1fr}
@@ -661,7 +703,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
   .timeline-end{position:relative;padding-left:1.5rem;margin-top:.35rem;font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);opacity:.55;display:flex;align-items:center;gap:.5rem}
   .timeline-end::before{content:'';position:absolute;left:3px;top:50%;transform:translateY(-50%);width:2px;height:10px;background:linear-gradient(180deg,rgba(232,98,42,0.2),transparent);border-radius:2px}
-  2),transparent);border-radius:2px}
   /* ── Settings ───────────────────────────────────────────── */
   .settings-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);padding:.85rem 1rem .75rem;margin-bottom:.6rem;}
   .settings-row{margin-bottom:.5rem;}
@@ -675,12 +716,16 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   .settings-success{font-size:.62rem;color:var(--green,#2a9d5c);margin:.3rem 0 0;display:none;}
   .settings-error{font-size:.62rem;color:var(--error,#d63031);margin:.3rem 0 0;}
   /* ── Home tabs ─────────────────────────────────────────── */
-  .home-tabs{display:flex;background:var(--surface);border-radius:12px;border:1px solid var(--border);overflow:hidden;margin-top:.4rem;margin-bottom:1.1rem;}
-  .home-tab{flex:1;padding:.42rem .5rem;font-size:.6rem;font-family:'Plus Jakarta Sans',sans-serif;text-align:center;color:var(--muted);border:none;background:none;cursor:pointer;transition:all .2s;letter-spacing:.04em;border-right:1px solid var(--border);}
-  .home-tab:last-child{border-right:none;}
-  .home-tab.active{background:linear-gradient(135deg,rgba(232,98,42,0.12),rgba(212,83,126,0.08));color:var(--k);font-weight:600;}
+  .home-tabs{display:flex;background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:.75rem;flex-shrink:0;z-index:50;box-shadow:0 1px 0 rgba(200,85,58,0.07);}
+  .home-tab{flex:1;padding:.58rem .4rem;font-size:.68rem;font-family:'Plus Jakarta Sans',sans-serif;
+    text-align:center;color:var(--muted);border:none;background:none;
+    cursor:pointer;transition:all .18s;font-weight:500;letter-spacing:.01em;}
+  .home-tab.active{color:var(--k);font-weight:700;background:var(--kll);}
   .home-tab-panel{display:none;}
-  .home-tab-panel.active{display:block;}
+  .home-tab-panel.active{display:flex;flex-direction:column;flex:1 1 0;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;padding-bottom:calc(3.5rem + env(safe-area-inset-bottom,0px));}
+  /* home-greeting-row kept for backward compat but hidden */
+  .home-greeting-row{display:none}
+  .home-days-badge{display:none}
   /* Notes preview on Us tab */
   .home-note-preview{background:var(--surface);border-radius:12px;border:1px solid var(--border);padding:.75rem 1rem;margin-bottom:.65rem;}
   .home-note-preview-item{padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.72rem;color:var(--text);}
@@ -702,9 +747,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   .moments-link-sub{font-size:.58rem;color:var(--muted);margin-top:.1rem;}
   .moments-link-arrow{font-size:1rem;color:var(--muted);}
   /* ── Status + Mood ──────────────────────────────────────── */
-  .status-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:.85rem;}
-  .status-card-header{display:flex;align-items:center;justify-content:space-between;padding:.6rem .9rem;border-bottom:1px solid var(--border);}
-  .status-card-label{font-size:.48rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+  .status-card{background:var(--surface);border-radius:16px;border:1px solid var(--border);overflow:hidden;margin-bottom:.65rem;}
+  .status-card-header{display:flex;align-items:center;justify-content:flex-end;padding:.45rem .9rem .2rem;}
+  .status-card-label{font-size:.42rem;letter-spacing:.2em;text-transform:uppercase;color:var(--label-color);font-weight:600;}
   .status-update-btn{font-size:.62rem;color:var(--k);background:none;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;}
   .status-person-row{display:flex;align-items:center;gap:.75rem;padding:.65rem .9rem;border-bottom:1px solid var(--border);}
   .status-person-row:last-child{border-bottom:none;}
@@ -727,7 +772,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   /* Bottom sheet */
   .status-sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:800;display:none;align-items:flex-end;justify-content:center;}
   .status-sheet-overlay.open{display:flex;}
-  .status-sheet{background:var(--bg);border-radius:20px 20px 0 0;width:100%;max-width:600px;padding:0 0 env(safe-area-inset-bottom,12px);max-height:85vh;overflow-y:auto;}
+  .status-sheet{background:var(--bg);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:0 0 calc(env(safe-area-inset-bottom,0px) + 1.5rem);max-height:92vh;overflow-y:auto;}
   .status-sheet-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 8px;}
   .status-sheet-title{font-size:.85rem;font-weight:600;color:var(--text);padding:.5rem 1.1rem .75rem;border-bottom:1px solid var(--border);}
   .status-sheet-section{font-size:.48rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:.75rem 1.1rem .4rem;}
@@ -744,7 +789,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   .status-mood-pill.selected{background:rgba(232,98,42,0.1);border-color:var(--k);color:var(--k);}
   .status-save-btn{margin:.25rem 1.1rem .75rem;width:calc(100% - 2.2rem);padding:.6rem;background:linear-gradient(135deg,var(--k),var(--pk));color:white;border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;}
   /* ── Memory Jar ─────────────────────────────────────────── */
-  .mj-preview-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:.85rem;}
+  .mj-preview-card{background:var(--surface);border-radius:16px;border:1px solid var(--border);overflow:hidden;margin-bottom:.75rem;}
   .mj-preview-header{display:flex;align-items:center;justify-content:space-between;padding:.6rem .9rem;border-bottom:1px solid var(--border);}
   .mj-preview-label{font-size:.48rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
   .mj-streak{font-size:.62rem;font-weight:600;color:var(--k);}
@@ -756,7 +801,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   .mj-entry-text{font-size:.72rem;color:var(--text);line-height:1.45;flex:1;}
   .mj-entry-meta{font-size:.55rem;color:var(--muted);margin-top:.18rem;}
   .mj-empty-entry{font-size:.68rem;color:var(--muted);font-style:italic;}
-  .mj-input-row{padding:.55rem .9rem;border-top:1px solid var(--border);display:flex;gap:.55rem;align-items:center;}
+  .mj-input-row{padding:.45rem .9rem .5rem;border-top:1px solid var(--border);display:flex;gap:.55rem;align-items:center;justify-content:center;}
+  .mj-add-btn{background:none;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;
+    font-size:.65rem;color:var(--k);font-weight:600;padding:.2rem .5rem;
+    letter-spacing:.02em;transition:opacity .15s;}
+  .mj-add-btn:hover{opacity:.7;}
   .mj-input{flex:1;border:none;background:rgba(0,0,0,0.03);border-radius:8px;padding:.45rem .7rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.72rem;color:var(--text);outline:none;resize:none;}
   .mj-input::placeholder{color:var(--muted);}
   .mj-send-btn{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--k),var(--pk));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .2s;}
@@ -792,10 +841,13 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   .time-input{border:1px solid var(--border);border-radius:8px;padding:.25rem .5rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.72rem;color:var(--text);background:var(--surface);outline:none;transition:border-color .2s;width:auto;}
   .time-input:focus{border-color:var(--k);}
   /* ── Date night planner ───────────────────────────────────── */
-  .dn-planner{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:.85rem;display:none;}
+  .dn-planner{display:none;margin-bottom:.65rem;}
   .dn-planner.visible{display:block;}
-  .dn-planner-header{display:flex;align-items:center;justify-content:space-between;padding:.6rem .9rem;border-bottom:1px solid var(--border);}
-  .dn-planner-label{font-size:.48rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+  .dn-planner-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;}
+  .dn-planner-heading .section-heading{margin:0;flex:1;}
+  .dn-planner .dn-planner-header{display:none;}
+  .dn-planner-label{font-size:.42rem;letter-spacing:.2em;text-transform:uppercase;color:var(--label-color);font-weight:700;}
+  .dn-planner-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;}
   .dn-planner-date{font-size:.62rem;color:var(--k);font-weight:500;}
   .dn-planner-field{display:flex;align-items:center;gap:.65rem;padding:.6rem .9rem;border-bottom:1px solid var(--border);}
   .dn-planner-field:last-of-type{border-bottom:none;}
@@ -804,9 +856,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   .dn-field-input{width:100%;border:none;background:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.75rem;color:var(--text);outline:none;padding:0;}
   .dn-field-input::placeholder{color:var(--muted);}
   /* ── Today's plan ─────────────────────────────────────────── */
-  .todays-plan{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:.85rem;display:none;}
+  .todays-plan{display:none;margin-bottom:.65rem;}
   .todays-plan.visible{display:block;}
-  .todays-plan-header{display:flex;align-items:center;justify-content:space-between;padding:.6rem .9rem;border-bottom:1px solid var(--border);}
+  .todays-plan-heading{display:none;}
+  .dn-planner-heading{display:none;}
+  .tp-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;}
+  .todays-plan-header{display:none;}
   .todays-plan-label{font-size:.48rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
   .tp-entry-row{display:flex;gap:.65rem;padding:.6rem .9rem;border-bottom:1px solid var(--border);align-items:flex-start;}
   .tp-entry-row:last-of-type{border-bottom:none;}
@@ -820,7 +875,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   /* ── Together mode sheets (dn + tp + mj preview) ──────────── */
   .together-sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:800;display:none;align-items:flex-end;justify-content:center;}
   .together-sheet-overlay.open{display:flex;}
-  .together-sheet{background:var(--bg);border-radius:20px 20px 0 0;width:100%;max-width:600px;padding:0 0 env(safe-area-inset-bottom,12px);max-height:85vh;overflow-y:auto;touch-action:none;}
+  .together-sheet{background:var(--bg);border-radius:24px 24px 0 0;width:100%;max-width:600px;padding:0 0 calc(env(safe-area-inset-bottom,0px) + 1rem);max-height:90vh;overflow-y:auto;touch-action:none;}
   .together-sheet-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 8px;cursor:grab;}
   .together-sheet-title{font-size:.85rem;font-weight:600;color:var(--text);padding:.5rem 1.1rem .75rem;border-bottom:1px solid var(--border);}
   .together-sheet-body{padding:.75rem 1.1rem 0;}
@@ -873,6 +928,186 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     border-radius:20px;padding:.17rem .55rem;font-size:.58rem;letter-spacing:.06em;
     color:var(--k);font-weight:500;transition:background .15s;}
   .mode-pill:hover{background:rgba(232,98,42,0.14);}
+  /* ── METRIC CHIPS (Home Now tab) ── */
+  .home-metric-row{display:flex;gap:.5rem;margin-top:.7rem;margin-bottom:.1rem}
+  /* .home-metric-chip/.home-metric-label/.home-metric-value defined below */
+
+  /* ── SHELL PAGE HEADERS (Memories / Together / Account) ── */
+  .shell-page-header{
+    padding:.65rem .95rem .55rem;
+    flex-shrink:0;
+    background:transparent;
+    border-bottom:1px solid rgba(200,85,58,0.07);
+    margin-bottom:0;
+  }
+  .shell-page-title{font-size:1.25rem;font-weight:700;letter-spacing:-.02em;color:var(--text);line-height:1.2;}
+
+  /* ── APP FOOTER ── */
+  #app-footer, .app-footer-inner{flex-shrink:0;text-align:center;font-size:.46rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(200,85,58,0.28);padding:.55rem 0 calc(.3rem + env(safe-area-inset-bottom,0px));}
+
+  /* Legacy pages inside tab panels — always visible, no extra padding */
+  .page-tab-panel .page { display: block !important; padding: 0 !important; animation: none; }
+  /* Hide page-header in all panels — shell header above provides the title context */
+  .page-tab-panel .page .page-header { display: none; }
+
+  /* Sub-tab bar — matches home-tabs: white card, rounded, warm border, slim shadow */
+  .page-tabs{
+    display:flex;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    overflow:hidden;
+    flex-shrink:0;
+    margin:.4rem .95rem .75rem;
+    box-shadow:0 1px 0 rgba(200,85,58,0.07);
+    isolation:isolate;
+  }
+  .page-tabs::-webkit-scrollbar{display:none}
+  .page-tab{
+    flex:1;padding:.58rem .4rem;
+    font-size:.66rem;font-weight:500;letter-spacing:.01em;text-align:center;
+    color:var(--muted);background:none;
+    border:none;white-space:nowrap;
+    cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;
+    transition:all .18s;
+  }
+  .page-tab.active{
+    color:var(--k);font-weight:700;background:var(--kll);
+  }
+
+  /* Tab panels — flex:1 1 0 gives Chrome a definite computed height to scroll against */
+  .page-tab-panel{display:none;}
+  .page-tab-panel.active{display:flex;flex-direction:column;flex:1 1 0;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;padding:.75rem .95rem calc(3.5rem + env(safe-area-inset-bottom,0px));}
+
+  .home-map-card { display: none !important; }
+  #map { display: none !important; }
+  .home-top-row{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;margin-bottom:.3rem;}
+  .home-top-left{flex:1;min-width:0;overflow:visible;}
+  .home-top-right{flex-shrink:0;text-align:right;}
+  .home-days-badge-new{display:flex;flex-direction:column;align-items:flex-end;}
+  .home-days-lbl-new{font-size:.4rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:600;}
+  .home-days-num-new{font-size:2.2rem;font-weight:700;letter-spacing:-.04em;line-height:1;
+    background:linear-gradient(135deg,var(--k),var(--pk));-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
+    display:block;overflow:visible;}
+  .home-days-since-new{font-size:.42rem;color:var(--muted);opacity:.7;margin-top:.1rem;}
+
+  /* Account panel has no tabs bar — give it equivalent top breathing room */
+  #account-panel-profile { padding-top: .75rem; }
+
+  /* Home page — padding on sides, tab panels handle bottom padding */
+  #page-home { padding: 0 .95rem; }
+  /* Full-bleed border on home-top-strip despite page side-padding */
+  .home-top-strip {
+    padding:.55rem 0 .4rem;
+    border-bottom:1px solid rgba(200,85,58,0.07);
+    margin-bottom:.6rem;
+    margin-left:-.95rem;
+    margin-right:-.95rem;
+    padding-left:.95rem;
+    padding-right:.95rem;
+    flex-shrink:0;
+  }
+
+  /* Milestone counter subtle */
+  .milestone-counter { font-size: .62rem; color: var(--muted); margin-bottom: .75rem; }
+
+  /* Remove milestone-add-btn float compensation that was for old header */
+  .milestone-add-btn { flex-shrink: 0; }
+
+  /* ── LDR NOW CARD (clocks + distance + weather) ── */
+  .ldr-now-card{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:16px;overflow:hidden;margin-bottom:.7rem;
+    padding:.8rem .85rem .85rem;
+  }
+  .ldr-now-card .home-dist-strip{ display:none; } /* distance shown differently */
+  /* .ldr-section-label removed — using .section-heading instead */
+  .ldr-clocks-row{
+    display:grid;grid-template-columns:1fr auto 1fr;
+    align-items:center;gap:.5rem;
+  }
+  .ldr-clock-block{
+    background:rgba(200,85,58,0.05);border-radius:12px;
+    padding:.65rem .7rem;min-width:0;
+  }
+  .ldr-clock-block.right{ text-align:right; }
+  .ldr-clock-name-row{display:flex;align-items:center;gap:.3rem;margin-bottom:.22rem;}
+  .ldr-clock-block.right .ldr-clock-name-row{justify-content:flex-end;}
+  .ldr-clock-name{font-size:.5rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
+  /* .ldr-clock-online removed */
+  .ldr-clock-time{
+    font-size:1.6rem;font-weight:300;color:var(--text);
+    line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;
+    display:block;margin-bottom:.18rem;
+  }
+  .ldr-clock-location{font-size:.56rem;color:var(--muted);display:block;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .ldr-clock-sub{font-size:.5rem;color:var(--muted);opacity:.7;margin-top:.15rem;display:block;}
+  .ldr-dist-center{
+    display:flex;flex-direction:column;align-items:center;gap:.18rem;
+    flex-shrink:0;padding:0 .1rem;
+  }
+  .ldr-dist-km{font-size:.72rem;font-weight:700;color:var(--k);letter-spacing:-.01em;white-space:nowrap;}
+  .ldr-dist-apart{font-size:.38rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:500;}
+  .ldr-dist-plane{font-size:.9rem;opacity:.6;}
+  .ldr-weather{display:flex;align-items:center;gap:.22rem;margin-top:.3rem}
+  .ldr-clock-block.right .ldr-weather{justify-content:flex-end;}
+  .ldr-weather-icon{font-size:.78rem;line-height:1}
+  .ldr-weather-temp{font-size:.7rem;font-weight:500;color:var(--text)}
+  .ldr-weather-desc{font-size:.48rem;color:var(--muted)}
+  .ldr-weather-details{font-size:.44rem;color:var(--muted);opacity:.65;margin-top:.08rem}
+  .sleep-indicator{font-size:.48rem;color:var(--muted);opacity:.7;margin-top:.12rem;display:block;}
+
+  /* ── PHASE 4 GLOBAL POLISH ── */
+
+
+  /* .main padding set in base rule above */
+
+  /* Cards — clean, no shadow, warm border */
+  .card { border-radius: 16px; box-shadow: none; border: 1px solid var(--border); }
+  .card::before { display: none; }
+  .notes-compose { border-radius: 16px; box-shadow: none; border: 1px solid var(--border); }
+  .notes-compose::before { display: none; }
+  .note-card { border-radius: 12px; box-shadow: none; border: 1px solid var(--border); }
+  .note-card::before { display: none; }
+  /* .mj-preview-card border-radius in base rule */
+  .home-cd-card { border-radius: 16px; border: 1px solid var(--border); }
+  .m-card { border-radius: 16px; box-shadow: none; border: 1px solid var(--border); }
+  .m-card::before { display: none; }
+  .bl-item-card { border-radius: 12px; box-shadow: none; }
+  .settings-group { border-radius: 14px; overflow: hidden; }
+  /* .home-tab-panel padding reset in active rule */
+  .grid-2 { gap: .6rem; }
+  /* .together-sheet border-radius in base rule */
+
+  /* ── CARD SECTION LABELS ── */
+  .card-section-label{
+    font-size:.42rem;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--label-color);font-weight:600;display:block;
+    margin-bottom:.45rem;
+  }
+  /* .status-card-header defined above */
+  .pulse-send-row{padding:.4rem .9rem .65rem;display:flex;align-items:center;gap:.8rem;cursor:pointer;}
+
+  /* ── HOME GREETING REFINEMENT ── */
+  .home-top-date{font-size:.42rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.1rem;font-weight:500;}
+  .home-top-greeting{font-size:1.25rem;font-weight:700;letter-spacing:-.02em;color:var(--text);line-height:1.3;margin-bottom:.3rem;overflow:visible;padding-bottom:.15em;}
+  .home-top-greeting em{font-style:italic;font-weight:400;color:var(--k);}
+
+  /* ── METRIC CHIPS — editorial ── */
+  .home-metric-chip{
+    flex:1;background:var(--surface);border:1px solid var(--border);
+    border-radius:14px;padding:.6rem .5rem .55rem;text-align:center;
+    display:flex;flex-direction:column;align-items:center;gap:.12rem;
+  }
+  .home-metric-icon{font-size:.85rem;color:var(--k);opacity:.8;line-height:1;display:block;margin-bottom:.05rem;}
+  .home-metric-value{font-size:.95rem;font-weight:700;color:var(--text);letter-spacing:-.02em;line-height:1;display:block;}
+  .home-metric-label{font-size:.38rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;display:block;}
+
+  /* ── SECTION HEADING with see-all link ── */
+  .section-heading-see-all{font-size:.56rem;color:var(--k);font-weight:500;background:none;border:none;cursor:pointer;font-family:inherit;letter-spacing:.01em;}
+
   </style>
 </head>
 <body>
@@ -960,8 +1195,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
     <label class="auth-label">Your first name</label>
     <input type="text" class="auth-field" id="onboard-name" placeholder="e.g. Freddy" autocomplete="given-name"/>
-    <label class="auth-label">Your city</label>
-    <input type="text" class="auth-field" id="onboard-city" placeholder="e.g. Bonn, Germany" autocomplete="address-level2"/>
     <p class="auth-field-error" id="onboard-error"></p>
     <button class="auth-submit-btn" onclick="doOnboarding()">Continue</button>
   </div>
@@ -1058,44 +1291,25 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 </div>
 
 <!-- Sidebar overlay + hamburger -->
-<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
-<div class="mobile-header" id="mobile-header">
-  <button class="hamburger" id="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
-  <p class="mobile-header-title" id="mobile-header-couple-name">Snug</p>
-  <div style="width:26px;flex-shrink:0;"></div>
-</div>
-
-<!-- Sidebar -->
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-logo">
-    <p class="sidebar-eyebrow">your little snug</p>
-    <p class="sidebar-title" id="sidebar-couple-name">Snug</p>
-    <svg class="sidebar-ornament" width="90" height="10" viewBox="0 0 90 10"><line x1="0" y1="5" x2="34" y2="5" stroke="#f0956a" stroke-width=".6"/><circle cx="45" cy="5" r="2.5" fill="none" stroke="#f0956a" stroke-width=".6"/><circle cx="45" cy="5" r="1" fill="#f0956a"/><line x1="56" y1="5" x2="90" y2="5" stroke="#f0956a" stroke-width=".6"/></svg>
-  </div>
-  <div class="mode-pill" id="sidebar-mode-pill" onclick="window.showPage&&window.showPage('settings')" style="cursor:pointer;">📍 Long distance</div><button id="register-bio-btn" onclick="registerThisDevice()" style="display:none;margin:.5rem 1.4rem 0;background:none;border:1px solid rgba(232,98,42,0.2);border-radius:8px;padding:.3rem .75rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);cursor:pointer;width:calc(100% - 2.8rem);text-align:left;transition:all .2s;" onmouseover="this.style.borderColor='rgba(232,98,42,0.5)';this.style.color='var(--k)'" onmouseout="this.style.borderColor='rgba(232,98,42,0.2)';this.style.color='var(--muted)'">⬡ Register fingerprint</button>
-  <nav class="sidebar-nav">
-    <p class="nav-section-label">Navigate</p>
-    <button class="nav-item active" id="nav-home" onclick="showPage('home')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M2 6.5L8 2l6 4.5V14H2V6.5z"/></svg>Home</button>
-    <button class="nav-item" id="nav-milestones" onclick="showPage('milestones')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="8" cy="8" r="2"/><path d="M8 1v3M8 12v3M1 8h3M12 8h3"/><path d="M3.5 3.5l2 2M10.5 10.5l2 2M3.5 12.5l2-2M10.5 5.5l2-2"/></svg>Milestones</button>
-    <button class="nav-item" id="nav-notes" onclick="showPage('notes')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 2h10v9l-3 3H3V2z"/><path d="M10 11v3M10 11h3"/><line x1="5" y1="6" x2="11" y2="6"/><line x1="5" y1="9" x2="9" y2="9"/></svg>Notes</button>
-    <button class="nav-item" id="nav-memory" onclick="showPage('memory')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 2C5 2 3 4 3 7c0 3.5 5 7 5 7s5-3.5 5-7c0-3-2-5-5-5z"/><path d="M6 7h4M8 5v4"/></svg>Memory jar</button>
-    <button class="nav-item" id="nav-bucket" onclick="showPage('bucket')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2.5 6h4z"/></svg>Bucket list</button>
-    <button class="nav-item" id="nav-places" onclick="showPage('places')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 1a5 5 0 015 5c0 3.5-5 9-5 9S3 9.5 3 6a5 5 0 015-5z"/><circle cx="8" cy="6" r="1.8"/></svg>Places</button>
-    <button class="nav-item" id="nav-letter" onclick="showPage('letter')"><svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M2 6l6 4 6-4"/></svg>Letter</button>
-  </nav>
-  <div class="sidebar-footer">
-    <button id="nav-settings" onclick="showPage('settings')" style="display:block;width:100%;text-align:left;background:none;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);cursor:pointer;padding:.5rem 0;opacity:.6;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.6">Settings</button>
-    <button onclick="window.doSignOut()" style="display:block;width:100%;text-align:left;background:none;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);cursor:pointer;padding:.5rem 0;margin-bottom:.75rem;opacity:.6;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.6">Sign out</button>
-    <p class="sidebar-cd-label">Next meetup</p>
-    <div class="sidebar-cd-row">
-      <div><span class="sidebar-cd-num" id="scd-d">--</span><span class="sidebar-cd-lbl">d</span></div>
-      <div><span class="sidebar-cd-num" id="scd-h">--</span><span class="sidebar-cd-lbl">h</span></div>
-      <div><span class="sidebar-cd-num" id="scd-m">--</span><span class="sidebar-cd-lbl">m</span></div>
-      <div><span class="sidebar-cd-num" id="scd-s">--</span><span class="sidebar-cd-lbl">s</span></div>
-    </div>
-    <p class="sidebar-cd-caption" id="scd-caption">—</p>
-  </div>
-</aside>
+<!-- Bottom Nav -->
+<nav class="bottom-nav" id="bottom-nav" style="display:none;">
+  <button class="bn-item active" id="nav-home" onclick="showPage('home')">
+    <svg class="bn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L10 3l7 6.5V18H14v-5H6v5H3V9.5z"/></svg>
+    <span class="bn-label">Home</span>
+  </button>
+  <button class="bn-item" id="nav-memories" onclick="showPage('memories')">
+    <svg class="bn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="14" height="12" rx="2"/><path d="M3 8h14"/><path d="M7 2v4M13 2v4"/></svg>
+    <span class="bn-label">Memories</span>
+  </button>
+  <button class="bn-item" id="nav-together" onclick="showPage('together')">
+    <svg class="bn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16.5C10 16.5 3.5 12 3.5 8a3.5 3.5 0 017 0 3.5 3.5 0 017 0c0 4-6.5 8.5-6.5 8.5z"/></svg>
+    <span class="bn-label">Together</span>
+  </button>
+  <button class="bn-item" id="nav-account" onclick="showPage('account')">
+    <svg class="bn-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="7" r="3"/><path d="M4 18c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+    <span class="bn-label">Account</span>
+  </button>
+</nav>
 
 <!-- Main -->
 <main class="main" id="main" style="display:none;">
@@ -1103,21 +1317,44 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   <!-- HOME -->
   <div class="page active" id="page-home">
 
-    <!-- ── GREETING ROW ── -->
-    <div class="home-greeting-row">
-      <div class="home-greeting-left">
-        <p class="page-eyebrow" id="home-date">—</p>
-        <h1 class="page-title" id="home-greeting">Good evening, <em>—</em></h1>
-
+    <!-- ── HOME TOP STRIP (always visible) ── -->
+    <div class="home-top-strip">
+      <!-- Row: greeting left, days counter right -->
+      <div class="home-top-row">
+        <div class="home-top-left">
+          <p class="home-top-date" id="home-date">—</p>
+          <h1 class="home-top-greeting" id="home-greeting">Good evening, <em>—</em></h1>
+        </div>
+        <div class="home-top-right">
+          <div class="home-days-badge-new">
+            <span class="home-days-lbl-new">Together</span>
+            <span class="home-days-num-new" id="days-together">—</span>
+            <span class="home-days-lbl-new">days</span>
+            <span class="home-days-since-new">since <span id="couple-since-date">—</span></span>
+          </div>
+        </div>
       </div>
-      <!-- Days together badge top-right -->
-      <div class="home-days-badge">
-        <p class="home-days-lbl">Together</p>
-        <p class="home-days-num" id="days-together">—</p>
-        <p class="home-days-lbl">days</p>
-        <p class="home-days-since">since <span id="couple-since-date">—</span></p>
+      <!-- Avatar strip -->
+      <div class="home-avatar-strip">
+        <div class="home-avatar-block">
+          <div class="home-avatar home-avatar-me" id="home-avatar-me">
+            <span class="home-avatar-initial" id="home-avatar-me-initial">—</span>
+          </div>
+          <span class="home-avatar-name" id="home-avatar-me-name">—</span>
+        </div>
+        <div class="home-avatar-heart">
+          <svg width="16" height="14" viewBox="0 0 20 18" fill="none"><path d="M10 16C10 16 2 10.5 2 5.5C2 3.3 3.8 1.5 6 1.5C7.6 1.5 9 2.4 10 3.7C11 2.4 12.4 1.5 14 1.5C16.2 1.5 18 3.3 18 5.5C18 10.5 10 16 10 16Z" fill="var(--kll)" stroke="rgba(200,85,58,0.25)" stroke-width="1.2"/></svg>
+        </div>
+        <div class="home-avatar-block">
+          <div class="home-avatar home-avatar-other" id="home-avatar-other">
+            <span class="home-avatar-initial" id="home-avatar-other-initial">—</span>
+          </div>
+          <span class="home-avatar-name" id="home-avatar-other-name">—</span>
+        </div>
       </div>
     </div>
+    <!-- Hidden compat elements for JS that references days-together in pill -->
+    <span id="home-days-pill" style="display:none;"></span>
 
     <!-- ── HOME TABS ── -->
     <div class="home-tabs">
@@ -1130,6 +1367,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <div class="home-tab-panel active" id="panel-now">
 
       <!-- Pulse card -->
+      <p class="section-heading">Pulse</p>
       <div class="pulse-card" id="pulse-card">
         <div class="pulse-recv-strip" id="pulse-received-now" style="display:none;">
           <div class="pulse-recv-dot"></div>
@@ -1145,8 +1383,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
             </div>
           </div>
           <div style="flex:1;min-width:0;">
-            <p class="pulse-row-title">Send a pulse</p>
-            <p class="pulse-row-sub">Let <span id="pulse-other-name">—</span> know you're thinking of them</p>
+            <p class="pulse-row-title">Send <span id="pulse-other-name">—</span> a pulse</p>
+            <p class="pulse-row-sub">They'll feel a little heartbeat</p>
           </div>
           <span class="pulse-row-last" id="pulse-last-sent" style="display:none;"></span>
         </div>
@@ -1156,12 +1394,61 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         <div class="pulse-history" id="pulse-history-list"></div>
       </div>
 
-      <!-- Status + Mood card -->
-      <div class="status-card" id="status-card">
-        <div class="status-card-header">
-          <span class="status-card-label">What you're up to</span>
-          <button class="status-update-btn" onclick="openStatusSheet()">Update yours →</button>
+      <!-- LDR: Clocks + Distance + Weather (hidden in Together mode) -->
+      <div id="ldr-section-wrap">
+      <p class="section-heading">Right now</p>
+      <div class="ldr-now-card" id="ldr-now-card">
+        <!-- Hidden dist-strip elements for JS compat -->
+        <div id="home-dist-strip" style="display:none;">
+          <span id="home-dist-city-a"></span><span id="home-dist-name-a"></span>
+          <span id="home-dist-city-b"></span><span id="home-dist-name-b"></span>
         </div>
+        <div class="ldr-clocks-row">
+          <!-- My clock -->
+          <div class="ldr-clock-block">
+            <div class="ldr-clock-name-row">
+              <span class="ldr-clock-name" id="home-dist-name-a-label">—</span>
+            </div>
+            <span class="ldr-clock-time" id="my-time">--:--</span>
+            <span class="ldr-clock-location" id="my-city">—</span>
+            <span class="ldr-clock-sub" id="my-date">--</span>
+            <span id="sleep-my" class="sleep-indicator"></span>
+            <div class="ldr-weather">
+              <span id="my-weather-icon" class="ldr-weather-icon"></span>
+              <span id="my-weather-temp" class="ldr-weather-temp"></span>
+              <span id="my-weather-desc" class="ldr-weather-desc"></span>
+            </div>
+            <span class="ldr-weather-details" id="my-weather-details"></span>
+          </div>
+          <!-- Distance center -->
+          <div class="ldr-dist-center">
+            <span class="ldr-dist-plane">✈</span>
+            <span class="ldr-dist-km"><span id="distance-apart">—</span> km</span>
+            <span class="ldr-dist-apart">apart</span>
+          </div>
+          <!-- Partner clock -->
+          <div class="ldr-clock-block right">
+            <div class="ldr-clock-name-row">
+              <span class="ldr-clock-name" id="home-dist-name-b-label">—</span>
+            </div>
+            <span class="ldr-clock-time" id="other-time">--:--</span>
+            <span class="ldr-clock-location" id="other-city">—</span>
+            <span class="ldr-clock-sub" id="other-date">--</span>
+            <span id="sleep-other" class="sleep-indicator"></span>
+            <div class="ldr-weather" style="justify-content:flex-end;">
+              <span id="other-weather-icon" class="ldr-weather-icon"></span>
+              <span id="other-weather-temp" class="ldr-weather-temp"></span>
+              <span id="other-weather-desc" class="ldr-weather-desc"></span>
+            </div>
+            <span class="ldr-weather-details" id="other-weather-details"></span>
+          </div>
+        </div>
+      </div>
+      </div><!-- end ldr-section-wrap -->
+
+      <!-- Status + Mood card -->
+      <p class="section-heading">What you're up to</p>
+      <div class="status-card" id="status-card">
         <div class="status-person-row">
           <div class="status-accent status-accent-me"></div>
           <div class="status-emoji status-emoji-me" id="status-my-emoji">—</div>
@@ -1182,123 +1469,108 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
           </div>
           <div class="status-time" id="status-other-time"></div>
         </div>
-      </div>
-
-      <!-- Map + Weather -->
-      <p class="section-heading" style="margin-top:.1rem;">Where you are</p>
-      <div class="map-card home-map-card">
-        <div id="map"></div>
-        <div class="weather-row">
-          <div class="weather-cell">
-            <p class="weather-city" id="my-weather-city">—</p>
-            <div class="weather-main"><span id="my-weather-icon" style="font-size:1.3rem;line-height:1;">—</span><span class="weather-temp" id="my-weather-temp">—</span><span class="weather-desc" id="my-weather-desc"></span></div>
-            <p class="weather-details" id="my-weather-details"></p>
-          </div>
-          <div class="weather-cell">
-            <p class="weather-city" id="other-weather-city">—</p>
-            <div class="weather-main"><span id="other-weather-icon" style="font-size:1.3rem;line-height:1;">—</span><span class="weather-temp" id="other-weather-temp">—</span><span class="weather-desc" id="other-weather-desc"></span></div>
-            <p class="weather-details" id="other-weather-details"></p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Clocks -->
-      <p class="section-heading" style="margin-top:1.1rem;">Right now</p>
-      <div class="grid-2">
-        <div class="card mine"><p class="card-label"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg><span id="my-city">—</span></p><p class="clock-time" id="my-time">--:--:--</p><p class="clock-date" id="my-date">--</p><p id="sleep-my" class="sleep-indicator"></p></div>
-        <div class="card"><p class="card-label"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg><span id="other-city">—</span></p><p class="clock-time" id="other-time">--:--:--</p><p class="clock-date" id="other-date">--</p><p id="sleep-other" class="sleep-indicator"></p></div>
-      </div>
-
-      <!-- Distance strip -->
-      <div class="card home-dist-strip" id="home-dist-strip" style="margin-top:.85rem;">
-        <div class="home-dist-city">
-          <p class="home-dist-city-name" id="home-dist-city-a">—</p>
-          <p class="home-dist-city-sub" id="home-dist-name-a">—</p>
-        </div>
-        <div class="home-dist-center">
-          <div class="home-dist-line">
-            <div class="home-dist-line-seg"></div>
-            <svg class="home-dist-plane" width="14" height="14" viewBox="0 0 24 24" fill="var(--k)"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 00-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
-            <div class="home-dist-line-seg"></div>
-          </div>
-          <p class="home-dist-km"><span id="distance-apart">—</span> <span class="home-dist-km-unit">km</span></p>
-        </div>
-        <div class="home-dist-city" style="text-align:right;">
-          <p class="home-dist-city-name" id="home-dist-city-b">—</p>
-          <p class="home-dist-city-sub" id="home-dist-name-b">—</p>
+        <div class="mj-input-row">
+          <button class="mj-add-btn" onclick="openStatusSheet()">+ Update yours</button>
         </div>
       </div>
 
       <!-- Today's plan (Together mode only) — ABOVE date night plan -->
       <div class="todays-plan" id="todays-plan">
-        <div class="todays-plan-header">
-          <span class="todays-plan-label">Today's plan</span>
-          <button class="status-update-btn" onclick="openTpSheet()">Update plan →</button>
-        </div>
-        <div class="tp-display-row">
-          <div class="tp-avatar tp-avatar-me" id="tp-my-avatar">F</div>
-          <div class="tp-display-empty" id="tp-my-display">Nothing yet today</div>
-        </div>
-        <div class="tp-display-row">
-          <div class="tp-avatar tp-avatar-other" id="tp-other-avatar">S</div>
-          <div class="tp-display-empty" id="tp-other-text">Waiting for their plan…</div>
+        <p class="section-heading" style="margin-top:0;">Today's plan</p>
+        <div class="tp-card">
+          <div class="tp-display-row">
+            <div class="tp-avatar tp-avatar-me" id="tp-my-avatar">F</div>
+            <div class="tp-display-empty" id="tp-my-display">Nothing yet today</div>
+          </div>
+          <div class="tp-display-row">
+            <div class="tp-avatar tp-avatar-other" id="tp-other-avatar">S</div>
+            <div class="tp-display-empty" id="tp-other-text">Waiting for their plan…</div>
+          </div>
+          <div class="mj-input-row">
+            <button class="mj-add-btn" onclick="openTpSheet()">+ Update plan</button>
+          </div>
         </div>
       </div>
 
       <!-- Date night planner (Together mode only) -->
       <div class="dn-planner" id="dn-planner">
-        <div class="dn-planner-header">
-          <span class="dn-planner-label">Date night plan</span>
-          <div style="display:flex;align-items:center;gap:.75rem;">
-            <span class="dn-planner-date" id="dn-planner-date">—</span>
-            <button class="status-update-btn" onclick="openDnSheet()">Update →</button>
-          </div>
+        <div class="section-heading" style="margin-top:0;">
+          <span>Date night plan</span>
+          <span class="dn-planner-date" id="dn-planner-date" style="font-size:.58rem;color:var(--k);font-weight:500;"></span>
         </div>
-        <div class="dn-display-row">
-          <div class="dn-field-icon">📍</div>
-          <div style="flex:1;">
-            <div class="dn-field-label">Where</div>
-            <div class="dn-display-empty" id="dn-where-display">Not set yet</div>
+        <div class="dn-planner-card">
+          <div class="dn-display-row">
+            <div class="dn-field-icon">📍</div>
+            <div style="flex:1;">
+              <div class="dn-field-label">Where</div>
+              <div class="dn-display-empty" id="dn-where-display">Not set yet</div>
+            </div>
           </div>
-        </div>
-        <div class="dn-display-row">
-          <div class="dn-field-icon">✨</div>
-          <div style="flex:1;">
-            <div class="dn-field-label">What</div>
-            <div class="dn-display-empty" id="dn-what-display">Not set yet</div>
+          <div class="dn-display-row">
+            <div class="dn-field-icon">✨</div>
+            <div style="flex:1;">
+              <div class="dn-field-label">What</div>
+              <div class="dn-display-empty" id="dn-what-display">Not set yet</div>
+            </div>
           </div>
-        </div>
-        <div class="dn-display-row">
-          <div class="dn-field-icon">🎫</div>
-          <div style="flex:1;">
-            <div class="dn-field-label">Who's booking</div>
-            <div class="dn-display-empty" id="dn-who-display">Not set yet</div>
+          <div class="dn-display-row">
+            <div class="dn-field-icon">🎫</div>
+            <div style="flex:1;">
+              <div class="dn-field-label">Who's booking</div>
+              <div class="dn-display-empty" id="dn-who-display">Not set yet</div>
+            </div>
+          </div>
+          <div class="mj-input-row">
+            <button class="mj-add-btn" onclick="openDnSheet()">+ Update plan</button>
           </div>
         </div>
       </div>
 
-    </div><!-- end panel-now -->
 
-    <!-- ══ US TAB ══ -->
+      <!-- Metric chips -->
+      <div class="home-metric-row" id="home-metric-row">
+        <div class="home-metric-chip home-metric-chip-meetup">
+          <span class="home-metric-icon">✈</span>
+          <span class="home-metric-value" id="metric-meetup-val">—</span>
+          <span class="home-metric-label" id="metric-meetup-label">Next meetup</span>
+        </div>
+        <div class="home-metric-chip home-metric-chip-moments">
+          <span class="home-metric-icon">✦</span>
+          <span class="home-metric-value" id="metric-moments-val">—</span>
+          <span class="home-metric-label">Milestones</span>
+        </div>
+        <div class="home-metric-chip home-metric-chip-streak">
+          <span class="home-metric-icon">🔥</span>
+          <span class="home-metric-value" id="metric-streak-val">—</span>
+          <span class="home-metric-label">Streak</span>
+        </div>
+      </div>
+
+      <footer class="app-footer-inner">Snug</footer>
+    </div><!-- end panel-now -->
     <div class="home-tab-panel" id="panel-us">
 
       <!-- Countdown -->
-      <div class="card home-cd-card" style="margin-bottom:.85rem;">
+      <p class="section-heading" style="margin-top:.25rem;">Next meetup</p>
+      <div class="card home-cd-card" style="margin-bottom:.75rem;">
         <div>
-          <div class="stat-card-header" style="margin-bottom:.5rem;">
-            <p class="card-label" style="margin:0;" id="cd-card-label"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2.5 6h4z"/></svg>Next meetup</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap;">
+            <div class="cd-row" style="margin-top:0;"><div><span class="cd-num" id="cd-d">--</span><span class="cd-lbl">d</span></div><div><span class="cd-num" id="cd-h">--</span><span class="cd-lbl">h</span></div><div><span class="cd-num" id="cd-m">--</span><span class="cd-lbl">m</span></div><div><span class="cd-num" id="cd-s">--</span><span class="cd-lbl">s</span></div></div>
             <div class="datetime-row">
+              <p class="card-label" style="margin:0;display:none;" id="cd-card-label">Next meetup</p>
               <input type="date" id="meetup-date-input" class="meetup-input" onchange="updateMeetupDate(this.value)"/>
               <input type="time" id="meetup-time-input" class="time-input meetup-time-hidden" value="19:00" onchange="updateMeetupTime(this.value)" style="display:none;"/>
             </div>
           </div>
-          <div class="cd-row"><div><span class="cd-num" id="cd-d">--</span><span class="cd-lbl">d</span></div><div><span class="cd-num" id="cd-h">--</span><span class="cd-lbl">h</span></div><div><span class="cd-num" id="cd-m">--</span><span class="cd-lbl">m</span></div><div><span class="cd-num" id="cd-s">--</span><span class="cd-lbl">s</span></div></div>
         </div>
         <p class="cd-caption" id="cd-caption">—</p>
       </div>
 
       <!-- Memory Jar preview -->
-      <p class="section-heading">Memory jar</p>
+      <div class="section-heading">
+        <span>Memory jar</span>
+        <button class="section-heading-see-all" onclick="showPage('memory')">See all</button>
+      </div>
       <div class="mj-preview-card" id="mj-preview-card">
         <div class="mj-preview-header">
           <span class="mj-preview-label">Today's moments</span>
@@ -1317,26 +1589,33 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
           </div>
         </div>
         <div class="mj-input-row" id="mj-preview-input-row">
-          <button class="together-sheet-save" onclick="openMjSheet()" style="margin:.3rem 0 .1rem;padding:.55rem 1rem;font-size:.72rem;">Add today's moment →</button>
+          <button class="mj-add-btn" onclick="openMjSheet()">+ Add today's moment</button>
         </div>
       </div>
-      <button class="home-see-all" onclick="showPage('memory')" style="margin-bottom:.85rem;">See all memories →</button>
+
 
       <!-- Notes preview -->
-      <p class="section-heading" style="margin-top:.85rem;">Recent notes</p>
-      <div id="home-notes-preview" style="margin-bottom:.85rem;"><p class="empty">No notes yet.</p></div>
-      <button class="home-see-all" onclick="showPage('notes')">See all notes →</button>
+      <div class="section-heading" style="margin-top:.75rem;">
+        <span>Recent notes</span>
+        <button class="section-heading-see-all" onclick="showPage('notes')">See all</button>
+      </div>
+      <div id="home-notes-preview" style="margin-bottom:.85rem;display:flex;flex-direction:column;gap:.65rem;"><p class="empty">No notes yet.</p></div>
+
 
       <!-- Bucket list progress -->
-      <p class="section-heading" style="margin-top:.85rem;">Bucket list</p>
+      <div class="section-heading" style="margin-top:.75rem;">
+        <span>Bucket list</span>
+        <button class="section-heading-see-all" onclick="showPage('bucket')">See all</button>
+      </div>
       <div class="home-bl-progress">
         <div class="home-bl-stats">
           <div class="home-bl-stat"><span id="home-bl-done">0</span> done · <span id="home-bl-total">0</span> total</div>
-          <button class="home-see-all" style="margin:0;" onclick="showPage('bucket')">See all →</button>
+
         </div>
         <div class="home-bl-bar-bg"><div class="home-bl-bar" id="home-bl-bar" style="width:0%"></div></div>
       </div>
 
+      <footer class="app-footer-inner">Snug</footer>
     </div><!-- end panel-us -->
 
     <!-- ══ MOMENTS TAB ══ -->
@@ -1388,16 +1667,129 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         <span class="moments-link-arrow">›</span>
       </div>
 
+      <footer class="app-footer-inner">Snug</footer>
     </div><!-- end panel-moments -->
 
   </div>
 
   <!-- MILESTONES -->
+
+
+  <!-- NOTES -->
+
+
+  <!-- BUCKET LIST -->
+
+
+  <!-- MEMORY JAR -->
+
+
+  <!-- PLACES -->
+
+
+  <!-- LETTER -->
+
+
+  <!-- Photo reposition modal -->
+  <div class="m-reposition-overlay" id="m-reposition-overlay" onclick="if(event.target===this)closeRepositionModal()">
+    <div class="m-reposition-modal">
+      <div class="m-reposition-header">
+        <div class="m-reposition-hint">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg>
+          Drag to reposition
+        </div>
+        <span class="m-reposition-title" id="m-reposition-title"></span>
+      </div>
+      <div class="m-reposition-frame" id="m-reposition-frame">
+        <img id="m-reposition-img" src="" alt=""/>
+        <div class="m-reposition-grid"></div>
+      </div>
+      <div class="m-reposition-footer">
+        <div class="m-reposition-tip">
+          <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 11h.01"/></svg>
+          Drag up/down/left/right to frame
+        </div>
+        <div class="m-reposition-actions">
+          <button class="m-reposition-reset" onclick="resetReposition()">Reset</button>
+          <button class="m-reposition-save" onclick="saveReposition()">Done ✓</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Letter write modal -->
+  <div class="letter-modal-overlay" id="letter-modal-overlay" onclick="if(event.target===this)closeLetterModal()">
+    <div class="letter-modal">
+      <p class="letter-modal-title" id="letter-modal-title">Your letter</p>
+      <p class="letter-modal-sub" id="letter-modal-sub">Only you can see this until the unlock date.</p>
+      <textarea class="letter-modal-textarea" id="letter-modal-textarea" placeholder="Dear …,&#10;&#10;I've been thinking about what to write…" rows="10" maxlength="4000" oninput="document.getElementById('letter-char-count').textContent=this.value.length"></textarea>
+      <p style="font-size:.62rem;color:var(--muted);text-align:right;margin-top:.35rem;"><span id="letter-char-count" style="font-size:.6rem;color:var(--muted)">0</span> / 4000</p>
+      <div class="letter-modal-footer">
+        <div class="letter-modal-hint">
+          <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" style="flex-shrink:0;margin-top:1px;"><rect x="3" y="8" width="10" height="7" rx="1"/><path d="M5 8V6a3 3 0 016 0v2"/></svg>
+          <span>Saved privately · <span id="letter-modal-hint-name">—</span> can't see this</span>
+        </div>
+        <div class="letter-modal-actions">
+          <button class="letter-modal-cancel" onclick="closeLetterModal()">Cancel</button>
+          <button class="letter-modal-save" onclick="saveLetterContent()">Save letter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS PAGE -->
+
+
+    <!-- Status bottom sheet -->
+  <div class="status-sheet-overlay" id="status-sheet-overlay" onclick="if(event.target===this)closeStatusSheet()">
+    <div class="status-sheet">
+      <div class="status-sheet-handle"></div>
+      <div class="status-sheet-title">What are you up to?</div>
+      <div class="status-sheet-section">Activity</div>
+      <div class="status-activity-grid" id="status-activity-grid">
+        <div class="status-act-opt" data-activity="Working" onclick="selectActivity(this)"><span class="status-act-icon">💼</span><div class="status-act-label">Working</div></div>
+        <div class="status-act-opt" data-activity="Reading" onclick="selectActivity(this)"><span class="status-act-icon">📖</span><div class="status-act-label">Reading</div></div>
+        <div class="status-act-opt" data-activity="Music" onclick="selectActivity(this)"><span class="status-act-icon">🎵</span><div class="status-act-label">Music</div></div>
+        <div class="status-act-opt" data-activity="Eating" onclick="selectActivity(this)"><span class="status-act-icon">🍽️</span><div class="status-act-label">Eating</div></div>
+        <div class="status-act-opt" data-activity="Gaming" onclick="selectActivity(this)"><span class="status-act-icon">🎮</span><div class="status-act-label">Gaming</div></div>
+        <div class="status-act-opt" data-activity="Sports" onclick="selectActivity(this)"><span class="status-act-icon">⚽</span><div class="status-act-label">Sports</div></div>
+        <div class="status-act-opt" data-activity="Resting" onclick="selectActivity(this)"><span class="status-act-icon">😴</span><div class="status-act-label">Resting</div></div>
+        <div class="status-act-opt" data-activity="Traveling" onclick="selectActivity(this)"><span class="status-act-icon">✈️</span><div class="status-act-label">Traveling</div></div>
+        <div class="status-act-opt" data-activity="Cooking" onclick="selectActivity(this)"><span class="status-act-icon">🍳</span><div class="status-act-label">Cooking</div></div>
+        <div class="status-act-opt" data-activity="Outside" onclick="selectActivity(this)"><span class="status-act-icon">☀️</span><div class="status-act-label">Outside</div></div>
+        <div class="status-act-opt" data-activity="Shopping" onclick="selectActivity(this)"><span class="status-act-icon">🛍️</span><div class="status-act-label">Shopping</div></div>
+        <div class="status-act-opt" data-activity="Studying" onclick="selectActivity(this)"><span class="status-act-icon">📚</span><div class="status-act-label">Studying</div></div>
+      </div>
+      <div class="status-sheet-section">How are you feeling?</div>
+      <div class="status-mood-pills" id="status-mood-pills">
+        <div class="status-mood-pill" data-mood="focused" onclick="selectMood(this)">focused</div>
+        <div class="status-mood-pill" data-mood="happy" onclick="selectMood(this)">happy</div>
+        <div class="status-mood-pill" data-mood="tired" onclick="selectMood(this)">tired</div>
+        <div class="status-mood-pill" data-mood="cozy" onclick="selectMood(this)">cozy</div>
+        <div class="status-mood-pill" data-mood="excited" onclick="selectMood(this)">excited</div>
+        <div class="status-mood-pill" data-mood="stressed" onclick="selectMood(this)">stressed</div>
+        <div class="status-mood-pill" data-mood="grateful" onclick="selectMood(this)">grateful</div>
+        <div class="status-mood-pill" data-mood="meh" onclick="selectMood(this)">meh</div>
+      </div>
+      <button class="status-save-btn" onclick="saveStatus()">Save status</button>
+      <button onclick="closeStatusSheet()" style="display:block;width:calc(100% - 2.2rem);margin:.2rem 1.1rem .25rem;padding:.45rem;background:none;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.68rem;color:var(--muted);cursor:pointer;text-align:center;">Cancel</button>
+    </div>
+  </div>
+
+  <!-- MEMORIES page (sub-tabs: Milestones, Places, Memory jar) -->
+  <div class="page" id="page-memories">
+    <div class="shell-page-header">
+      <h2 class="shell-page-title">Memories</h2>
+    </div>
+    <div class="page-tabs">
+      <button class="page-tab active" id="memories-tab-milestones" onclick="switchPageTab('memories','milestones')">Milestones</button>
+      <button class="page-tab" id="memories-tab-places" onclick="switchPageTab('memories','places')">Places</button>
+      <button class="page-tab" id="memories-tab-jar" onclick="switchPageTab('memories','jar')">Memory jar</button>
+    </div>
+    <div class="page-tab-panel active" id="memories-panel-milestones">
   <div class="page" id="page-milestones">
-    <div class="page-header">
-      <div><p class="page-eyebrow">Our story</p><h1 class="page-title">Milestones</h1></div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:.75rem;margin-top:.25rem;">
       <button class="milestone-add-btn" onclick="toggleAddForm()"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>Add milestone</button>
-      
     </div>
     <p class="milestone-counter" id="milestone-counter">You have <span>0</span> milestones together</p>
     <div class="timeline" id="milestone-timeline"><p class="empty">No milestones yet. Add your first one!</p></div>
@@ -1421,34 +1813,109 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       </div>
     </div>
   </div>
+    </div>
+    <div class="page-tab-panel" id="memories-panel-places">
+  <div class="page" id="page-places">
+    
 
-  <!-- NOTES -->
-  <div class="page" id="page-notes">
-    <div class="page-header">
-      <div><p class="page-eyebrow">For each other</p><h1 class="page-title">Notes</h1></div>
-      
+    <!-- Stats -->
+    <div class="places-stat-row">
+      <div class="card">
+        <p class="card-label"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 1a5 5 0 015 5c0 3.5-5 9-5 9S3 9.5 3 6a5 5 0 015-5z"/><circle cx="8" cy="6" r="1.8"/></svg>Places</p>
+        <p class="stat-value" id="places-count">—</p>
+      </div>
+      <div class="card">
+        <p class="card-label"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2a10 10 0 010 12M8 2a10 10 0 000 12"/></svg>Countries</p>
+        <p class="stat-value" id="countries-count">—</p>
+      </div>
+      <div class="card">
+        <p class="card-label"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="2"/><path d="M8 1v3M8 12v3M1 8h3M12 8h3"/></svg>Memories</p>
+        <p class="stat-value" id="places-memories-count">—</p>
+      </div>
     </div>
-    <p class="section-heading">Write something</p>
-    <div class="notes-compose">
-      <textarea id="note-input" rows="3" placeholder="Write something…" maxlength="2000"></textarea>
-      <div class="compose-footer"><span class="author-tag" id="note-author-name">—</span><button class="send-btn" onclick="submitNote()">Send</button></div>
+
+    <!-- Map -->
+    <div class="places-map-card">
+      <div id="places-map" class="places-map"></div>
     </div>
-    <p class="section-heading">All notes</p>
-    <div id="notes-wall"><p class="empty">No notes yet.</p></div>
+
+    <!-- Popup (hidden until pin tapped) -->
+    <div class="places-popup" id="places-popup" style="display:none;">
+      <div class="places-popup-header">
+        <div class="places-popup-loc">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="#e8622a" stroke-width="1.3"><path d="M8 1a5 5 0 015 5c0 3.5-5 9-5 9S3 9.5 3 6a5 5 0 015-5z"/><circle cx="8" cy="6" r="1.8"/></svg>
+          <span id="places-popup-loc-name">—</span>
+        </div>
+        <span class="places-popup-count" id="places-popup-count">—</span>
+      </div>
+      <div id="places-popup-items"></div>
+    </div>
+
+    <!-- Place chips -->
+    <p class="section-heading" id="places-chips-label" style="display:none;">All places</p>
+    <div class="places-chips" id="places-chips"></div>
+
+    <p class="empty" id="places-empty" style="display:none;">No milestone locations yet. Add a location to a milestone to see it here!</p>
+  </div>
+    </div>
+    <div class="page-tab-panel" id="memories-panel-jar">
+  <div class="page" id="page-memory">
+    <div class="mj-page-streak" id="mj-page-streak-wrap" style="display:none;">
+      <span class="mj-page-streak-num" id="mj-page-streak-num">0</span>
+      <span class="mj-page-streak-lbl">day streak · keep it going!</span>
+    </div>
+
+    <!-- Today's entry + input -->
+    <p class="section-heading">Today</p>
+    <div class="mj-day-card" id="mj-today-card">
+      <div class="mj-day-header">
+        <span class="mj-day-date" id="mj-today-date">—</span>
+        <span class="mj-day-badge" id="mj-today-badge"></span>
+      </div>
+      <div class="mj-entry-row" id="mj-today-my-row">
+        <div class="mj-avatar mj-avatar-me" id="mj-today-my-avatar">F</div>
+        <div style="flex:1;">
+          <div class="mj-entry-text mj-empty-entry" id="mj-today-my-text">You haven't written yet today</div>
+          <div class="mj-entry-meta" id="mj-today-my-time"></div>
+        </div>
+      </div>
+      <div class="mj-entry-row" id="mj-today-other-row">
+        <div class="mj-avatar mj-avatar-other" id="mj-today-other-avatar">S</div>
+        <div style="flex:1;">
+          <div class="mj-entry-text mj-empty-entry" id="mj-today-other-text">Waiting for their moment…</div>
+          <div class="mj-entry-meta" id="mj-today-other-time"></div>
+        </div>
+      </div>
+      <div class="mj-input-row" id="mj-today-input-row">
+        <button class="mj-add-btn" onclick="openMjSheet()">+ Add today's moment</button>
+      </div>
+    </div>
+
+    <!-- History -->
+    <p class="section-heading" style="margin-top:.85rem;">Earlier</p>
+    <div id="mj-history-list"><p class="empty">No earlier memories yet — start writing!</p></div>
+    <footer class="app-footer-inner">Snug</footer>
+  </div>
+    </div>
   </div>
 
-  <!-- BUCKET LIST -->
+  <!-- TOGETHER page (sub-tabs: Bucket list, Notes, Letter) -->
+  <div class="page" id="page-together">
+    <div class="shell-page-header">
+      <h2 class="shell-page-title">Together</h2>
+    </div>
+    <div class="page-tabs">
+      <button class="page-tab active" id="together-tab-bucket" onclick="switchPageTab('together','bucket')">Bucket list</button>
+      <button class="page-tab" id="together-tab-notes" onclick="switchPageTab('together','notes')">Notes</button>
+      <button class="page-tab" id="together-tab-letter" onclick="switchPageTab('together','letter')">Letter</button>
+    </div>
+    <div class="page-tab-panel active" id="together-panel-bucket">
   <div class="page" id="page-bucket">
-    <div class="page-header">
-      <div>
-        <p class="page-eyebrow">Dreams to share</p>
-        <h1 class="page-title">Bucket <em>list</em></h1>
-      </div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:.75rem;margin-top:.25rem;">
       <button class="milestone-add-btn" onclick="toggleBucketForm()">
         <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
         Add dream
       </button>
-      
     </div>
 
     <!-- Progress bar -->
@@ -1505,107 +1972,23 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       </div>
     </div>
   </div>
-
-  <!-- MEMORY JAR -->
-  <div class="page" id="page-memory">
-    <div class="page-header">
-      <div>
-        <p class="page-eyebrow">Little moments</p>
-        <h1 class="page-title">Memory <em>jar</em></h1>
-      </div>
     </div>
-    <div class="mj-page-streak" id="mj-page-streak-wrap" style="display:none;">
-      <span class="mj-page-streak-num" id="mj-page-streak-num">0</span>
-      <span class="mj-page-streak-lbl">day streak · keep it going!</span>
+    <div class="page-tab-panel" id="together-panel-notes">
+  <div class="page" id="page-notes">
+    
+    <p class="section-heading">Write something</p>
+    <div class="notes-compose">
+      <textarea id="note-input" rows="3" placeholder="Write something…" maxlength="2000"></textarea>
+      <div class="compose-footer"><span class="author-tag" id="note-author-name">—</span><button class="send-btn" onclick="submitNote()">Send</button></div>
     </div>
-
-    <!-- Today's entry + input -->
-    <p class="section-heading">Today</p>
-    <div class="mj-day-card" id="mj-today-card">
-      <div class="mj-day-header">
-        <span class="mj-day-date" id="mj-today-date">—</span>
-        <span class="mj-day-badge" id="mj-today-badge"></span>
-      </div>
-      <div class="mj-entry-row" id="mj-today-my-row">
-        <div class="mj-avatar mj-avatar-me" id="mj-today-my-avatar">F</div>
-        <div style="flex:1;">
-          <div class="mj-entry-text mj-empty-entry" id="mj-today-my-text">You haven't written yet today</div>
-          <div class="mj-entry-meta" id="mj-today-my-time"></div>
-        </div>
-      </div>
-      <div class="mj-entry-row" id="mj-today-other-row">
-        <div class="mj-avatar mj-avatar-other" id="mj-today-other-avatar">S</div>
-        <div style="flex:1;">
-          <div class="mj-entry-text mj-empty-entry" id="mj-today-other-text">Waiting for their moment…</div>
-          <div class="mj-entry-meta" id="mj-today-other-time"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- History -->
-    <p class="section-heading" style="margin-top:.85rem;">Earlier</p>
-    <div id="mj-history-list"><p class="empty">No earlier memories yet — start writing!</p></div>
+    <p class="section-heading">All notes</p>
+    <div id="notes-wall"><p class="empty">No notes yet.</p></div>
   </div>
-
-  <!-- PLACES -->
-  <div class="page" id="page-places">
-    <div class="page-header">
-      <div>
-        <p class="page-eyebrow">Our journey</p>
-        <h1 class="page-title">Places <em>we've been</em></h1>
-      </div>
-      
     </div>
-
-    <!-- Stats -->
-    <div class="places-stat-row">
-      <div class="card">
-        <p class="card-label"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 1a5 5 0 015 5c0 3.5-5 9-5 9S3 9.5 3 6a5 5 0 015-5z"/><circle cx="8" cy="6" r="1.8"/></svg>Places</p>
-        <p class="stat-value" id="places-count">—</p>
-      </div>
-      <div class="card">
-        <p class="card-label"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2a10 10 0 010 12M8 2a10 10 0 000 12"/></svg>Countries</p>
-        <p class="stat-value" id="countries-count">—</p>
-      </div>
-      <div class="card">
-        <p class="card-label"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="2"/><path d="M8 1v3M8 12v3M1 8h3M12 8h3"/></svg>Memories</p>
-        <p class="stat-value" id="places-memories-count">—</p>
-      </div>
-    </div>
-
-    <!-- Map -->
-    <div class="places-map-card">
-      <div id="places-map" class="places-map"></div>
-    </div>
-
-    <!-- Popup (hidden until pin tapped) -->
-    <div class="places-popup" id="places-popup" style="display:none;">
-      <div class="places-popup-header">
-        <div class="places-popup-loc">
-          <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="#e8622a" stroke-width="1.3"><path d="M8 1a5 5 0 015 5c0 3.5-5 9-5 9S3 9.5 3 6a5 5 0 015-5z"/><circle cx="8" cy="6" r="1.8"/></svg>
-          <span id="places-popup-loc-name">—</span>
-        </div>
-        <span class="places-popup-count" id="places-popup-count">—</span>
-      </div>
-      <div id="places-popup-items"></div>
-    </div>
-
-    <!-- Place chips -->
-    <p class="section-heading" id="places-chips-label" style="display:none;">All places</p>
-    <div class="places-chips" id="places-chips"></div>
-
-    <p class="empty" id="places-empty" style="display:none;">No milestone locations yet. Add a location to a milestone to see it here!</p>
-  </div>
-
-  <!-- LETTER -->
+    <div class="page-tab-panel" id="together-panel-letter">
   <div class="page" id="page-letter">
-    <div class="page-header">
-      <div>
-        <p class="page-eyebrow" id="letter-page-eyebrow">For the day we meet</p>
-        <h1 class="page-title">Our <em>letters</em></h1>
-      </div>
-      
-    </div>
+    <span id="letter-page-eyebrow" style="display:none;">For the day we meet</span>
+    
 
     <!-- Unlocked banner (shown on meetup day) -->
     <div id="letter-unlocked-banner" style="display:none;" class="letter-unlocked-banner">
@@ -1619,60 +2002,19 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
     <!-- Empty state -->
     <p class="empty" id="letter-empty" style="display:none;">No letters yet. Write your first one above!</p>
+    <footer class="app-footer-inner">Snug</footer>
   </div>
-
-  <!-- Photo reposition modal -->
-  <div class="m-reposition-overlay" id="m-reposition-overlay" onclick="if(event.target===this)closeRepositionModal()">
-    <div class="m-reposition-modal">
-      <div class="m-reposition-header">
-        <div class="m-reposition-hint">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg>
-          Drag to reposition
-        </div>
-        <span class="m-reposition-title" id="m-reposition-title"></span>
-      </div>
-      <div class="m-reposition-frame" id="m-reposition-frame">
-        <img id="m-reposition-img" src="" alt=""/>
-        <div class="m-reposition-grid"></div>
-      </div>
-      <div class="m-reposition-footer">
-        <div class="m-reposition-tip">
-          <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 11h.01"/></svg>
-          Drag up/down/left/right to frame
-        </div>
-        <div class="m-reposition-actions">
-          <button class="m-reposition-reset" onclick="resetReposition()">Reset</button>
-          <button class="m-reposition-save" onclick="saveReposition()">Done ✓</button>
-        </div>
-      </div>
     </div>
   </div>
 
-  <!-- Letter write modal -->
-  <div class="letter-modal-overlay" id="letter-modal-overlay" onclick="if(event.target===this)closeLetterModal()">
-    <div class="letter-modal">
-      <p class="letter-modal-title" id="letter-modal-title">Your letter</p>
-      <p class="letter-modal-sub" id="letter-modal-sub">Only you can see this until the unlock date.</p>
-      <textarea class="letter-modal-textarea" id="letter-modal-textarea" placeholder="Dear …,&#10;&#10;I've been thinking about what to write…" rows="10" maxlength="4000" oninput="document.getElementById('letter-char-count').textContent=this.value.length"></textarea>
-      <p style="font-size:.62rem;color:var(--muted);text-align:right;margin-top:.35rem;"><span id="letter-char-count" style="font-size:.6rem;color:var(--muted)">0</span> / 4000</p>
-      <div class="letter-modal-footer">
-        <div class="letter-modal-hint">
-          <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" style="flex-shrink:0;margin-top:1px;"><rect x="3" y="8" width="10" height="7" rx="1"/><path d="M5 8V6a3 3 0 016 0v2"/></svg>
-          <span>Saved privately · <span id="letter-modal-hint-name">—</span> can't see this</span>
-        </div>
-        <div class="letter-modal-actions">
-          <button class="letter-modal-cancel" onclick="closeLetterModal()">Cancel</button>
-          <button class="letter-modal-save" onclick="saveLetterContent()">Save letter</button>
-        </div>
-      </div>
+  <!-- ACCOUNT page (sub-tabs: Profile, Couple, Settings) -->
+  <div class="page" id="page-account">
+    <div class="shell-page-header">
+      <h2 class="shell-page-title">Account</h2>
     </div>
-  </div>
-
-  <!-- SETTINGS PAGE -->
+    <div class="page-tab-panel active" id="account-panel-profile">
   <div class="page" id="page-settings">
-    <div class="page-header">
-      <div><p class="page-eyebrow">Your account</p><h1 class="page-title">Your <em>settings</em></h1></div>
-    </div>
+    
 
     <!-- PROFILE -->
     <p class="settings-section-heading">Profile</p>
@@ -1840,7 +2182,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       <p class="auth-field-error" id="settings-delete-error" style="margin-bottom:.4rem;"></p>
       <button id="btn-delete-account" class="settings-btn"
               onclick="window.doDeleteAccount()"
-              style="background:rgba(192,57,43,0.08);color:#c0392b;border-color:rgba(192,57,43,0.25);margin-bottom:.4rem;">
+              style="display:block;width:100%;background:rgba(192,57,43,0.08);color:#c0392b;border:1px solid rgba(192,57,43,0.25);border-radius:10px;padding:.65rem;text-align:center;margin-bottom:.35rem;font-family:inherit;font-size:.75rem;font-weight:600;cursor:pointer;">
         Delete everything
       </button>
       <button onclick="window.hideDeleteConfirm()"
@@ -1848,46 +2190,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         Cancel
       </button>
     </div>
+    <footer class="app-footer-inner">Snug</footer>
 
   </div>
-
-    <!-- Status bottom sheet -->
-  <div class="status-sheet-overlay" id="status-sheet-overlay" onclick="if(event.target===this)closeStatusSheet()">
-    <div class="status-sheet">
-      <div class="status-sheet-handle"></div>
-      <div class="status-sheet-title">What are you up to?</div>
-      <div class="status-sheet-section">Activity</div>
-      <div class="status-activity-grid" id="status-activity-grid">
-        <div class="status-act-opt" data-activity="Working" onclick="selectActivity(this)"><span class="status-act-icon">💼</span><div class="status-act-label">Working</div></div>
-        <div class="status-act-opt" data-activity="Reading" onclick="selectActivity(this)"><span class="status-act-icon">📖</span><div class="status-act-label">Reading</div></div>
-        <div class="status-act-opt" data-activity="Music" onclick="selectActivity(this)"><span class="status-act-icon">🎵</span><div class="status-act-label">Music</div></div>
-        <div class="status-act-opt" data-activity="Eating" onclick="selectActivity(this)"><span class="status-act-icon">🍽️</span><div class="status-act-label">Eating</div></div>
-        <div class="status-act-opt" data-activity="Gaming" onclick="selectActivity(this)"><span class="status-act-icon">🎮</span><div class="status-act-label">Gaming</div></div>
-        <div class="status-act-opt" data-activity="Sports" onclick="selectActivity(this)"><span class="status-act-icon">⚽</span><div class="status-act-label">Sports</div></div>
-        <div class="status-act-opt" data-activity="Resting" onclick="selectActivity(this)"><span class="status-act-icon">😴</span><div class="status-act-label">Resting</div></div>
-        <div class="status-act-opt" data-activity="Traveling" onclick="selectActivity(this)"><span class="status-act-icon">✈️</span><div class="status-act-label">Traveling</div></div>
-        <div class="status-act-opt" data-activity="Cooking" onclick="selectActivity(this)"><span class="status-act-icon">🍳</span><div class="status-act-label">Cooking</div></div>
-        <div class="status-act-opt" data-activity="Outside" onclick="selectActivity(this)"><span class="status-act-icon">☀️</span><div class="status-act-label">Outside</div></div>
-        <div class="status-act-opt" data-activity="Shopping" onclick="selectActivity(this)"><span class="status-act-icon">🛍️</span><div class="status-act-label">Shopping</div></div>
-        <div class="status-act-opt" data-activity="Studying" onclick="selectActivity(this)"><span class="status-act-icon">📚</span><div class="status-act-label">Studying</div></div>
-      </div>
-      <div class="status-sheet-section">How are you feeling?</div>
-      <div class="status-mood-pills" id="status-mood-pills">
-        <div class="status-mood-pill" data-mood="focused" onclick="selectMood(this)">focused</div>
-        <div class="status-mood-pill" data-mood="happy" onclick="selectMood(this)">happy</div>
-        <div class="status-mood-pill" data-mood="tired" onclick="selectMood(this)">tired</div>
-        <div class="status-mood-pill" data-mood="cozy" onclick="selectMood(this)">cozy</div>
-        <div class="status-mood-pill" data-mood="excited" onclick="selectMood(this)">excited</div>
-        <div class="status-mood-pill" data-mood="stressed" onclick="selectMood(this)">stressed</div>
-        <div class="status-mood-pill" data-mood="grateful" onclick="selectMood(this)">grateful</div>
-        <div class="status-mood-pill" data-mood="meh" onclick="selectMood(this)">meh</div>
-      </div>
-      <button class="status-save-btn" onclick="saveStatus()">Save status</button>
-      <button onclick="closeStatusSheet()" style="display:block;width:calc(100% - 2.2rem);margin:.2rem 1.1rem .25rem;padding:.45rem;background:none;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.68rem;color:var(--muted);cursor:pointer;text-align:center;">Cancel</button>
     </div>
   </div>
 
-  <footer id="app-footer">Snug</footer>
 </main>
 
 <script type="module">
@@ -2025,14 +2333,13 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   // ── ONBOARDING ───────────────────────────────────────────
   window.doOnboarding = async function(){
     const name      = document.getElementById('onboard-name').value.trim();
-    const city      = document.getElementById('onboard-city').value.trim();
     const err       = document.getElementById('onboard-error');
     err.textContent = '';
     if(!name){ err.textContent = 'Please enter your name.'; return; }
     try{
       const uid = fbAuth.currentUser.uid;
       await dbSet(dbRef(db, `users/${uid}`), {
-        name, city: city||'', email: fbAuth.currentUser.email,
+        name, city: '', email: fbAuth.currentUser.email,
         createdAt: Date.now()
       });
       // Upload avatar if user selected one (non-blocking)
@@ -2282,6 +2589,22 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       startCoupleTypeListener();
     }catch(e){
       console.error('loadCoupleAndStart failed:',e);
+      // Reset nav to home so next login starts fresh
+      document.querySelectorAll('.page').forEach(p=>{
+        if(!p.closest('.page-tab-panel')) p.classList.remove('active');
+      });
+      const homeP = document.getElementById('page-home');
+      if(homeP) homeP.classList.add('active');
+      document.querySelectorAll('.bn-item').forEach(n=>n.classList.remove('active'));
+      const homeN = document.getElementById('nav-home');
+      if(homeN) homeN.classList.add('active');
+      // Reset home tabs to Now
+      ['now','us','moments'].forEach(t=>{
+        const tp=document.getElementById(`panel-${t}`);
+        const tb=document.getElementById(`tab-${t}`);
+        if(tp) tp.classList.toggle('active',t==='now');
+        if(tb) tb.classList.toggle('active',t==='now');
+      });
       showAuthWrap();
       showAuthScreen('screen-login');
     }
@@ -2338,6 +2661,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
           if(clockInterval){clearInterval(clockInterval);clockInterval=null;}
           if(distanceInterval){clearInterval(distanceInterval);distanceInterval=null;}
           if(countdownInterval){clearInterval(countdownInterval);countdownInterval=null;}
+          if(window._metricInterval){clearInterval(window._metricInterval);window._metricInterval=null;}
           if(pulseTimeInterval){clearInterval(pulseTimeInterval);pulseTimeInterval=null;}
           if(unsubNotes){try{unsubNotes();}catch(e){}unsubNotes=null;}
           if(unsubMilestones){try{unsubMilestones();}catch(e){}unsubMilestones=null;}
@@ -2409,6 +2733,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
               // Show message
               coupleId=null;
               document.getElementById('main').style.display='none';
+              document.getElementById('bottom-nav').style.display='none';
               showAuthWrap();
               showAuthScreen('screen-linking');
               const msg = document.getElementById('linking-deleted-msg');
@@ -2492,8 +2817,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
           const changed=nc&&(!otherCoords||Math.abs(nc[0]-(otherCoords[0]||0))>0.01||Math.abs(nc[1]-(otherCoords[1]||0))>0.01);
           if(nc)otherCoords=nc;
           const label=`${OTHER} · ${otherCity}`;
-          document.getElementById("other-city").textContent=label;
-          document.getElementById("other-weather-city").textContent=label;
+          document.getElementById("other-city").textContent=otherCity||"—";
+          // other-weather-city removed — city shown in ldr-clock-city
           // Update distance strip city name immediately
           const dcb=document.getElementById("home-dist-city-b");
           if(dcb){dcb.textContent=otherCity||"—";dcb.classList.remove("home-dist-loading");}
@@ -2595,7 +2920,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     const weatherUrl = isLocal
       ? `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,weathercode,windspeed_10m&daily=temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=1`
       : `/api/weather?lat=${lat}&lng=${lng}`;
-    const r=await fetch(weatherUrl,{cache:'no-store'});const j=await r.json();const temp=Math.round(j.current.temperature_2m),code=j.current.weathercode,wind=Math.round(j.current.windspeed_10m),high=Math.round(j.daily.temperature_2m_max[0]),low=Math.round(j.daily.temperature_2m_min[0]);document.getElementById(`${prefix}-weather-icon`).textContent=wIcon(code);document.getElementById(`${prefix}-weather-temp`).textContent=`${temp}°`;document.getElementById(`${prefix}-weather-desc`).textContent=wDesc(code);document.getElementById(`${prefix}-weather-details`).textContent=`H ${high}°  L ${low}°  Wind ${wind} km/h`;}catch{document.getElementById(`${prefix}-weather-temp`).textContent="—";}}
+    const r=await fetch(weatherUrl,{cache:'no-store'});const j=await r.json();const temp=Math.round(j.current.temperature_2m),code=j.current.weathercode,wind=Math.round(j.current.windspeed_10m),high=Math.round(j.daily.temperature_2m_max[0]),low=Math.round(j.daily.temperature_2m_min[0]);const _wi=document.getElementById(`${prefix}-weather-icon`);const _wt=document.getElementById(`${prefix}-weather-temp`);const _wd=document.getElementById(`${prefix}-weather-desc`);const _wdt=document.getElementById(`${prefix}-weather-details`);if(_wi)_wi.textContent=wIcon(code);if(_wt)_wt.textContent=`${temp}°`;if(_wd)_wd.textContent=wDesc(code);if(_wdt)_wdt.textContent=`H ${high}°  L ${low}°  Wind ${wind} km/h`;}catch(e){const _wt2=document.getElementById(`${prefix}-weather-temp`);if(_wt2)_wt2.textContent='—';}}
 
   // Map
   function initMap(myCo,oCo,myL,oL){
@@ -2995,7 +3320,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   };
 
   // Meetup
-  function updateCdCaption(date){if(!date)return;const s=date.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});document.getElementById("cd-caption").textContent=s;document.getElementById("scd-caption").textContent=s;}
+  function updateCdCaption(date){if(!date)return;const s=date.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});const cdCap=document.getElementById("cd-caption");if(cdCap)cdCap.textContent=s;}
   window.updateMeetupDate=function(val){
     if(!val){meetupDate=null;startCountdown();return;}
     const newDate=new Date(val+"T00:00:00");
@@ -3087,9 +3412,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     if(countdownInterval)clearInterval(countdownInterval);
     function tick(){
       if(!meetupDate){
-        ["cd-d","cd-h","cd-m","cd-s","scd-d","scd-h","scd-m","scd-s"].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent="—";});
+        ["cd-d","cd-h","cd-m","cd-s"].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent="—";});
         const cc=document.getElementById("cd-caption");if(cc)cc.textContent=coupleType==='together'?'Set your next date night 🗓️':'Set your next meetup date 🗓️';
-        const sc=document.getElementById("scd-caption");if(sc)sc.textContent="Pick a new date";
+        // scd-caption removed (was sidebar)
         return;
       }
       const diff=meetupDate-Date.now();
@@ -3100,22 +3425,21 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         ["cd-d","cd-h","cd-m","cd-s"].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent="—";});
         if(cdCaption)cdCaption.textContent=coupleType==='together'?'Set your next date night 🗓️':'Set your next meetup date 🗓️';
         // Sidebar countdown
-        ["scd-d","scd-h","scd-m","scd-s"].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent="—";});
-        const scdCaption=document.getElementById("scd-caption");
-        if(scdCaption)scdCaption.textContent="Pick a new date";
+        // scd-* removed (was sidebar)
       } else {
         const d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
-        ["cd","scd"].forEach(p=>{
-          const de=document.getElementById(`${p}-d`),he=document.getElementById(`${p}-h`),me=document.getElementById(`${p}-m`),se=document.getElementById(`${p}-s`);
-          if(de)de.textContent=d;if(he)he.textContent=h;if(me)me.textContent=m;if(se)se.textContent=s;
+        ["cd-d","cd-h","cd-m","cd-s"].forEach((id,i)=>{
+          const el=document.getElementById(id);
+          if(el)el.textContent=[d,h,m,s][i];
         });
         if(cdCaption)cdCaption.textContent=meetupDate?meetupDate.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"}):(coupleType==='together'?'Set your next date night 🗓️':'Set your next meetup date 🗓️');
-        const scdCaption=document.getElementById("scd-caption");
-        if(scdCaption)scdCaption.textContent=meetupDate?meetupDate.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"}):"Pick a new date";
       }
     }
     tick();
     countdownInterval=setInterval(tick,1000);
+    // Update metric chip every 60s so day count stays in sync
+    if(window._metricInterval) clearInterval(window._metricInterval);
+    window._metricInterval = setInterval(()=>updateMetricChips&&updateMetricChips(), 5000);
   }
 
   // Greeting
@@ -4691,6 +5015,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     if(swEl && snEl){
       swEl.style.display = _mjStreakCount>0 ? 'inline-flex' : 'none';
       snEl.textContent = _mjStreakCount;
+      updateMetricChips&&updateMetricChips();
     }
   }
 
@@ -5032,6 +5357,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
   // ── Date Night Sheet ────────────────────────────────────────
   window.openDnSheet = function(){
+    document.getElementById('bottom-nav').style.display='none';
     // Pre-fill with current values
     const d = _dnCurrentPlan||{};
     const w = document.getElementById('dn-sheet-where');
@@ -5046,6 +5372,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   };
 
   window.closeDnSheet = function(){
+    document.getElementById('bottom-nav').style.display='flex';
     document.getElementById('dn-sheet-overlay').classList.remove('open');
   };
 
@@ -5068,6 +5395,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
   // ── Today's Plan Sheet ──────────────────────────────────────
   window.openTpSheet = function(){
+    document.getElementById('bottom-nav').style.display='none';
     const inp = document.getElementById('tp-sheet-input');
     const ctr = document.getElementById('tp-sheet-counter');
     if(inp){ inp.value = _tpMyCurrentVal||''; }
@@ -5078,6 +5406,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   };
 
   window.closeTpSheet = function(){
+    document.getElementById('bottom-nav').style.display='flex';
     document.getElementById('tp-sheet-overlay').classList.remove('open');
   };
 
@@ -5095,6 +5424,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
   // ── Memory Jar Sheet ────────────────────────────────────────
   window.openMjSheet = function(){
+    document.getElementById('bottom-nav').style.display='none';
     if(_mjMyEntry?.text) return; // already written today
     const inp = document.getElementById('mj-sheet-input');
     const ctr = document.getElementById('mj-sheet-counter');
@@ -5106,6 +5436,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   };
 
   window.closeMjSheet = function(){
+    document.getElementById('bottom-nav').style.display='flex';
     document.getElementById('mj-sheet-overlay').classList.remove('open');
   };
 
@@ -5131,7 +5462,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   window.switchHomeTab = function(tab){
     ['now','us','moments'].forEach(t=>{
       document.getElementById(`tab-${t}`).classList.toggle('active', t===tab);
-      document.getElementById(`panel-${t}`).classList.toggle('active', t===tab);
+      const panel = document.getElementById(`panel-${t}`);
+      panel.classList.toggle('active', t===tab);
+      if(t===tab) panel.scrollTop = 0;
     });
     // Re-invalidate map size when Now tab shown — Leaflet needs visible container
     if(tab==='now' && mapInstance){
@@ -5239,6 +5572,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   }
 
   window.openStatusSheet = function(){
+    document.getElementById('bottom-nav').style.display='none';
     // Pre-select current values
     document.querySelectorAll('.status-act-opt').forEach(el=>{
       el.classList.toggle('selected', el.dataset.activity === (myStatus?.activity||null));
@@ -5279,6 +5613,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   };
 
   window.closeStatusSheet = function(){
+    document.getElementById('bottom-nav').style.display='flex';
     document.getElementById('status-sheet-overlay').classList.remove('open');
   };
 
@@ -5322,16 +5657,17 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   // All element IDs that show MY avatar
   const MY_AVATAR_IDS = [
     'tp-my-avatar','mj-preview-my-avatar','mj-today-my-avatar',
-    'settings-avatar-wrap'
+    'settings-avatar-wrap','home-avatar-me'
   ];
   // All element IDs that show PARTNER avatar
   const OTHER_AVATAR_IDS = [
-    'tp-other-avatar','mj-preview-other-avatar','mj-today-other-avatar'
+    'tp-other-avatar','mj-preview-other-avatar','mj-today-other-avatar',
+    'home-avatar-other'
   ];
 
   function _applyAvatar(el, url, initial, isMe){
     if(!el) return;
-    // Check if it's the settings wrap (special structure)
+    // Settings wrap (special structure)
     if(el.id === 'settings-avatar-wrap'){
       const img = document.getElementById('settings-avatar-img');
       const ini = document.getElementById('settings-avatar-initial');
@@ -5344,6 +5680,20 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         if(img) img.style.display = 'none';
         if(ini){ ini.style.display = ''; ini.textContent = initial; }
         if(hint) hint.textContent = 'Tap to upload a photo';
+      }
+      return;
+    }
+    // Home avatar circles (have initial span + img slot)
+    if(el.id === 'home-avatar-me' || el.id === 'home-avatar-other'){
+      const ini = el.querySelector('.home-avatar-initial');
+      let img = el.querySelector('img');
+      if(url){
+        if(!img){ img = document.createElement('img'); img.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;'; el.appendChild(img); }
+        img.src = url; img.style.display = 'block';
+        if(ini) ini.style.display = 'none';
+      } else {
+        if(img) img.style.display = 'none';
+        if(ini){ ini.style.display = ''; ini.textContent = initial; }
       }
       return;
     }
@@ -5521,7 +5871,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       // Update greeting + couple name
       const greet = document.getElementById('home-greeting');
       if(greet) greet.textContent = name;
-      const sbEl = document.getElementById('sidebar-couple-name');
+      const sbEl = null; // removed sidebar
       if(sbEl) sbEl.innerHTML = `${_esc(ME)} <em>&</em> ${_esc(OTHER)}`;
       const mhEl = document.getElementById('mobile-header-couple-name');
       if(mhEl) mhEl.innerHTML = `${_esc(ME)} <em>&</em> ${_esc(OTHER)}`;
@@ -5927,48 +6277,33 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   // ── LDR / TOGETHER MODE ────────────────────────────────────
   let _coupleTypeUnsub = null;
 
-  // IDs to hide in Together mode
-  const TOGETHER_HIDE = ['home-dist-strip','sleep-my','sleep-other'];
-  const TOGETHER_HIDE_CARDS = ['map','my-time','other-time']; // handled by section heading
+  // Mode constants (cleaned up)
 
   function applyMode(type){
     coupleType = type;
     const isLDR = type === 'ldr';
     const isTogether = type === 'together';
 
-    // Map card + weather — hide in Together (just hide the whole map-card section)
-    const mapCard = document.querySelector('.home-map-card');
-    if(mapCard) mapCard.style.display = isLDR ? '' : 'none';
+    // Map removed from UI — no toggle needed
 
-    // "Where you are" heading — hide in Together
-    const whereHeading = document.querySelector('#panel-now .section-heading');
-    if(whereHeading && whereHeading.textContent.includes('Where')) whereHeading.style.display = isLDR ? '' : 'none';
+    // LDR card (clocks + distance + weather) — hide in Together
+    const ldrCard = document.getElementById('ldr-now-card');
+    if(ldrCard) ldrCard.style.display = isLDR ? '' : 'none';
+    const ldrWrap = document.getElementById('ldr-section-wrap');
+    if(ldrWrap) ldrWrap.style.display = isLDR ? '' : 'none';
 
-    // Clocks (grid-2 with my-time) — hide in Together
-    const clockGrid = document.getElementById('my-time')?.closest('.grid-2');
-    if(clockGrid) clockGrid.style.display = isLDR ? '' : 'none';
+    // Right now heading removed
 
-    // "Right now" heading — hide in Together
-    const rightNowHeadings = document.querySelectorAll('#panel-now .section-heading');
-    rightNowHeadings.forEach(h=>{ if(h.textContent.includes('Right now')) h.style.display = isLDR ? '' : 'none'; });
+    // Distance strip — now inside ldr-now-card, handled above
 
-    // Distance strip — hide in Together
-    const distStrip = document.getElementById('home-dist-strip');
-    if(distStrip) distStrip.style.display = isLDR ? '' : 'none';
-
-    // Sleep indicators — hide in Together
-    ['sleep-my','sleep-other'].forEach(id=>{
-      const el = document.getElementById(id);
-      if(el) el.style.display = isLDR ? '' : 'none';
-    });
+    // Sleep indicators — inside ldr-now-card, handled above
 
     // Countdown label — "Next meetup" vs "Next date night"
     const cdLabel = document.querySelector('#panel-us .card-label');
     if(cdLabel) cdLabel.innerHTML = `<svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 2l1.5 4h4l-3.5 2.5 1.5 4L8 10l-3.5 2.5 1.5-4L2.5 6h4z"/></svg>${isLDR ? 'Next meetup' : 'Next date night'}`;
 
-    // Sidebar countdown label
-    const scdLabel = document.querySelector('.sidebar-cd-label');
-    if(scdLabel) scdLabel.textContent = isLDR ? 'Next meetup' : 'Next date night';
+    // sidebar countdown label removed
+    updateMetricChips&&updateMetricChips();
 
     // Moments tab letter subtitle
     const letterSub = document.getElementById('moments-letter-sub');
@@ -5984,9 +6319,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     const eyebrow = document.getElementById('letter-page-eyebrow');
     if(eyebrow) eyebrow.textContent = isLDR ? 'For the day we meet' : 'For our date night';
 
-    // Sidebar mode pill
-    const modePill = document.getElementById('sidebar-mode-pill');
-    if(modePill) modePill.textContent = isLDR ? '📍 Long distance' : '🏠 Living together';
+    // sidebar-mode-pill removed
 
     // Time picker — Together mode only
     _showTimeInput && _showTimeInput(isTogether);
@@ -6119,29 +6452,28 @@ Your letters will be kept but your current date will be cleared. You can set a n
       repositionKey=null;repositionDragging=false;pendingPhotoForKey=null;
       // Hide main, show auth
       document.getElementById('main').style.display='none';
+      document.getElementById('bottom-nav').style.display='none';
+      if(window._metricInterval){clearInterval(window._metricInterval);window._metricInterval=null;}
+      // Reset home to Now tab on next login
+      if(typeof switchHomeTab==='function') switchHomeTab('now');
       showAuthWrap();
       showAuthScreen('screen-login');
     }
   };
 
-  window.showPage=function(name){
-    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-    document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
-    document.getElementById(`page-${name}`).classList.add("active");
-    document.getElementById(`nav-${name}`).classList.add("active");
-    closeSidebar();
-    _stopLetterCountdown();
-    if(name==="settings"){
-      window.openSettingsPage();
-    }
-    if(name==="letter"){
-      initLetterPage(_startLetterCountdown);
-    }
-    if(name==="memory"){
-      renderMemoryJarPage&&renderMemoryJarPage();
-      _mjRenderHistory&&_mjRenderHistory();
-    }
-    if(name==="places"){
+  // ── Page routing ──────────────────────────────────────────────
+  // Maps bottom-nav tab names to the sub-tab that should be activated
+  const _pageSubContent = {
+    memories: { default:'milestones', init: _initMemoriesPage },
+    together: { default:'bucket',     init: _initTogetherPage },
+    account:  { default:'profile',    init: _initAccountPage  },
+  };
+
+  // Legacy pages now live inside their panels — just call special inits
+  function _hideLegacyPages(){} // no-op: panels handle visibility via .active class
+
+  function _initMemoriesPage(tab){
+    if(tab==='places'){
       setTimeout(()=>{
         if(db&&fbOnValue){
           fbOnValue(dbRef(db,`couples/${coupleId}/milestones`),snap=>{
@@ -6149,35 +6481,139 @@ Your letters will be kept but your current date will be cleared. You can set a n
             const items=d?Object.entries(d).map(([k,v])=>({...v,_key:k})):[];
             window._initPlacesPage(items);
           },{onlyOnce:true});
-        } else {
-          window._initPlacesPage([...localMilestones]);
-        }
+        } else { window._initPlacesPage([...localMilestones]); }
         if(placesMapInstance)placesMapInstance.invalidateSize();
       },100);
+    } else if(tab==='jar'){
+      renderMemoryJarPage&&renderMemoryJarPage();
+      _mjRenderHistory&&_mjRenderHistory();
     }
+  }
+
+  function _initTogetherPage(tab){
+    if(tab==='letter') initLetterPage(_startLetterCountdown);
+  }
+
+  function _initAccountPage(tab){
+    window.openSettingsPage&&window.openSettingsPage();
+  }
+
+  window.switchPageTab = function(page, tab){
+    // Hide any currently visible legacy pages before switching
+    _hideLegacyPages&&_hideLegacyPages();
+    // Update tab pills
+    const allTabs = document.querySelectorAll(`[id^="${page}-tab-"]`);
+    allTabs.forEach(t=>t.classList.toggle('active', t.id===`${page}-tab-${tab}`));
+    // Update panels
+    const allPanels = document.querySelectorAll(`[id^="${page}-panel-"]`);
+    allPanels.forEach(p=>{
+      const isActive = p.id===`${page}-panel-${tab}`;
+      p.classList.toggle('active', isActive);
+      if(isActive) p.scrollTop = 0;
+    });
+    // Init content
+    if(_pageSubContent[page]) _pageSubContent[page].init(tab);
   };
-  window.toggleSidebar=function(){const s=document.getElementById("sidebar");const o=document.getElementById("sidebar-overlay");s.classList.toggle("open");o.classList.toggle("open");};
-  window.registerThisDevice=async function(){const btn=document.getElementById("register-bio-btn");btn.textContent="⬡ Registering…";const ok=await registerBiometric(ME);btn.textContent=ok?"✓ Registered!":"⬡ Registration failed";setTimeout(()=>{if(ok)btn.style.display="none";else btn.textContent="⬡ Try again";},2000);};window.closeSidebar=function(){document.getElementById("sidebar").classList.remove("open");document.getElementById("sidebar-overlay").classList.remove("open");};
+
+  window.showPage=function(name){
+    // Map legacy page names to new nav structure
+    const legacyMap = {
+      milestones:'memories', places:'memories', memory:'memories',
+      notes:'together', bucket:'together', letter:'together',
+      settings:'account'
+    };
+    const legacyTab = {
+      milestones:'milestones', places:'places', memory:'jar',
+      notes:'notes', bucket:'bucket', letter:'letter',
+      settings:'profile'
+    };
+
+    const navName = legacyMap[name] || name;
+
+    // Activate page — only remove active from top-level pages, not legacy pages inside panels
+    document.querySelectorAll(".page").forEach(p=>{
+      // Don't touch pages inside page-tab-panels — those are legacy content pages
+      if(!p.closest('.page-tab-panel')) p.classList.remove("active");
+    });
+    const pageEl = document.getElementById(`page-${navName}`);
+    if(pageEl) pageEl.classList.add("active");
+
+    // Scroll active panel to top
+    const activePanel = pageEl && pageEl.querySelector('.page-tab-panel.active, .home-tab-panel.active');
+    if(activePanel) activePanel.scrollTop = 0;
+
+    // Activate bottom nav item
+    document.querySelectorAll(".bn-item").forEach(n=>n.classList.remove("active"));
+    const navEl = document.getElementById(`nav-${navName}`);
+    if(navEl) navEl.classList.add("active");
+
+    // If legacy name, switch to right sub-tab
+    if(legacyMap[name]){
+      switchPageTab(navName, legacyTab[name]);
+    } else if(_pageSubContent[name]){
+      // First visit to a new nav tab — init default sub-tab
+      const def = _pageSubContent[name].default;
+      switchPageTab(name, def);
+    }
+
+    _stopLetterCountdown();
+
+    // Hide legacy pages when switching to any top-level page
+    _hideLegacyPages&&_hideLegacyPages();
+  };
+
+  window.toggleSidebar=function(){};
+  window.closeSidebar=function(){};
+  window.registerThisDevice=async function(){const btn=document.getElementById("register-bio-btn");if(btn){btn.textContent="⬡ Registering…";const ok=await registerBiometric(ME);btn.textContent=ok?"✓ Registered!":"⬡ Registration failed";setTimeout(()=>{if(ok)btn.style.display="none";else btn.textContent="⬡ Try again";},2000);}};
+
+
+  // ── Metric chips ─────────────────────────────────────────────
+  function updateMetricChips(){
+    // Next meetup
+    const meetupLabel = document.getElementById('metric-meetup-label');
+    const meetupVal   = document.getElementById('metric-meetup-val');
+    if(meetupLabel) meetupLabel.textContent = coupleType==='together' ? 'Date night' : 'Next meetup';
+    if(meetupVal){
+      if(meetupDate && meetupDate > new Date()){
+        const diff = meetupDate - new Date();
+        const days = Math.floor(diff / 86400000);
+        meetupVal.textContent = days === 0 ? 'Tomorrow' : `${days}d`;
+      } else {
+        meetupVal.textContent = '—';
+      }
+    }
+    // Moments (milestone count)
+    const momentsVal = document.getElementById('metric-moments-val');
+    if(momentsVal) momentsVal.textContent = localMilestones.length > 0 ? localMilestones.length : '—';
+    // Streak
+    const streakVal = document.getElementById('metric-streak-val');
+    if(streakVal){
+      const streakNum = parseInt(document.getElementById('mj-page-streak-num')?.textContent||'0');
+      streakVal.textContent = streakNum > 0 ? `${streakNum}d` : '—';
+    }
+  }
 
   // Start UI
   function startUI(){
     document.getElementById("locating").style.display="none";
-    document.getElementById("main").style.display="block";
+    document.getElementById("main").style.display="flex";
+    document.getElementById("bottom-nav").style.display="flex";
     const myL=`${ME} · ${myCity}`,oL=`${OTHER} · ${otherCity}`;
-    const mhEl=document.getElementById('mobile-header-couple-name');
-    const sbEl=document.getElementById('sidebar-couple-name');
-    if(mhEl) mhEl.innerHTML=`${_esc(ME)} <em>&</em> ${_esc(OTHER)}`;
+    const mhEl=null; // removed: mobile-header-couple-name
+    const sbEl=null; // removed: sidebar-couple-name
     if(sbEl) sbEl.innerHTML=`${_esc(ME)} <em>&</em> ${_esc(OTHER)}`;
-    const ftEl=document.getElementById('app-footer');
+    const ftEl=document.querySelector('.app-footer-inner');
     if(ftEl) ftEl.textContent=`${ME} & ${OTHER}`;
+    document.querySelectorAll('.app-footer-inner').forEach(el=>el.textContent=`${ME} & ${OTHER}`);
     // sidebar-user replaced by mode pill
-    document.getElementById("my-city").textContent=myL;
-    document.getElementById("other-city").textContent=oL;
-    document.getElementById("my-weather-city").textContent=myL;
-    document.getElementById("other-weather-city").textContent=oL;
+    document.getElementById("my-city").textContent=myCity||"—";
+    document.getElementById("other-city").textContent=otherCity||"—";
+    // weather city labels use my-city / other-city
     document.getElementById("note-author-name").textContent=ME;
     const dna=document.getElementById("home-dist-name-a");if(dna)dna.textContent=ME;
     const dnb=document.getElementById("home-dist-name-b");if(dnb)dnb.textContent=OTHER;
+    const dnaL=document.getElementById("home-dist-name-a-label");if(dnaL)dnaL.textContent=ME;
+    const dnbL=document.getElementById("home-dist-name-b-label");if(dnbL)dnbL.textContent=OTHER;
     // Populate city names immediately — they update again when coords arrive
     const dca=document.getElementById("home-dist-city-a");if(dca)dca.textContent=myCity||"—";
     const dcb=document.getElementById("home-dist-city-b");
@@ -6191,7 +6627,12 @@ Your letters will be kept but your current date will be cleared. You can set a n
     }
     document.getElementById("home-greeting").innerHTML=greeting(ME,myTz);
     document.getElementById("home-date").textContent=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-    setTimeout(()=>initMap(myCoords||[0,0],otherCoords||[0,0],myL,oL),50);
+    // Home avatar names
+    const avMeName = document.getElementById('home-avatar-me-name');
+    const avOtherName = document.getElementById('home-avatar-other-name');
+    if(avMeName) avMeName.textContent = ME||'—';
+    if(avOtherName) avOtherName.textContent = OTHER||'—';
+
     if(myCoords&&(myCoords[0]||myCoords[1]))fetchWeather(myCoords[0],myCoords[1],"my");
     if(otherCoords&&(otherCoords[0]||otherCoords[1]))fetchWeather(otherCoords[0],otherCoords[1],"other");
     if(window._watchOther)window._watchOther();
@@ -6225,6 +6666,7 @@ Your letters will be kept but your current date will be cleared. You can set a n
         localMilestones=[...items];
         renderMilestones(items);
         updateMomentsSubtitles();
+        updateMetricChips&&updateMetricChips();
       });
       // Bucket
       if(unsubBucket)unsubBucket();
@@ -6252,6 +6694,8 @@ Your letters will be kept but your current date will be cleared. You can set a n
       if(sinceEl){ const d=new Date(_sd+'T12:00:00'); sinceEl.textContent=`${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}`; }
     }
     if(meetupDate)updateCdCaption(meetupDate);startCountdown();
+    updateMetricChips&&updateMetricChips();
+    updateMetricChips();
   }
 
   // Read ?join=CODE from invite link URL on page load
@@ -6276,6 +6720,21 @@ Your letters will be kept but your current date will be cleared. You can set a n
     if(el && el.style.display !== 'none') window.location.reload();
   });
 </script>
+  <script>
+    // ── App height fix for iOS Safari / PWA ─────────────────
+    // 100svh is unreliable on iOS (dynamic toolbar, home indicator).
+    // We set --app-height from window.innerHeight which is always accurate.
+    // Falls back to 100svh if JS hasn't run yet (CSS variable undefined).
+    function _setAppHeight() {
+      document.documentElement.style.setProperty('--app-height', window.innerHeight + 'px');
+    }
+    _setAppHeight();
+    window.addEventListener('resize', _setAppHeight);
+    // Re-run after orientationchange settles (iOS fires resize before layout is final)
+    window.addEventListener('orientationchange', function() {
+      setTimeout(_setAppHeight, 100);
+    });
+  </script>
   <script>
     // Register Service Worker
     if ('serviceWorker' in navigator) {
